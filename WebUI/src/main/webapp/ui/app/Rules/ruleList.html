@@ -1,0 +1,116 @@
+<div class="no margin sc-page-title">
+	<div class="sc-page-title-left">
+		<div class="sc-vertical-middle-div">{{'rules.label'| translate}}</div>
+	</div>
+	<div class="sc-page-title-right sc-title-button-box">
+		<form id="exportRuleForm" action="rest/v1/rule/export/" target="_top" data-ng-show="false" method="post">
+			<input id="exportRule" name="exportRule" type="text">
+		</form>
+		<button class="sc-vertical-middle-div btn btn-default sc-ps-btn sc-btn-export sc-ps-btn-sc-big sc-ps-import-export-line" 
+			data-ng-click="exportRule()" data-ng-disabled="!ruleList.length" title="{{'rule.export.title' | translate}}"></button>
+		<button class="sc-vertical-middle-div btn btn-default sc-ps-btn sc-btn-import sc-ps-btn-sc-big sc-ps-import-export-line" 
+			data-ng-click="importRule()" title="{{'rule.import.title' | translate}}"></button>
+		<input id="file-browser" type="file" data-ng-show="false" onchange="angular.element(this).scope().jsonFileSelected(this)">
+		<a data-ng-click="createNewRule()"
+			class="sc-vertical-middle-div btn btn-default sc-btn-big"
+			id="sc-btn-create-rule"> <i class="fa fa-plus uppercase"></i>&nbsp;&nbsp;{{"rule.button.create"
+			| translate}}
+		</a>
+	</div>
+</div>
+<div data-ng-if="ruleList.length" class="sc-list-container">
+	<div data-ng-if="ruleList.length" class="sc-operation">
+		<div id="sc-sort-by" class="sc-inline">
+			<div class="sc-inline sc-sort-by-title">{{"sort.by.label"|translate}}</div>
+			<div
+				class="sc-sort-by-select sc-inline btn-group btn-block sc-search-status"
+				uib-dropdown>
+				<button class="form-control sc-button-common" id="" type="button"
+					data-uib-dropdown-toggle ng-disabled="disabled">
+					<span class="sc-dropdown-btn-label">{{'rule.sortBy.' +
+						sortBy.code | translate}}</span> <span
+						class="sc-dropdown-btn-expand-icon"></span>
+				</button>
+				<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu"
+					aria-labelledby="">
+					<li role="menuitem" data-ng-repeat="s in sortByFields"
+						data-ng-click="sortByField(s)" class="sc-clickable-dropdown">{{'rule.sortBy.'
+						+ s.code | translate}}</li>
+				</ul>
+			</div>
+			<div class="sc-inline sc-sort-by-title">{{"sort.order.label"|translate}}</div>
+			<div
+				class="sc-sort-by-select sc-inline btn-group btn-block sc-search-status"
+				uib-dropdown>
+				<button class="form-control sc-button-common" id="" type="button"
+					data-uib-dropdown-toggle ng-disabled="disabled">
+					<span class="sc-dropdown-btn-label">{{sortOrder.label}}</span> <span
+						class="sc-dropdown-btn-expand-icon"></span>
+				</button>
+				<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu"
+					aria-labelledby="">
+					<li role="menuitem" data-ng-repeat="s in sortOrders"
+						data-ng-click="sortByOrder(s)" class="sc-clickable-dropdown">{{s.label}}</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<table class="sc-list-table table table-hover">
+		<thead>
+		</thead>
+		<tbody>
+			<tr data-ng-repeat="rule in ruleList">
+				<td class="sc-rule-details-on-table">
+					<div class="sc-inline-block-on-table sc-clickable"
+						style="width: 50%" data-ng-click="openRule(rule)">
+						<p class="sc-bold-text-on-table">{{rule.name}}</p>
+						<p class="sc-grey-text-on-table sc-inline"
+							data-ng-if="rule.lastExecutionDate > 0 ">{{'last.executed'
+							|translate}}</p>
+						<p class="sc-inline" data-ng-if="rule.lastExecutionDate > 0 "><friendly-date data-date="{{rule.lastExecutionDate}}"
+							data-date-type="miliseconds"
+							data-full-format="d MMM yyyy, hh:mm a"
+							data-short-format="hh:mm a"></friendly-date></p>
+						<p class="sc-grey-text-on-table"
+							data-ng-if="rule.lastExecutionDate === 0 ">{{'never.executed'
+							| translate}}</p>
+					</div>
+					<div data-ng-click="openRule(rule)"
+						class="sc-inline-block-on-table sc-clickable">
+						<button data-ng-show="rule.enabled"
+							class="sc-green sc-rule-status-btn btn btn-default sc-btn-no-border">
+							<i class="fa fa-check"> {{'active.status.label' | translate}}</i>
+						</button>
+						<button data-ng-show="!rule.enabled"
+							class="sc-grey sc-rule-status-btn btn btn-default sc-btn-no-border">
+							<i class="fa fa-exclamation"> {{'inactive.status.label' |
+								translate}}</i>
+						</button>
+					</div>
+					<div class="sc-rule-option-block">
+						<div class="sc-align-right">
+							<button
+								class="btn btn-default sc-component-option sc-btn-icon-big sc-btn-bkgrd-hover sc-btn-no-bkgrd sc-btn-no-border"
+								data-ng-click="openOption(rule, !openOption(rule), $event)"></button>
+						</div>
+						<div
+							data-ng-include="'ui/app/Rules/partials/ruleoption-template.html'"
+							class="fade-in fade-out sc-option-large"
+							data-ng-show="isOptionOpen(rule)"></div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div data-ng-show="ruleList.length< total">
+		<button type="button" class="btn btn-default sc-btn-loadmore"
+			data-ng-click="loadMore()">{{"button.load.more" |
+			translate}}</button>
+	</div>
+
+</div>
+
+<div data-ng-if="!ruleList.length" class="sc-empty-resource-list-box">
+	<p style="text-align: center">{{'empty.list.msg' | translate}}</p>
+</div>

@@ -1,0 +1,62 @@
+<div class="modal-header" data-ng-if="title">
+	<h3 class="modal-title">{{ title }}</h3>
+</div>
+<form id="reportNameForm"
+		class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-valid-maxlength"
+		novalidate="" name="reportNameForm">
+	<div class="modal-body">
+		<table width="100%">
+			<tr>
+				<td style="width:25%;">
+					<div class="sc-details-page-editor-data" style="margin-bottom: 20px;">
+						<label for="name">{{"adHocReport.editor.name.label" | translate}}</label>
+					</div>
+				</td>
+				<td style="width: 75%;">
+					<div class="sc-details-page-editor-data" style="margin-bottom: 20px;">
+						<input id="reportName"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'adHocReport.editor.name.place.holder' | translate}}"
+							data-ng-model="returnParam.name" name="reportName" required
+							ng-maxlength="100" max-length="100">
+						<div style="padding: 0px 20px;" class="sc-validation-block"
+							ng-messages="reportNameForm.reportName.$error"
+							ng-if="reportNameForm.reportName.$touched">
+							<p ng-message="maxlength" align="left">{{"adHocReport.editor.name.validation.max.length" | translate}}</p>
+							<p ng-message="required" align="left">{{"adHocReport.editor.name.validation.required" | translate}}</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="sc-details-page-editor-data" style="margin-bottom: 20px;">
+						<label for="description">{{"adHocReport.editor.description.label" | translate}}</label>
+					</div>
+				</td>
+				<td>
+					<div class="sc-details-page-editor-data" style="margin-bottom: 20px;">
+						<textarea id="reportDescription"
+							class="sc-details-page-editor-input-placeholder sc-component-text-area sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'adHocReport.editor.description.place.holder' | translate}}"
+							data-ng-model="returnParam.description" name="reportDescription"
+							ng-maxlength="1000" max-length="1000"/></textarea>
+						<div style="padding: 0px 20px;" class="sc-validation-block"
+							ng-messages="reportNameForm.reportDescription.$error"
+							ng-if="reportNameForm.reportDescription.$touched">
+							<p ng-message="maxlength">{{"adHocReport.editor.description.validation.max.length" | translate}}</p>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-confirm" type="button" ng-click="ok(reportNameForm)">
+			{{"dialog.save" | translate}}
+		</button>
+		<button class="btn btn-warning" type="button" ng-click="cancel()">
+			{{"dialog.cancel" | translate}}
+		</button>
+	</div>
+</form>

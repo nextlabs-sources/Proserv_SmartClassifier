@@ -1,0 +1,558 @@
+<div data-ng-if="!detailsFound" class="sc-empty-resource-list-box">
+	<p style="text-align: center">
+		{{'scheduledReport.details.not.found' | translate}}
+	</p>
+</div>
+<div data-http-loader class="sc-data-loading">
+	<p style="text-align: center" class="sc-vertical-middle-div">
+		{{'data.loading' | translate}}
+	</p>
+</div>
+<div class="sc-resource" data-ng-if="detailsFound" style="height: 100%">
+	<form id="scheduledReportDetailsForm"
+		class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-vaid-maxlength"
+		novalidate="" name="scheduledReportDetailsForm">
+		<div class="no-margin sc-details-page-title-panel">
+			<div class="sc-details-page-back-btn-div ">
+				<button class="sc-details-page-back-btn btn btn-default"
+					type="button" data-ng-click="backToScheduledReportList(scheduledReportDetailsForm)">
+					<i class="fa fa-arrow-left" data-ng-class=""> </i>
+				</button>
+			</div>
+			<div class="sc-details-page-title">
+				<div class="sc-vertical-middle-div">
+					<p class="sc-details-page-edit-text" data-ng-if="scheduledReportID != 'create'">
+						{{"edit.label" | translate}}
+					</p>
+					<p class="sc-details-page-edit-text" data-ng-if="scheduledReportID == 'create'">
+						{{"create.label" | translate}}
+					</p>
+					<p class="sc-details-page-edit-subject">{{scheduledReport.name}}</p>
+				</div>
+			</div>
+			<div class="sc-details-page-btn-div">
+				<a class="btn btn-default sc-details-page-discard-btn"
+					data-ng-click="discardScheduledReportChanges(scheduledReportDetailsForm)">
+					{{"button.discard" | translate}}
+				</a>
+				<a class="btn btn-default sc-btn-save-page"
+					data-ng-click="saveScheduledReportChanges(scheduledReportDetailsForm)">
+					{{"button.save" | translate}}
+				</a>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="sc-details-page-bottom-panel">
+			<div class="sc-details-page-summary-div">
+				<a href="" data-ng-click="scrollTo('scheduledReportInfo')">
+					<div class="sc-details-page-summary-row"
+						data-ng-class="{'sc-details-page-summary-row-selected':isActive('scheduledReportInfo')}">
+						<label for="scheduledReportInfo">
+							{{"this.label" | translate}} {{'scheduledReport.label'|translate}}
+						</label>
+						<div class="wrapper">
+							<span ng-show="!scheduledReport.name.length" class="sc-details-page-summary-content">
+									<{{'scheduledReport.summary.scheduledReport.name.alt' | translate}}>
+							</span>
+							<span ng-show="scheduledReport.name.length" class="sc-details-page-summary-content">
+									{{scheduledReport.name}}
+							</span>
+						</div>
+					</div>
+				</a>
+				<a href="" data-ng-click="scrollTo('scheduledReportFilter')">
+					<div class="sc-details-page-summary-row"
+						data-ng-class="{'sc-details-page-summary-row-selected':isActive('scheduledReportFilter')}">
+						<label for="scheduledReportFilter" style="margin-top: 10px">
+							{{'scheduledReport.summary.look.for.filter.label'| translate}}
+						</label>
+						<div class="wrapper">
+							<span class="sc-details-page-summary-content"
+								ng-show="!scheduledReport.filters.length">
+								<{{'scheduledReport.summary.filter.alt'| translate}}>
+							</span>
+							<span class="sc-details-page-summary-content"
+								ng-show="scheduledReport.filters.length">
+									{{scheduledReport.name}}
+							</span>
+						</div>
+					</div>
+				</a>
+				<a href="" data-ng-click="scrollTo('scheduledReportEmail')">	
+					<div class="sc-details-page-summary-row"
+						data-ng-class="{'sc-details-page-summary-row-selected':isActive('scheduledReportEmail')}">
+						<label for="scheduledReportRecipient" style="margin-top: 10px">
+							{{'scheduledReport.summary.recipient.label'| translate}}
+						</label>
+						<div class="wrapper">
+							<span class="sc-details-page-summary-content"
+								ng-show="!scheduledReport.schedule.recipients.length">
+								<{{'scheduledReport.summary.recipient.alt'| translate}}>
+							</span>
+							<span class="sc-details-page-summary-content"
+								ng-show="scheduledReport.schedule.recipients.length"
+								data-ng-repeat="(index, recipient) in scheduledReport.schedule.recipients">
+									{{recipient.email}}
+							</span>
+						</div>
+					</div>
+				</a>
+				<a href="" data-ng-click="scrollTo('scheduledReportValidity')">
+					<div class="sc-details-page-summary-row"
+						data-ng-class="{'sc-details-page-summary-row-selected':isActive('scheduledReportValidity')}">
+						<label for="scheduledReportValidity" style="margin-top: 10px">
+							{{'scheduledReport.summary.validity.from.label'| translate}}
+						</label>
+						<div class="wrapper">
+							<span class="sc-details-page-summary-content">
+								{{validity.validFrom | date:'dd/MM/yyyy'}}
+							</span>
+						</div>
+						<label data-ng-show="validity.expiringOnOption === 'never'">
+							{{"component.summary.never.expires.label" | translate}}
+						</label>
+						<label data-ng-show="validity.expiringOnOption === 'specific'">
+							{{"component.summary.expiring.on.label" | translate}}
+						</label>
+						<div class="wrapper" data-ng-show="validity.expiringOnOption === 'specific'">
+							<span class="sc-details-page-summary-content">
+								{{validity.expiringOn | date:'dd/MM/yyyy'}}
+							</span>
+						</div>
+					</div>
+				</a>
+				<a href="" data-ng-click="scrollTo('scheduledReportSchedule')">
+					<div class="sc-details-page-summary-row"
+						data-ng-class="{'sc-details-page-summary-row-selected':isActive('scheduledReportSchedule')}">
+						<label> {{"scheduledReport.summary.schedule.label" | translate}} </label>
+						<div class="wrapper">
+							<span class="sc-details-page-summary-content">
+								{{getScheduleAsText()}}
+							</span>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="sc-details-page-editor-div">
+				<div id="scheduledReportInfo" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline">
+						{{"scheduledReport.editor.configuration.info.label" | translate}}
+					</span>
+				</div>
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label for="name">
+							{{"scheduledReport.editor.name.label" | translate}}
+						</label>
+						<input id="name"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'scheduledReport.editor.name.place.holder' | translate}}"
+							data-ng-model="scheduledReport.name" name="name" required
+							ng-maxlength="100" max-length="100">
+						<div class="sc-validation-block"
+							ng-messages="scheduledReportDetailsForm.name.$error"
+							ng-if="scheduledReportDetailsForm.name.$touched">
+							<p ng-message="maxlength">
+								{{"scheduledReport.editor.name.validation.max.length" | translate}}
+							</p>
+							<p ng-message="required">
+								{{"scheduledReport.editor.name.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="description">{{"scheduledReport.editor.description.label" | translate}}</label>
+						<textarea id="description"
+							class="sc-details-page-editor-input-placeholder sc-component-text-area sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'scheduledReport.editor.description.place.holder' | translate}}"
+							data-ng-model="scheduledReport.description" name="description">
+						</textarea>
+					</div>
+				</div>
+				<div id="scheduledReportFilter" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline">
+						{{"scheduledReport.editor.filter.label" | translate}}
+					</span>
+				</div>
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label for="description">{{"scheduledReport.editor.filter.range.label" | translate}}</label>
+						<div class="sc-half-width dropdown" data-uib-dropdown>
+							<button class="form-control sc-button-common" type="button" data-uib-dropdown-toggle ng-disabled="disabled" required>
+								<span class="sc-dropdown-btn-label">
+									{{scheduledReport.range.display | translate}}
+								</span>
+								<span class="sc-dropdown-btn-expand-icon"></span>
+							</button>
+							<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+								<li role="menuitem">
+									<label class="nobold sc-green-checkbox-radio" 
+										data-ng-click="updateRange(undefined);">
+										<input type="radio" class="sc-green-checkbox-radio sc-ps-search-modifieddate ng-prestine ng-untouched ng-valid"
+											data-ng-model="scheduledReport.range.$_checked">
+										<span class="sc-ps-search-item-label sc-ps-label-for-checkbox-radio ng-binding">
+											<span class="sc-green-checkbox-radio-bgrd-holder"></span>
+											{{scheduledReport.range.display | translate}}
+										</span>
+									</label>
+								</li>
+								<li role="separator" class="divider"></li>
+								<li role="menuitem" data-ng-repeat="range in rangeList" class="ng-scope">
+									<label class="nobold sc-green-checkbox-radio" 
+										data-ng-click="updateRange(range);">
+										<input type="radio" class="sc-green-checkbox-radio sc-ps-search-modifieddate ng-prestine ng-untouched ng-valid"
+											data-ng-model="range.$_checked">
+										<span class="sc-ps-search-item-label sc-ps-label-for-checkbox-radio ng-binding">
+											<span class="sc-green-checkbox-radio-bgrd-holder"></span>
+											{{range.display | translate}}
+										</span>
+									</label>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label data-ng-if="scheduledReport.filters && scheduledReport.filters.length > 0">
+							{{"scheduledReport.editor.filter.execute.label" | translate}}
+						</label>
+						<label data-ng-if="!scheduledReport.filters || scheduledReport.filters.length === 0">
+							{{"scheduledReport.editor.filter.execute.alt" | translate}}
+						</label>
+						<div class="sc-report-filter">
+							<table>
+								<tr	data-ng-repeat="(index, filter) in scheduledReport.filters">
+									<td width="20%">
+										<div class="sc-full-width dropdown" data-uib-dropdown>
+											<button class="form-control sc-button-common" type="button" data-uib-dropdown-toggle ng-disabled="disabled" required>
+												<span class="sc-dropdown-btn-label" data-ng-show="!filter.fieldName">
+													{{'scheduledReport.editor.filter.field.name.dropdown' | translate}}
+												</span>
+												<span class="sc-dropdown-btn-label" data-ng-show="filter.fieldName">
+													{{filter.fieldName}}
+												</span>
+												<span class="sc-dropdown-btn-expand-icon"></span>
+											</button>
+											<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+												<li role="menuitem" data-ng-repeat="fieldName in fieldNameList"
+													data-ng-click="setFilterFieldName(index, fieldName)"
+													class="sc-clickable-dropdown">{{fieldName}}
+												</li>
+											</ul>
+										</div>
+									</td>
+									<td width="15%">
+										<div class="sc-full-width dropdown" data-uib-dropdown>
+											<button class="form-control sc-button-common" type="button" data-uib-dropdown-toggle ng-disabled="disabled" required>
+												<span class="sc-dropdown-btn-label" data-ng-show="!filter.operator">
+													{{'scheduledReport.editor.filter.operator.dropdown' | translate}}
+												</span>
+												<span class="sc-dropdown-btn-label" data-ng-show="filter.operator">
+													{{filter.operator}}
+												</span>
+												<span class="sc-dropdown-btn-expand-icon"></span>
+											</button>
+											<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+												<li role="menuitem" data-ng-repeat="operator in operatorList"
+													data-ng-click="setFilterOperator(index, operator)"
+													class="sc-clickable-dropdown">{{operator}}
+												</li>
+											</ul>
+										</div>
+									</td>
+									<td width="60%">
+										<input
+											data-ng-class="{'has-error': scheduledReportDetailsForm['filter0' + index].$dirty && scheduledReportDetailsForm['filter0' + index].$invalid}"
+											class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-full sc-details-page-common-input"
+											placeholder="{{'scheduledReport.editor.filter.place.holder' | translate}}"
+											data-ng-model="filter.value" name="{{'filter0' + index}}"
+											required max-length="1000" ng-maxlength="1000"
+											uib-tooltip="{{getTooltipMessage(scheduledReportDetailsForm['filter0' + index])}}"
+											tooltip-trigger="mouseenter" tooltip-placement="bottom">
+									</td>
+									<td width="5%">
+										<div class="fa fa-trash-o sc-bigger-icon sc-inline"	data-ng-click="removeFilter(index)">
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<a data-ng-click="addFilter()" class="btn btn-default"
+							style="margin-top: 2%"> 
+							<i class="fa fa-plus uppercase"></i>
+							&nbsp;&nbsp;{{'scheduledReport.editor.add.filter.button' | translate}}
+						</a>
+					</div>
+				</div>
+				<div id="scheduledReportEmail" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline">
+						{{"scheduledReport.editor.email.label" | translate}}
+					</span>
+				</div>
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<div class="sc-report-email-details">
+							<table width="100%">
+								<tbody>
+									<tr class="ng-scope">
+										<td width="18%" class="sc-action-param-label">
+											<span class="ng-binding">{{"scheduledReport.editor.email.recipient.label" | translate}}</span>
+										</td>
+										<td width="82%">
+											<multi-param paramlist="scheduledReport.schedule.recipients" class="multi-param ng-isolate-scope" 
+											input-type="Email" input-required="true" name="emailRecipient"
+											placeholder="{{'scheduledReport.editor.email.recipient.place.holder' | translate}}">
+												<div class="tag-input-ctn" id="tag-input-ctn">
+												</div>
+												<div class="sc-validation-block-sm" data-ng-show="invalidInput">
+													<p class="ng-biding">{{"multi.param.invalid.Email" | translate}}</p>
+												</div>
+												<div class="sc-validation-block-sm" data-ng-show="duplicateInput">
+													<p class="ng-biding">{{"multi.param.duplicate" | translate}}</p>
+												</div>
+											</multi-param>
+										</td>
+									<tr>
+									<tr class="ng-scope">
+										<td class="sc-action-param-label">
+											<span class="ng-binding">{{"scheduledReport.editor.email.subject.label" | translate}}</span>
+										</td>
+										<td>
+											<input id="emailSubject" style="width:100%;"
+												data-ng-class="{'has-error':scheduledReportDetailsForm.emailSubject.$dirty && !scheduledReport.schedule.emailSubject}"
+												class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+												placeholder="{{'scheduledReport.editor.email.subject.place.holder' | translate}}"
+												data-ng-model="scheduledReport.schedule.emailSubject" name="emailSubject" required
+												tooltip-placement="bottom"
+												uib-tooltip="{{'scheduledReport.editor.email.subject.validation.required' | translate}}"
+												data-ng-required="true"
+												ng-maxlength="1000" max-length="1000">
+										</td>
+									<tr>
+									<tr class="ng-scope">
+										<td class="sc-action-param-label">
+											<span class="ng-binding">{{"scheduledReport.editor.email.content.label" | translate}}</span>
+										</td>
+										<td>
+											<textarea
+												class="sc-textarea-input-sm"
+												required name="emailContent"
+												tooltip-placement="bottom"
+												uib-tooltip="{{'scheduledReport.editor.email.content.validation.required' | translate}}"
+												data-ng-model="scheduledReport.schedule.emailContent">
+											</textarea>
+										</td>
+									<tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div id="scheduledReportValidity" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline">
+						{{"scheduledReport.editor.expiry.label" | translate}}
+					</span>
+				</div>
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label for="validFrom" class="sc-label-inline">
+							{{"scheduledReport.editor.valid.from.label"	| translate}}
+						</label>
+						<div name="validFrom" id="validFrom" class="sc-inline">
+							<div class="sc-date-picker">
+								<p class="input-group">
+									<input type="text" class="form-control" name="validFrom"
+										id="validFrom" uib-datepicker-popup="dd/MM/yyyy"
+										data-ng-model="validity.validFrom"
+										is-open="validFromPopUp.opened" show-button-bar="true"
+										close-text="{{'close.label'|translate}}"
+										current-text="{{'today.label'|translate}}"
+										clear-text="{{'clear.label'|translate}}" /> <span
+										class="input-group-btn">
+										<button type="button" class="btn btn-default"
+											data-ng-click="validFromOpen()">
+											<i class="fa fa-calendar"></i>
+										</button>
+									</span>
+								</p>
+							</div>
+							<div class="sc-validation-block"
+								ng-messages="scheduledReportDetailsForm.validFrom.$error"
+								ng-if="scheduledReportDetailsForm.validFrom.$touched">
+								<p ng-message="required">
+									{{"scheduledReport.editor.valid.from.validation.required" | translate}}
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label class="sc-label-inline">
+							{{"scheduledReport.editor.expiring.on.label" | translate}}</label>
+						<div class="sc-inline">
+							<md-radio-group data-ng-model="validity.expiringOnOption">
+								<md-radio-button value="specific" class="md-primary sc-radio-inline sc-inline">
+									{{'scheduledReport.editor.specific.date.label'	| translate}}
+								</md-radio-button>
+								<md-radio-button value="never" class="md-primary sc-radio-inline sc-inline">
+									{{'scheduledReport.editor.never.label'| translate}}
+								</md-radio-button>
+							</md-radio-group>
+							<div data-ng-show="validity.expiringOnOption == 'specific'"
+								class="sc-date-picker">
+								<p class="input-group">
+									<input type="text" class="form-control" name="expiringOn"
+										id="expiringOn" uib-datepicker-popup="dd/MM/yyyy"
+										data-ng-model="validity.expiringOn"
+										is-open="expiringOnPopUp.opened"
+										ng-required="expiringOnOption =='specific'"
+										show-button-bar="true"
+										close-text="{{'close.label'|translate}}"
+										current-text="{{'today.label'|translate}}"
+										clear-text="{{'clear.label'|translate}}" /> 
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default"
+											data-ng-click="expiringOnOpen()">
+											<i class="fa fa-calendar"></i>
+										</button>
+									</span>
+								</p>
+							</div>
+							<div class="sc-validation-block"
+								ng-messages="scheduledReportDetailsForm.expiringOn.$error"
+								ng-if="scheduledReportDetailsForm.expiringOn.$touched && expiringOnOption == 'specific' && scheduledReportDetailsForm.expiringOn.$error">
+								<p ng-message="required">
+									{{"scheduledReport.editor.expiring.on.validation.required"	| translate}}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="scheduledReportSchedule" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline">
+						{{"scheduledReport.editor.schedule.label" | translate}}</span>
+				</div>
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label for="schedule">
+							{{"scheduledReport.editor.execute.schedule.label" | translate}}
+						</label>
+						<div class="sc-grey-div">
+							<md-radio-group data-ng-model="scheduledReport.schedule.scheduleType">
+								<md-radio-button value="D" class="md-primary sc-radio-inline-with-background sc-inline">
+									{{'daily.label'	| translate}}
+								</md-radio-button>
+								<md-radio-button value="W" class="md-primary sc-radio-inline-with-background sc-inline">
+									{{'weekly.label'| translate}}
+								</md-radio-button>
+								<md-radio-button value="M" class="md-primary sc-radio-inline-with-background sc-inline">
+									{{'monthly.label'| translate}}
+								</md-radio-button>
+							</md-radio-group>
+						</div>
+						<div class="sc-border-div" data-ng-show="scheduledReport.schedule.scheduleType == 'D'">
+							<table class="sc-schedule-table-daily">
+								<tr data-ng-repeat="dailySchedule in dailySchedules" class="sc-table-row">
+									<td class="sc-padding-cell-left" width="5%">
+										<span class="sc-inline sc-details-page-editor-label">
+											{{'at.label' | translate}}
+										</span>
+									</td>
+									<td>
+										<uib-timepicker data-ng-model="dailySchedule.time"
+											class="sc-inline sc-timepicker" minute-step="1"
+											hour-step="1" show-meridian="true">
+										</uib-timepicker>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="sc-border-div" data-ng-show="scheduledReport.schedule.scheduleType == 'W'">
+							<table class="sc-schedule-table-weekly">
+								<tr data-ng-repeat="weeklySchedule in weeklySchedules" class="sc-table-row">
+									<td class="sc-padding-cell-left sc-padding-cell-right"
+										width="50%">
+										<div class="btn-group">
+											<label class="btn btn-primary"
+												data-ng-repeat="day in dayOfTheWeek"
+												data-ng-model="weeklySchedule.days[day]" uib-btn-checkbox
+												btn-checkbox-true="true" btn-checkbox-false="false">
+												{{day + ".label" | translate}}
+											</label>
+										</div>
+									</td>
+									<td class="sc-padding-cell-left sc-horizontal-center-div">
+										<span class="sc-inline sc-details-page-editor-label">
+											{{'at.label' | translate}}
+										</span>
+									</td>
+									<td>
+										<uib-timepicker data-ng-model="weeklySchedule.time"
+											class="sc-inline sc-timepicker" minute-step="1"
+											show-meridian="true">
+										</uib-timepicker>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="sc-border-div" data-ng-show="scheduledReport.schedule.scheduleType == 'M'">
+							<table class="sc-schedule-table-monthly">
+								<tr data-ng-repeat="monthlySchedule in monthlySchedules" class="sc-table-row">
+									<td class="sc-padding-cell-left" width="50%">
+										<div class="btn-group btn-block" data-uib-dropdown auto-close="outsideClick">
+											<button class="form-control sc-button-common" id=""
+												type="button" data-uib-dropdown-toggle
+												ng-disabled="disabled">
+												<span class="sc-dropdown-btn-label">{{getDayOfMonthString(monthlySchedule.days)}}</span>
+												<span class="sc-dropdown-btn-expand-icon"></span>
+											</button>
+											<ul class="sc-dropdown-day-of-month-picker uib-dropdown-menu"
+												role="menu" aria-labelledby="">
+												<table width="100%">
+													<tr>
+														<td width="40%">
+															<div class="btn-group">
+																<button class="sc-select-all-btn btn" data-ng-click="selectAll(monthlySchedule)">
+																	{{'select.all.button' | translate}}
+																</button>
+																<button class="sc-clear-all-btn btn" data-ng-click="clearAll(monthlySchedule)">
+																	{{'clear.all.button' | translate}}
+																</button>
+															</div>
+														</td>
+														<td width="60%">
+															{{'scheduledReport.editor.monthly.schedule.context' | translate}}
+														</td>
+													</tr>
+												</table>
+												<div class="sc-dropdown-day-of-month-wrapper">
+													<div data-ng-repeat="day in dayOfTheMonth"
+														data-ng-click="monthlyScheduleChange(monthlySchedule, day, monthlySchedule.days[day])"
+														data-ng-model="monthlySchedule.days[day]"
+														class="sc-dropdown-day-of-month-item sc-inline"
+														uib-btn-checkbox btn-checkbox-true="true"
+														btn-checkbox-false="false">
+														{{day | translate}}
+													</div>
+												</div>
+											</ul>
+										</div>
+									</td>
+									<td class="sc-padding-cell-left sc-horizontal-center-div">
+										<span class="sc-inline sc-details-page-editor-label">
+											{{'at.label'| translate}}
+										</span>
+									</td>
+									<td>
+										<uib-timepicker data-ng-model="monthlySchedule.time"
+											class="sc-inline sc-timepicker" minute-step="1"
+											show-meridian="true">
+										</uib-timepicker>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

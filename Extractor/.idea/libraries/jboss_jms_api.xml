@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jboss-jms-api">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/xlib/jar/jboss-jms-api.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

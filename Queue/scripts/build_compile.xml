@@ -1,0 +1,117 @@
+<!-- build_compile.xml
+
+Description:
+	This ANT script publishes installers and build artifacts to s:/build.
+	
+	To use this script, you must update properties is <project root>/scripts/build.properties or overide 
+	them from commandline (using -D option). For example:
+		
+		set PATH=C:\depot\external\apache-ant\apache-ant-1.8.4\bin;%PATH%
+		ant -XX:MaxPermSize=512m -Dnlbuildroot=C:/depot/PolicyStudio/dev/BuildScript_1205 -Dexternal.dir=c:/depot/external -Dnlexternaldir=c:/depot/external -Dbuild_number=10001 -f scripts/build_publish.xml
+		
+	or
+		
+		set PATH=C:\depot\external\apache-ant\apache-ant-1.8.4\bin;%PATH%
+		set ANT_OPTS=-XX:MaxPermSize=512m -Dnlbuildroot=%NLBUILDROOT% -Dexternal.dir=%NLEXTERNALDIR% -Dnlexternaldir=%NLEXTERNALDIR% -Dbuild_number=10001 
+		ant -f scripts/build_publish.xml -v	
+-->
+<project name="build_compile" default="all" basedir=".">
+
+	<!-- Propery files -->
+	<property file="${basedir}/build.properties" />
+	<property environment="env" />
+	
+	<!-- Global properties -->
+	
+	<property name="conf_dir" location="${nlbuildroot}/conf" />
+	<property name="xlib_dir" location="${nlbuildroot}/xlib" />
+	<property name="xlib_jar_dir" location="${xlib_dir}/jar" />
+	<property name="xlib_artemis_dir" location="${xlib_dir}/artemis" />
+	<property name="xlib_exe_x86_dir" location="${xlib_dir}/exe/x86" />
+	<property name="xlib_exe_x64_dir" location="${xlib_dir}/exe/x64" />
+	<property name="build_dir" location="${nlbuildroot}/build" />
+	<property name="classes_dir" value="${build_dir}/classes" />
+	<property name="package_dir" value="${build_dir}/${package_name}" />
+	<property name="dist_zip_file_name" value="${package_name}-${version_str}-${version_build_short}-${build_date_long}.zip" />
+	
+	<!-- Dump properties -->
+	<echoproperties />
+
+	<echo message="INFO: Dump properties completed" />
+	
+	<!-- Sanity checks -->
+	<fail message="nlbuildroot is not set" unless="nlbuildroot" />
+	<fail message="nlbuildroot is empty">
+		<condition>
+			<equals arg1="${nlbuildroot}" arg2="" trim="true" />
+		</condition>
+	</fail>
+	<available file="${nlbuildroot}" type="dir" property="local.nlbuildroot_exists" />
+	<fail message="nlbuildroot directory does not exist - ${nlbuildroot}" unless="local.nlbuildroot_exists" />
+
+	<echo message="INFO: Sanity check completed (no error)" />
+	
+	<path id="compile.classpath">
+		<fileset dir="${xlib_jar_dir}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+	<!-- Global tasks -->
+	<tstamp>
+		<format property="local.now" pattern="EEE, d MMM yyyy HH:mm:ss Z" />
+	</tstamp>
+
+	<echo message="version_str = ${version_str}" />
+	<echo message="time = ${local.now}" />
+
+	<!-- Targets -->
+	<target name="all" description="Default for all" depends="clean, package" />
+	
+	<target name="clean" description="Delete all build artifacts" depends="">
+		<delete includeemptydirs="true" dir="${build_dir}"/>
+	</target>
+	
+	
+	<target name="package" description="builds each plugin module">		
+			<mkdir dir="${package_dir}" />
+			<mkdir dir="${package_dir}/bin" />
+													
+			<copy todir="${package_dir}" overwrite="true">
+				<fileset dir="${xlib_artemis_dir}"></fileset>
+			</copy>
+		
+			<copy todir="${package_dir}/bin" overwrite="true">
+				<fileset dir="${nlbuildroot}/conf" />
+			</copy>
+				    	
+			<copy todir="${package_dir}/bin" overwrite="true">
+				<fileset dir="${nlbuildroot}/setup" />
+			</copy>
+				
+			<copy todir="${package_dir}/bin">
+				<fileset dir="${xlib_exe_x64_dir}/" />
+			    <globmapper from="prunsrv.exe" to="Smart Classifier Queue.exe"/>
+			</copy>
+				
+			<copy todir="${package_dir}/bin">
+				<fileset dir="${xlib_exe_x64_dir}/" />
+				<globmapper from="prunmgr.exe" to="Smart Classifier Queuew.exe"/>
+			</copy>
+		
+			<fixcrlf srcdir="${package_dir}/bin" includes="**/*.bat" 
+								eol="unix" eof="remove" />	
+		
+			<fixcrlf srcdir="${package_dir}/bin/sc" includes="**/*.*" 
+						eol="unix" eof="remove" />
+		
+			<zip destfile="${build_dir}/${dist_zip_file_name}" encoding="UTF-8"> 
+				<fileset dir="${build_dir}"> 
+					<include name="${package_name}/**" />
+				</fileset>				
+			</zip>
+		
+		</target>
+
+</project>
+

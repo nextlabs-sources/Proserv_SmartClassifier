@@ -1,0 +1,211 @@
+
+<div data-ng-if="!detailsFound" class="sc-empty-resource-list-box">
+	<p style="text-align: center">{{'jms.details.not.found' |
+		translate}}</p>
+</div>
+<div data-http-loader class="sc-data-loading">
+	<p style="text-align: center" class="sc-vertical-middle-div">{{'data.loading'
+		| translate}}</p>
+</div>
+<div class="sc-resource" data-ng-if="detailsFound" style="height: 100%">
+	<form id="jmsDetailsForm"
+		class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-vaid-maxlength"
+		novalidate="" name="jmsDetailsForm">
+		<div class="no-margin sc-details-page-title-panel">
+			<div class="sc-details-page-back-btn-div ">
+				<button class="sc-details-page-back-btn btn btn-default"
+					type="button" data-ng-click="backToJMSList(jmsDetailsForm)">
+					<i class="fa fa-arrow-left" data-ng-class=""> </i>
+				</button>
+			</div>
+			<div class="sc-details-page-title">
+				<div class="sc-vertical-middle-div">
+					<p class="sc-details-page-edit-text">{{"edit.label" |
+						translate}}</p>
+					<p class="sc-details-page-edit-subject">{{jms.displayName}}</p>
+				</div>
+			</div>
+
+			<div class="sc-details-page-btn-div">
+				<a class="btn btn-default sc-details-page-discard-btn"
+					data-ng-click="discardJMSChanges(jmsDetailsForm)">{{"button.discard"
+					| translate}} </a> <a class="btn btn-default sc-btn-save-page"
+					data-ng-click="saveJMSChanges(jmsDetailsForm)">{{"button.save"
+					| translate}} </a>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="sc-details-page-bottom-panel">
+			<div class="sc-details-page-summary-div">
+				<a href="" data-ng-click="scrollTo('jmsInfo')">
+					<div class="sc-details-page-summary-row"
+						data-ng-class="{'sc-details-page-summary-row-selected':isActive('jmsInfo')}">
+						<label for="jmsInfo"> {{"this.label" |
+							translate}} {{'jms.label'|translate}}</label>
+						<div class="wrapper">
+							<span ng-hide="jms.displayName.length"
+								class="sc-details-page-summary-content"><{{'jms.summary.jms.name.alt'
+								| translate}}> </span> <span class="sc-details-page-summary-content"
+								ng-show="jms.displayName.length"> {{jms.displayName}}</span>
+						</div>
+						<label for="jmsInfo" style="margin-top: 10px">{{'jms.summary.type.label'|
+							translate}}</label>
+						<div>
+							<span>{{'jms.' + jms.type | translate}}</span>
+						</div>
+						<label for="jmsInfo" style="margin-top: 10px">{{'jms.summary.provider.url.label'|
+							translate}}</label>
+						<div>
+							<span>{{jms.providerURL}}</span>
+							<span data-ng-if = "!jms.providerURL"><{{'jms.summary.provider.url.alt' | translate}}></span>
+						</div>
+						<label for="jmsInfo" style="margin-top: 10px">{{'jms.summary.retry.interval.label'|
+							translate}}</label>
+						<div>
+							<span>{{jms.connectionRetryInterval}}</span>
+							<span data-ng-if = "!jms.connectionRetryInterval"><{{'jms.summary.retry.interval.alt' | translate}}></span>
+							<span data-ng-if = "jms.connectionRetryInterval">{{'second.label'|translate}}</span>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="sc-details-page-editor-div">
+
+				<div id="jmsInfo" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline">
+						{{"jms.editor.jms.info.label" | translate}}</span>
+				</div>
+
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label for="jmsName">{{"component.editor.name.label" |
+							translate}}</label> <input id="jmsName"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'jms.editor.name.place.holder' | translate}}"
+							data-ng-model="jms.displayName" name="jmsName" required
+							ng-maxlength="50" max-length="50">
+						<div class="sc-validation-block"
+							ng-messages="jmsDetailsForm.jmsName.$error"
+							ng-if="jmsDetailsForm.jmsName.$touched">
+							<p ng-message="maxlength">{{"jms.editor.name.validation.max.length"
+								| translate}}</p>
+							<p ng-message="required">{{"jms.editor.name.validation.required"
+								| translate}}</p>
+						</div>
+					</div>
+
+
+					<div class="sc-details-page-editor-data">
+						<label for="description">{{"component.editor.description.label"
+							| translate}}</label>
+						<textarea id="description" ng-maxlength="1000" max-length="1000"
+							class="
+							sc-details-page-editor-input-placeholder sc-component-text-area
+							sc-details-page-editor-data-right
+							sc-details-page-common-input"
+							placeholder="{{'jms.editor.description.place.holder' | translate}}"
+							data-ng-model="jms.description" name="description"></textarea>
+						<div class="sc-validation-block"
+							ng-messages="jmsDetailsForm.description.$error"
+							ng-if="jmsDetailsForm.description.$touched">
+							<p ng-message="maxlength">{{"jms.editor.description.validation.max.length"
+								| translate}}</p>
+						</div>
+					</div>
+
+					<div class="sc-details-page-editor-data">
+						<label for="type">{{"component.editor.type.label" |
+							translate}}</label>
+						<div id="type"
+							class="sc-details-page-editor-data-right-small btn-group btn-block"
+							data-uib-dropdown>
+							<button class="form-control sc-button-common" id="" type="button"
+								data-uib-dropdown-toggle ng-disabled="disabled">
+								<span class="sc-dropdown-btn-label">{{'jms.' + jms.type |
+									translate}}</span> <span class="sc-dropdown-btn-expand-icon"></span>
+							</button>
+							<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu"
+								aria-labelledby="">
+								<li role="menuitem" data-ng-repeat="jmsType in jmsTypes"
+									data-ng-click="changeJMSType(jmsType)"
+									class="sc-clickable-dropdown">{{'jms.' + jmsType |
+									translate}}</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="sc-details-page-editor-data">
+						<label for="providerURL">{{"jms.editor.provider.url.label"
+							| translate}}</label> <input id="providerURL"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'jms.editor.provider.url.place.holder' | translate}}"
+							data-ng-model="jms.providerURL" name="providerURL" required
+							max-length="250" ng-maxlength="250">
+						<div class="sc-validation-block"
+							ng-messages="jmsDetailsForm.providerURL.$error"
+							ng-if="jmsDetailsForm.providerURL.$touched">
+							<p ng-message="required">{{"jms.editor.provider.url.validation.required"
+								| translate}}</p>
+							<p ng-message="maxlength">{{"jms.editor.provider.url.validation.max.length"
+								| translate}}</p>
+						</div>
+					</div>
+
+					<div class="sc-details-page-editor-data">
+						<label for="initialContextFactory">{{"jms.editor.initial.context.label"
+							| translate}}</label> <input id="initialContextFactory"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'jms.editor.initial.context.place.holder' | translate}}"
+							data-ng-model="jms.initialContextFactory"
+							name="initialContextFactory" required max-length="250"
+							ng-maxlength="250">
+						<div class="sc-validation-block"
+							ng-messages="jmsDetailsForm.initialContextFactory.$error"
+							ng-if="jmsDetailsForm.initialContextFactory.$touched">
+							<p ng-message="required">{{"jms.editor.initial.context.validation.required"
+								| translate}}</p>
+							<p ng-message="maxlength">{{"jms.editor.initial.context.validation.max.length"
+								| translate}}</p>
+						</div>
+					</div>
+
+					<div class="sc-details-page-editor-data">
+						<label for="serviceName">{{"jms.editor.service.name.label"
+							| translate}}</label> <input id="serviceName"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'jms.editor.service.name.place.holder' | translate}}"
+							data-ng-model="jms.serviceName" name="serviceName" required
+							max-length="250" ng-maxlength="250">
+						<div class="sc-validation-block"
+							ng-messages="jmsDetailsForm.serviceName.$error"
+							ng-if="jmsDetailsForm.serviceName.$touched">
+							<p ng-message="required">{{"jms.editor.service.name.validation.required"
+								| translate}}</p>
+							<p ng-message="maxlength">{{"jms.editor.service.name.validation.max.length"
+								| translate}}</p>
+						</div>
+					</div>
+
+					<div class="sc-details-page-editor-data">
+						<label for="connectionRetryInterval">{{"component.editor.connection.retry.interval.label"
+							| translate}}</label>
+						<div class="wrapper">
+							<div numeric="{min:5}" required
+								class="sc-number-input-sm sc-details-page-common-input sc-inline"
+								name="connectionRetryInterval" id="connectionRetryInterval"
+								data-ng-model="jms.connectionRetryInterval"></div>
+							<span class="sc-inline sc-details-page-editor-label">{{'second.label'
+								| translate}}</span>
+						</div>
+						<div class="sc-validation-block"
+							ng-messages="jmsDetailsForm.connectionRetryInterval.$error"
+							ng-if="jmsDetailsForm.connectionRetryInterval.$touched">
+							<p ng-message="required">{{"jms.editor.connection.retry.interval.validation.required"
+								| translate}}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

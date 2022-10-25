@@ -1,0 +1,359 @@
+<div class="sc-resource" style="height: 100%">
+    <form id="idqForm" class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-vaid-maxlength"
+          novalidate=""
+          name="idqForm">
+        <div class="no-margin sc-details-page-title-panel">
+            <div class="sc-page-title-left">
+                <div class="sc-vertical-middle-div-inverse sc-details-page-title-right">{{'idq.title'| translate}}</div>
+            </div>
+            <div class="sc-details-page-btn-div">
+                <a class="btn btn-default sc-btn-execute" data-ng-if="ruleID !=='custom'" data-ng-click="backToRule()">
+                    <i class="fa fa-arrow-left" data-ng-class=""></i>
+                    {{"back.to.rule.button" | translate}}
+                </a>
+                <a class="btn btn-default sc-btn-execute" data-ng-click="querySolr(idqForm)"> {{"execute.button" |
+                    translate}} </a>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="sc-details-page-bottom-panel" style="overflow: auto">
+            <div class="sc-idq-panel">
+                <div id="repositoryTypeLabel" class="sc-details-page-editor-title">
+                    <span class="sc-details-page-title-underline"> {{"repo.type.label.caps" | translate}} </span>
+                </div>
+                <div class="sc-details-page-editor-info">
+                    <div id="repositoryTypeData" class="sc-details-page-editor-data">
+                        <div id="repositoryType" class="btn-group btn-block" data-uib-dropdown>
+                            <button class="form-control sc-button-common" type="button" data-uib-dropdown-toggle
+                                    ng-disabled="disabled">
+                                <span class="sc-dropdown-btn-label">{{query.repositoryType}}</span>
+                                <span class="sc-dropdown-btn-expand-icon"></span>
+                            </button>
+                            <ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+                                <li role="menuitem" data-ng-repeat="repositoryType in repositoryTypes"
+                                    data-ng-click="changeRepositoryType(repositoryType)" class="sc-clickable-dropdown">
+                                    {{repositoryType}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="criterias" class="sc-details-page-editor-title">
+                    <span class="sc-details-page-title-underline"> {{"idq.editor.criterias.label" | translate}} </span>
+                </div>
+                <div class="sc-details-page-editor-info">
+                    <div class="sc-details-page-editor-data">
+                        <label data-ng-if="query.criteria && query.criteria.length > 0"> {{"idq.editor.look.for.label" |
+                            translate}} </label>
+                        <div data-ng-if="!query.criteria || query.criteria.length === 0">
+                            <label class="center-inline"> {{"idq.editor.look.for.alt" | translate}} </label>
+                        </div>
+                        <div class="sc-criteria-group-div" data-ng-repeat="(index,cg) in query.criteria">
+                            <i class="fa fa-times-circle-o sc-component-del-icon"
+                               style="transform: translate(50%, -50%)"
+                               data-ng-click="removeCriteriaGroup(index)"> </i>
+                            <div class="sc-criteria-group-sub-div">
+                                <table class="sc-criteria-table">
+                                    <tr>
+                                        <td width="5%" rowspan="{{cg.criterias.length + 1}}"
+                                            style="border-right: 1px solid #CCCCCC"
+                                            data-ng-if="cg.criterias.length  > 1">
+                                            <span>{{'or.label' | translate}} </span>
+                                        </td>
+                                    </tr>
+                                    <tr data-ng-repeat="(cindex,cri) in cg.criterias">
+                                        <td width="20%">
+                                            <div class="btn-group btn-block" data-uib-dropdown>
+                                                <button class="form-control sc-button-common" type="button"
+                                                        data-uib-dropdown-toggle ng-disabled="disabled">
+                                                    <span class="sc-dropdown-btn-label"> {{"data.section." + cri.dataSection + ".label" | translate}} </span>
+                                                    <span class="sc-dropdown-btn-expand-icon"></span>
+                                                </button>
+                                                <ul class="uib-dropdown-menu sc-dropdown-menu" role="menu"
+                                                    aria-labelledby="">
+                                                    <li role="menuitem" data-ng-repeat="ds in dataSections"
+                                                        data-ng-if="ds != 'D'"
+                                                        data-ng-click="changeDataSection(cri, ds)"
+                                                        class="sc-clickable-dropdown">{{"data.section." + ds +
+                                                        ".label" | translate}}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td width="20%" data-ng-if="!isMetaData(cri, cg)">
+                                            <div class="btn-group btn-block" data-uib-dropdown>
+                                                <button class="form-control sc-button-common" type="button"
+                                                        data-uib-dropdown-toggle ng-disabled="disabled">
+                                                    <span class="sc-dropdown-btn-label"> {{"matching.condition." + cri.matchingCondition | translate}} </span>
+                                                    <span class="sc-dropdown-btn-expand-icon"></span>
+                                                </button>
+                                                <ul class="uib-dropdown-menu sc-dropdown-menu" role="menu"
+                                                    aria-labelledby="">
+                                                    <li role="menuitem" data-ng-repeat="mc in matchingConditions"
+                                                        data-ng-click="changeMatchingCondition(cri, mc)"
+                                                        class="sc-clickable-dropdown">
+                                                        {{"matching.condition." + mc.code | translate}}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td width="23%" data-ng-if="isMetaData(cri, cg)">
+                                            <input class="sc-input-dropdown-input sc-details-page-editor-input-placeholder sc-details-page-common-input"
+                                                   data-ng-model="cri.field"
+                                                   data-ng-keypress="resetMetaMatchingCondition(cri)"
+                                                   name="{{'criteriaField-' + index + '' + cindex}}" required
+                                                   data-ng-class="{'has-error': idqForm['criteriaField-' + index + '' + cindex].$dirty && idqForm['criteriaField-' + index + '' + cindex].$invalid}"
+                                                   uib-tooltip="{{getTooltipMessage(idqForm['criteriaField-' + index + '' + cindex])}}"
+                                                   max-length="100"
+                                                   ng-maxlength="100" data-ng-change="updateMetaField(cri)"
+                                                   tooltip-trigger="{{{true: 'focus', false: 'never'}[idqForm['criteriaField-' + index + '' + cindex].$invalid]}}"
+                                                   tooltip-placement="bottom"
+                                                   placeholder="{{'meta.field.place.holder' | translate}}">
+                                            <div class="sc-input-dropdown-dropdown btn-group" data-uib-dropdown>
+                                                <button class="form-control sc-button-common" type="button"
+                                                        data-uib-dropdown-toggle ng-disabled="disabled">
+                                                    <span class="sc-dropdown-btn-expand-icon"></span>
+                                                </button>
+                                                <ul class="uib-dropdown-menu sc-input-dropdown-menu" role="menu"
+                                                    aria-labelledby="">
+                                                    <li role="menuitem" data-ng-repeat="meta in metaDataList"
+                                                        data-ng-click="changeMetadataField(cri, meta)"
+                                                        class="sc-clickable-dropdown">{{meta.value}}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td width="19%" data-ng-if="isMetaData(cri, cg)">
+                                            <div class="btn-group btn-block" data-uib-dropdown>
+                                                <button class="form-control sc-button-common" id="" type="button"
+                                                        data-uib-dropdown-toggle
+                                                        ng-disabled="disabled">
+													<span class="sc-dropdown-btn-label"
+                                                          ng-bind-html="'meta.matching.condition.' + cri.matchingCondition | translate"></span>
+                                                    <span class="sc-dropdown-btn-expand-icon"></span>
+                                                </button>
+                                                <ul class="uib-dropdown-menu sc-dropdown-menu" role="menu"
+                                                    aria-labelledby="">
+                                                    <li role="menuitem"
+                                                        ng-bind-html="'meta.matching.condition.' + mc.code | translate"
+                                                        data-ng-if="!hideMetaMatchingCondition(cri, mc.code)"
+                                                        data-ng-repeat="mc in metaDataMatchingConditions"
+                                                        data-ng-click="changeMetaMatchingCondition(cri, mc)"
+                                                        class="sc-clickable-dropdown"></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td width="50%" data-ng-if="!isMetaData(cri, cg)"
+                                            colspan="{{hasMetaData(cg)?2:1}}">
+                                            <input class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-full-width"
+                                                   data-ng-model="cri.value" data-ng-change="checkDataProvider(cri)"
+                                                   uib-typeahead="dp.suggestion for dp in dataProviders | filter:{suggestion:$viewValue}:checkDataProvider | limitTo:10"
+                                                   name="{{'criteriaValue-' + index + '' + cindex}}" required
+                                                   data-ng-class="{'has-error': idqForm['criteriaValue-' + index + '' + cindex].$dirty && idqForm['criteriaValue-' + index + '' + cindex].$invalid}"
+                                                   uib-tooltip="{{getTooltipMessage(idqForm['criteriaValue-' + index + '' + cindex])}}"
+                                                   max-length="1000"
+                                                   ng-maxlength="1000"
+                                                   tooltip-trigger="{{{true: 'focus', false: 'never'}[idqForm['criteriaValue-' + index + '' + cindex].$invalid]}}"
+                                                   tooltip-placement="bottom"
+                                                   placeholder="{{'meta.value.place.holder'| translate}}">
+                                        </td>
+                                        <td width="28%" data-ng-if="isMetaData(cri, cg) && isStringCriteria(cri)">
+                                            <input class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-full-width"
+                                                   data-ng-model="cri.value" data-ng-change="checkDataProvider(cri)"
+                                                   uib-typeahead="dp.suggestion for dp in dataProviders | filter:{suggestion:$viewValue}:checkDataProvider | limitTo:10"
+                                                   name="{{'criteriaValue-' + index + '' + cindex}}" required
+                                                   data-ng-class="{'has-error': idqForm['criteriaValue-' + index + '' + cindex].$dirty && idqForm['criteriaValue-' + index + '' + cindex].$invalid}"
+                                                   uib-tooltip="{{getTooltipMessage(idqForm['criteriaValue-' + index + '' + cindex])}}"
+                                                   max-length="1000"
+                                                   ng-maxlength="1000"
+                                                   tooltip-trigger="{{{true: 'focus', false: 'never'}[idqForm['criteriaValue-' + index + '' + cindex].$invalid]}}"
+                                                   tooltip-placement="bottom"
+                                                   placeholder="{{'meta.value.place.holder'| translate}}">
+                                        </td>
+                                        <td width="28%"
+                                            data-ng-if="isMetaData(cri, cg) && cri.matchingCondition ==='BETWEEN'">
+                                            <input class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-full-width"
+                                                   data-ng-model="cri.value"
+                                                   name="{{'criteriaValue-' + index + '' + cindex}}" required
+                                                   data-ng-class="{'has-error': idqForm['criteriaValue-' + index + '' + cindex].$dirty && idqForm['criteriaValue-' + index + '' + cindex].$invalid}"
+                                                   uib-tooltip="{{getTooltipMessage(idqForm['criteriaValue-' + index + '' + cindex])}}"
+                                                   max-length="1000"
+                                                   ng-maxlength="1000"
+                                                   tooltip-trigger="{{{true: 'focus', false: 'never'}[idqForm['criteriaValue-' + index + '' + cindex].$invalid]}}"
+                                                   tooltip-placement="bottom"
+                                                   placeholder="{{'meta.value.place.holder' | translate}}">
+                                        </td>
+                                        <td width="28%" data-ng-if="isMetaData(cri, cg) && isNumberCriteria(cri)">
+                                            <input class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-full-width"
+                                                   data-ng-model="cri.value" ui-hide-group-sep ui-negative-number
+                                                   name="{{'criteriaValue-' + index + '' + cindex}}" required
+                                                   data-ng-class="{'has-error': idqForm['criteriaValue-' + index + '' + cindex].$dirty && idqForm['criteriaValue-' + index + '' + cindex].$invalid}"
+                                                   uib-tooltip="{{getTooltipMessage(idqForm['criteriaValue-' + index + '' + cindex])}}"
+                                                   max-length="1000"
+                                                   ng-maxlength="1000"
+                                                   tooltip-trigger="{{{true: 'focus', false: 'never'}[idqForm['criteriaValue-' + index + '' + cindex].$invalid]}}"
+                                                   tooltip-placement="bottom"
+                                                   placeholder="{{'meta.value.place.holder' | translate}}"
+                                                   ui-number-mask="0">
+                                        </td>
+                                        <td width="28%" data-ng-if="isMetaData(cri, cg) && isDateCriteria(cri)">
+                                            <div class="sc-date-picker">
+												<span class="input-group">
+													<input
+                                                            type="text"
+                                                            class="form-control"
+                                                            name="{{'criteriaValue-' + index + '' + cindex}}"
+                                                            uib-datepicker-popup="dd/MM/yyyy"
+                                                            ng-model="cri.date"
+                                                            data-ng-change="updateDateCriteria(cri)"
+                                                            is-open="cri.dateOpened"
+                                                            ng-required
+                                                            show-button-bar="true"
+                                                            close-text="{{'close.label'|translate}}"
+                                                            current-text="{{'today.label'|translate}}"
+                                                            clear-text="{{'clear.label'|translate}}"/>
+													<span class="input-group-btn">
+														<button type="button" class="btn btn-default"
+                                                                data-ng-click="cri.openDate()">
+															<i class="fa fa-calendar"></i>
+														</button>
+													</span>
+												</span>
+                                            </div>
+                                        </td>
+                                        <td width="5%">
+                                            <div class="fa fa-trash-o sc-bigger-icon sc-inline"
+                                                 data-ng-click="removeCriteria(cg, index, cindex)">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <a data-ng-click="addCriteria(cg)" class="btn btn-default"
+                                   style="margin-right: 1%; margin-top: 1%; margin-bottom: 1%">
+                                    <i class="fa fa-plus uppercase"></i>
+                                    &nbsp;&nbsp;{{'idq.editor.add.criteria.button' | translate}}
+                                </a>
+                            </div>
+                            <div class="sc-rule-criteria-and" data-ng-show="index != query.criteria.length - 1">
+                                {{'and.label' |
+                                translate}}
+                            </div>
+                        </div>
+                        <a data-ng-click="addCriteriaGroup()" class="btn btn-default"
+                           data-ng-if="!query.criteria || query.criteria.length  === 0"
+                           style="margin-right: 2%; margin-top: 2%">
+                            <i class="fa fa-plus uppercase"></i>
+                            &nbsp;&nbsp;{{'idq.editor.add.criteria.group.button.first' | translate}}
+                        </a>
+                        <a data-ng-click="addCriteriaGroup()" class="btn btn-default"
+                           data-ng-if="query.criteria.length > 0"
+                           style="margin-top: 2%">
+                            <i class="fa fa-plus uppercase"></i>
+                            &nbsp;&nbsp;{{'idq.editor.add.criteria.group.button' | translate}}
+                        </a>
+                    </div>
+                </div>
+                <div id="directories" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline"> {{query.repositoryType === "SHARED FOLDER" ?
+						("idq.editor.directories.label" | translate) : ("idq.editor.sharepoint.directories.label" | translate)}}</span>
+                </div>
+                <div class="sc-details-page-editor-info">
+                    <div class="sc-details-page-editor-data">
+                        <label data-ng-if="query.directories && query.directories.length > 0 && query.directories[0].criterias && query.directories[0].criterias.length > 0"> {{query.repositoryType
+                            ===
+                            "SHARED FOLDER" ? ("idq.editor.directories.context" | translate) :
+                            ("idq.editor.sharepoint.directories.context"
+                            | translate)}} </label>
+                        <div data-ng-if="!query.directories || query.directories.length === 0 || !query.directories[0].criterias || query.directories[0].criterias.length === 0">
+                            <label class="center-inline"> {{query.repositoryType === "SHARED FOLDER" ?
+                                ("idq.editor.directories.alt"
+                                | translate) : ("idq.editor.sharepoint.directories.alt" | translate)}} </label>
+                        </div>
+                        <!-- <label data-ng-if="!query.directories || query.directories.length === 0"> {{query.repositoryType ===
+                            "SHARED FOLDER" ? ("idq.editor.directories.alt" | translate) : ("idq.editor.sharepoint.directories.alt" |
+                            translate)}} </label> -->
+                        <div class="sc-criteria-group-div"
+                        	 data-ng-if="query.directories && query.directories.length > 0 && query.directories[0].criterias && query.directories[0].criterias.length > 0"
+                             data-ng-repeat="(index, directoryGroup) in query.directories">
+                            <i class="fa fa-times-circle-o sc-component-del-icon"
+                               style="transform: translate(50%, -50%)"
+                               data-ng-click="removeDirectoryGroup(index)"></i>
+                            <div class="sc-criteria-group-sub-div">
+                                <table class="sc-criteria-table">
+                                    <tr>
+                                        <td width="5%" rowspan="{{directoryGroup.criterias.length + 1}}"
+                                            style="border-right: 1px solid #CCCCCC"
+                                            data-ng-if="directoryGroup.criterias.length  > 1">
+                                            <span>{{'or.label' | translate}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr data-ng-repeat="(dindex, dir) in directoryGroup.criterias">
+                                        <td width="10%">
+                                            <div class="btn-group btn-block" data-uib-dropdown>
+                                                <button class="form-control sc-button-common" type="button"
+                                                        data-uib-dropdown-toggle ng-disabled="disabled">
+													<span class="sc-dropdown-btn-label"
+                                                          ng-bind-html="'dir.matching.condition.' + dir.matchingCondition | translate"> </span>
+                                                    <span class="sc-dropdown-btn-expand-icon"></span>
+                                                </button>
+                                                <ul class="uib-dropdown-menu sc-dropdown-menu" role="menu"
+                                                    aria-labelledby="">
+                                                    <li role="menuitem"
+                                                        ng-bind-html="'dir.matching.condition.' + mc.code | translate"
+                                                        data-ng-repeat="mc in documentMatchingConditions"
+                                                        data-ng-click="changeDirectoryMatchingCondition(dir, mc)"
+                                                        class="sc-clickable-dropdown"></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td width="80%">
+                                            <input
+                                                    data-ng-class="{'has-error': idqForm['directory0' + index + dindex].$dirty && idqForm['directory0' + index + dindex].$invalid}"
+                                                    class="sc-details-page-editor-input-placeholder	sc-details-page-editor-data-full sc-details-page-common-input"
+                                                    placeholder="{{query.repositoryType === 'SHARED FOLDER'
+													? ('idq.editor.directory.place.holder' | translate)
+													: ('idq.editor.sharepoint.directory.place.holder' | translate)}}"
+                                                    data-ng-model="dir.value" name="{{'directory0' + index + dindex}}"
+                                                    required max-length="1000"
+                                                    ng-maxlength="1000"
+                                                    uib-tooltip="{{getTooltipMessage(idqForm['directory0' + index + dindex])}}"
+                                                    max-length="1000" ng-maxlength="1000" tooltip-trigger="mouseenter"
+                                                    tooltip-placement="bottom">
+                                        </td>
+                                        <td width="5%">
+                                            <div class="fa fa-trash-o sc-bigger-icon sc-inline"
+                                                 data-ng-click="removeDirectory(directoryGroup, index, dindex)"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <a data-ng-click="addDirectory(directoryGroup)" class="btn btn-default"
+                                   style="margin-top: 2%">
+                                    <i class="fa fa-plus uppercase"></i>
+                                    &nbsp;&nbsp;{{query.repositoryType === "SHARED FOLDER" ?
+                                    ("idq.editor.add.directory.button" | translate) :
+                                    ("idq.sharepoint.directory.new.button" | translate)}}
+                                </a>
+                            </div>
+                            <div class="sc-rule-criteria-and" data-ng-show="index != query.directories.length - 1">
+                                {{'and.label'|
+                                translate}}
+                            </div>
+                        </div>
+                        <a data-ng-click="addDirectoryGroup()" class="btn btn-default"
+                           data-ng-if="!query.directories || query.directories.length  === 0"
+                           style="margin-right: 2%; margin-top: 2%">
+                            <i class="fa fa-plus uppercase"></i>
+                            &nbsp;&nbsp;{{'idq.editor.add.directory.group.button.first' | translate}}
+                        </a>
+                        <a data-ng-click="addDirectoryGroup()" class="btn btn-default"
+                           data-ng-if="query.directories.length > 0"
+                           style="margin-top: 2%">
+                            <i class="fa fa-plus uppercase"></i>
+                            &nbsp;&nbsp; {{'idq.editor.add.directory.group.button' | translate}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

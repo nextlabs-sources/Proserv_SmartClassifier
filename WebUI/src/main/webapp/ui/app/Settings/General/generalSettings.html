@@ -1,0 +1,77 @@
+<form id="settingsForm"
+	class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-vaid-maxlength"
+	novalidate="" name="settingsForm">
+	<div class="no margin sc-page-title">
+		<div class="sc-page-title-left">
+			<div class="sc-vertical-middle-div">{{'settings.title'|
+				translate}}</div>
+		</div>
+		<div class="sc-page-title-right sc-title-button-box">
+			<a data-ng-click="resetSettings()"
+				class="sc-vertical-middle-div btn btn-default sc-setting-reset">
+				<!-- <i
+			class="fa fa-undo"></i>&nbsp;&nbsp; -->{{"button.discard" |
+				translate}}
+			</a> <a data-ng-click="saveAll(settingsForm)"
+				class="sc-vertical-middle-div btn btn-default sc-setting-save">
+				<!-- <i
+			class="fa fa-save"></i>&nbsp;&nbsp; --> {{"button.save.all" |
+				translate}}
+			</a>
+		</div>
+	</div>
+
+
+
+	<div data-ng-if="settingList.length" class="sc-list-container">
+		<div style="margin-top: 3%">
+			<div class="sc-setting-group"
+				data-ng-repeat="(index,settingGroup) in settingList">
+				<table width="100%" class="sc-setting-header-table">
+					<tr>
+						<td width="30%" class="sc-setting-group-name">{{settingGroup.name}}</td>
+						<td width="70%" class="sc-setting-group-des">{{settingGroup.description}}</td>
+					</tr>
+				</table>
+				<div class="sc-details-page-editor-data">
+					<table class="sc-setting-table">
+						<tr
+							data-ng-repeat="(sindex,setting) in settingGroup.systemConfigs">
+							<td width="35%" class="sc-component-details-on-table"><p
+									class="sc-bold-text-on-table">{{setting.label}}</p>
+								<p class="sc-grey-text-on-table">{{setting.identifier}}</p></td>
+							<td width="35%"><input
+								class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-full-width"
+								data-ng-model="setting.value"
+								data-ng-change="onSettingChange(setting.id)"
+								name="{{'setting-' + index + '' + sindex}}" required
+								data-ng-class="{'has-error': settingsForm['setting-' + index + '' + sindex].$dirty && settingsForm['setting-' + index + '' + sindex].$invalid}"
+								uib-tooltip="{{getTooltipMessage(settingsForm['setting-' + index + '' + sindex])}}"
+								max-length="300" ng-maxlength="300"
+								tooltip-trigger="{{{true: 'focus', false:
+									'never'}[settingsForm['setting-' + index + '' + sindex].$invalid]}}"
+								tooltip-placement="bottom"
+								placeholder="{{'setting.value.place.holder'| translate}}"></td>
+							<td width="20%" style="text-align: center"><span> <switch
+										class="sc-switch sc-inline"
+										data-ng-change="onSettingChange(setting.id)"
+										data-ng-model="setting.encrypt"></switch>
+							</span><span class="sc-inline">{{'encrypt.label'|translate}}</span></td>
+							<td width="10%" style="text-align: center"><a
+								class="btn btn-default sc-setting-save"
+								data-ng-show="isDirty[setting.id]"
+								data-ng-click="modifyGeneralSetting(setting, settingsForm['setting-' + index + '' + sindex])">
+									{{'button.save' | translate}} </a></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div data-ng-if="!settingList.length"
+		class="sc-empty-resource-list-box">
+		<p style="text-align: center">{{'empty.list.msg' | translate}}</p>
+	</div>
+</form>

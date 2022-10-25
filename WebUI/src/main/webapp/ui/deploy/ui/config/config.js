@@ -1,0 +1,61 @@
+var MainAppConfig = {
+	"isOnline" : true,
+	"logLevel" : 1,
+	"baseUrl" : '',
+	"defaultServicePageSize" : 10,
+	"defaultRulePageSize" : 10,
+	"defaultJMSPageSize" : 10,
+	"defaultPluginsPageSize" : 10,
+	"date.format" : "dd-MM-yy HH:mm:ss",
+	"defaultExecutionWindowPageSize" : 10,
+	"defaultIDBResultPageSize" : 10,
+	"url" : {
+		"online" : {
+			"projectName" : "WebUI",
+			"baseUrl" : "http://localhost:8080/WebUI/rest/v1/",
+			"map" : {
+				"watcher.list" : "watcher/list",
+				"watcher.get" : "watcher/details/",
+				"watcher.modify" : "watcher/modify",
+				"extractor.list" : "extractor/list",
+				"extractor.get" : "extractor/details/",
+				"extractor.modify" : "extractor/modify",
+				"ruleEngine.list" : "ruleEngine/list",
+				"ruleEngine.get" : "ruleEngine/details/",
+				"ruleEngine.modify" : "ruleEngine/modify",
+				"jms.list" : "jmsProfile/list",
+				"jms.get" : "jmsProfile/details/",
+				"jms.modify" : "jmsProfile/modify",
+				"jms.delete" : "jmsProfile/remove/",
+				"jms.add" : "jmsProfile/add",
+				"executionWindow.list" : "executionWindowSet/list",
+				"executionWindow.get" : "executionWindowSet/details/",
+				"executionWindow.add" : "executionWindowSet/add",
+				"executionWindow.modify" : "executionWindowSet/modify",
+				"executionWindow.delete" : "executionWindowSet/remove/",
+				"rule.sortFields" : "rule/sortFields",
+				"rule.list" : "rule/list",
+				"rule.get" : "rule/details/",
+				"rule.add" : "rule/add",
+				"rule.modify" : "rule/modify",
+				"rule.delete" : "rule/remove/",
+				"rule.execute" : "rule/execute/",
+				"collection.get" : "collection/list/",
+				"plugins.list" : "actionPlugin/list",
+				"plugins.get" : "actionPlugin/details/",
+				"plugins.modify" : "actionPlugin/modify",
+				"solr.query" : "documentQuery/list",
+				"solr.sortFields" : "documentQuery/sortFields",
+				"summary.get" : "dashboard/",
+				"generalSettings.list" : "systemConfig/list",
+				"generalSettings.get" : "systemConfig/details/",
+				"generalSettings.modify" : "systemConfig/modify",
+				"generalSettings.modifyAll" : "systemConfig/modifyAll"
+			}
+		},
+		"offline" : {
+			"baseUrl" : "SmartClassifier/data/",
+			"map" : {}
+		}
+	}
+}

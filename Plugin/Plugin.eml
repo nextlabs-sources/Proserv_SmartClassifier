@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inheritJdk="true">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="nextlabs-jtagger.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/lib/jar/nextlabs-jtagger.jar!/"/>
+	</lib>
+	<lib name="RMJavaSdk.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/lib/jar/RMJavaSdk.jar!/"/>
+	</lib>
+	<lib name="nextlabs-sc-common.jar" scope="COMPILE">
+		<srcroot url="file://$MODULE_DIR$/../CommonLibrary/src"/>
+		<relative-module-src project-related="file://$PROJECT_DIR$/CommonLibrary/src"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/lib/jar/nextlabs-sc-common.jar!/"/>
+	</lib>
+	<lib name="KeyManagementService.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/lib/jar/KeyManagementService.jar!/"/>
+	</lib>
+	<lib name="slf4j-api-1.7.7.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/lib/jar/slf4j-api-1.7.7.jar!/"/>
+	</lib>
+	<lib name="nlJavaSDK2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/lib/jar/nlJavaSDK2.jar!/"/>
+	</lib>
+	<lib name="c3p0-0.9.5.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/c3p0-0.9.5.2.jar!/"/>
+	</lib>
+	<lib name="commons-io-2.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/commons-io-2.4.jar!/"/>
+	</lib>
+	<lib name="commons-lang-2.6.jar" scope="COMPILE">
+		<srcroot url="jar://$USER_HOME$/.ideaLibSources/commons-lang-2.6-sources.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/commons-lang-2.6.jar!/"/>
+	</lib>
+	<lib name="log4j-1.2.17.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/log4j-1.2.17.jar!/"/>
+	</lib>
+	<lib name="mail.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/mail.jar!/"/>
+	</lib>
+	<lib name="mchange-commons-java-0.2.3.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/mchange-commons-java-0.2.3.4.jar!/"/>
+	</lib>
+	<lib name="poi-3.11-20141221.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/poi-3.11-20141221.jar!/"/>
+	</lib>
+	<lib name="poi-ooxml-3.11-20141221.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/poi-ooxml-3.11-20141221.jar!/"/>
+	</lib>
+	<lib name="solr-solrj-4.10.3.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/solr-solrj-4.10.3.jar!/"/>
+	</lib>
+	<lib name="xmlbeans-2.6.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/xmlbeans-2.6.0.jar!/"/>
+	</lib>
+	<lib name="crypt.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/lib/jar/crypt.jar!/"/>
+	</lib>
+	<lib name="commons-codec-1.9.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/commons-codec-1.9.jar!/"/>
+	</lib>
+	<lib name="commons-logging-1.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/commons-logging-1.2.jar!/"/>
+	</lib>
+	<lib name="fluent-hc-4.5.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/fluent-hc-4.5.2.jar!/"/>
+	</lib>
+	<lib name="httpclient-4.5.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/httpclient-4.5.2.jar!/"/>
+	</lib>
+	<lib name="httpclient-cache-4.5.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/httpclient-cache-4.5.2.jar!/"/>
+	</lib>
+	<lib name="httpclient-win-4.5.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/httpclient-win-4.5.2.jar!/"/>
+	</lib>
+	<lib name="httpcore-4.4.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/httpcore-4.4.4.jar!/"/>
+	</lib>
+	<lib name="httpmime-4.5.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Plugin/xlib/jar/httpmime-4.5.2.jar!/"/>
+	</lib>
+</component>

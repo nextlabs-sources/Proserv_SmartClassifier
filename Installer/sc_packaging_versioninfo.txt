@@ -1,0 +1,16 @@
+export PRODUCTNAME="NextLabs Smart Classifier"
+export PRODUCTCAPTION="NextLabs Smart Classifier"
+export PRODUCTVERSION="2022.03"
+
+export DATETIMESTAMP=$(date +"%Y%m%d%H%M")
+
+if [ "X${BUILD_NUMBER}" = "X" ]
+then
+    # We are not in a hudson environment
+	export PRODUCT_INSTALLER_FILENAME="SmartClassifier_${PRODUCTVERSION}-${DATETIMESTAMP}.exe"
+else
+    # We are in a hudson environment
+	export PRODUCT_INSTALLER_FILENAME="SmartClassifier_${PRODUCTVERSION}-${BUILD_NUMBER}-${DATETIMESTAMP}.exe"
+fi
+
+## EOF ##

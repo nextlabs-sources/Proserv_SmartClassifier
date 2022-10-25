@@ -1,0 +1,49 @@
+<div class="no margin sc-page-title" data-ng-if="pluginsList.length">
+	<div class="sc-page-title-left">
+		<div class="sc-vertical-middle-div">{{'plugins.label'| translate}}</div>
+	</div>
+</div>
+
+
+
+<div data-ng-if="pluginsList.length" class="sc-list-container">
+	<div data-ng-if="pluginsList.length" class="sc-operation"></div>
+	<table class="sc-list-table table table-hover">
+		<thead>
+		</thead>
+		<tbody>
+			<tr data-ng-repeat="plugins in pluginsList">
+				<td class="sc-component-details-on-table">
+					<div class="sc-inline-block-on-table sc-clickable"
+						style="width: 50%; vertical-align:middle" data-ng-click="openPlugin(plugins)">
+						<p class="sc-bold-text-on-table">{{plugins.name + ' (' + plugins.repositoryType + ') '}}</p>
+					</div>
+					<div data-ng-click="openPlugin(plugins)"
+						class="sc-inline-block-on-table sc-clickable">
+						<p class="sc-grey-text-on-table">{{'plugins.last.modified' |
+							translate}}</p>
+						<friendly-date data-date="{{plugins.modifiedOn}}"
+							data-date-type="miliseconds"
+							data-full-format="d MMM yyyy, hh:mm a"
+							data-short-format="hh:mm a"></friendly-date>
+<!-- 						<p>{{plugins.modifiedOn | date: getDateFormat()}}</p> -->
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div data-ng-show="pluginsList.length < total">
+		<button type="button" class="btn btn-default sc-btn-loadmore"
+			data-ng-click="loadMore()">{{"button.load.more" |
+			translate}}</button>
+	</div>
+
+</div>
+<div data-http-loader class="sc-data-loading">
+	<p style="text-align: center" class="sc-vertical-middle-div ">{{'data.loading'
+		| translate}}</p>
+</div>
+<div data-ng-if="!pluginsList.length" class="sc-empty-resource-list-box">
+	<p style="text-align: center">{{'empty.list.msg' | translate}}</p>
+</div>

@@ -1,0 +1,4 @@
+com.nextlabs.smartclassifier.ruleengine.plugin.actions.copyaction.CopyAction
+com.nextlabs.smartclassifier.ruleengine.plugin.actions.deleteaction.DeleteAction
+com.nextlabs.smartclassifier.ruleengine.plugin.actions.moveaction.MoveAction
+com.nextlabs.smartclassifier.ruleengine.plugin.actions.tagaction.TagAction

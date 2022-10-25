@@ -1,0 +1,59 @@
+<!-- build_compile.xml
+
+Description:
+	This ANT script publishes installers and build artifacts to s:/build.
+	
+	To use this script, you must update properties is <project root>/scripts/build.properties or overide 
+	them from commandline (using -D option). For example:
+		
+		set PATH=C:\depot\external\apache-ant\apache-ant-1.8.4\bin;%PATH%
+		ant -XX:MaxPermSize=512m -Dnlbuildroot=C:/depot/PolicyStudio/dev/BuildScript_1205 -Dexternal.dir=c:/depot/external -Dnlexternaldir=c:/depot/external -Dbuild_number=10001 -f scripts/build_publish.xml
+		
+	or
+		
+		set PATH=C:\depot\external\apache-ant\apache-ant-1.8.4\bin;%PATH%
+		set ANT_OPTS=-XX:MaxPermSize=512m -Dnlbuildroot=%NLBUILDROOT% -Dexternal.dir=%NLEXTERNALDIR% -Dnlexternaldir=%NLEXTERNALDIR% -Dbuild_number=10001 
+		ant -f scripts/build_publish.xml -v	
+-->
+<project name="build_compile" default="all" basedir=".">
+	<!-- Property files -->
+	<property file="${basedir}/build.properties" />
+	<property environment="env" />
+	<echoproperties />
+	<echo message="INFO: Dump properties completed" />
+	
+	<!-- Sanity checks -->
+
+	<!--Check if nlbuildroot is set-->
+<!--	<fail message="nlbuildroot is not set" unless="nlbuildroot" />
+	<fail message="nlbuildroot is empty">
+		<condition>
+			<equals arg1="${nlbuildroot}" arg2="" trim="true" />
+		</condition>
+	</fail>-->
+
+	<!--Check if nlbuildroot is set-->
+<!--	<available file="${nlbuildroot}" type="dir" property="local.nlbuildroot_exists" />
+	<fail message="nlbuildroot directory does not exist - ${nlbuildroot}" unless="local.nlbuildroot_exists" />
+	
+	<echo message="INFO: Sanity check completed (no error)" />-->
+
+	<!-- Global tasks -->
+<!--	<tstamp>
+		<format property="local.now" pattern="EEE, d MMM yyyy HH:mm:ss Z" />
+	</tstamp>
+	<echo message="version_str = ${version_str}" />
+	<echo message="time = ${local.now}" />-->
+	
+	<!-- Targets -->
+	<target name="all" description="Default for all" />
+	
+<!--	<target name="compile" description="Compile the project">
+        <copy file="${conf_dir}/web_Global.xml" tofile="${tomcat_dir}/conf/web.xml" overwrite="true" force="true" />
+        <copy file="${conf_dir}/web_ROOTWebApp.xml" tofile="${tomcat_dir}/webapps/ROOT/WEB-INF/web.xml" overwrite="true" force="true" />
+        <copy file="${conf_dir}/urlrewrite.xml" todir="${tomcat_dir}/webapps/ROOT/WEB-INF" overwrite="true" force="true" />
+        <copy file="${conf_dir}/tomcat-users.xml" todir="${tomcat_dir}/conf" overwrite="true" force="true" />
+        <copy file="${conf_dir}/service_SC.bat" todir="${tomcat_dir}/bin" overwrite="true" force="true" />
+	</target>-->
+
+</project>

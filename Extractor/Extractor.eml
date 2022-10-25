@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inheritJdk="true">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="antlr-2.7.7.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/antlr-2.7.7.jar!/"/>
+	</lib>
+	<lib name="commons-configuration-1.8.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/commons-configuration-1.8.jar!/"/>
+	</lib>
+	<lib name="commons-io-2.3.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/commons-io-2.3.jar!/"/>
+	</lib>
+	<lib name="commons-lang-2.6.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/commons-lang-2.6.jar!/"/>
+	</lib>
+	<lib name="commons-vfs2-2.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/commons-vfs2-2.0.jar!/"/>
+	</lib>
+	<lib name="dom4j-1.6.1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/dom4j-1.6.1.jar!/"/>
+	</lib>
+	<lib name="hibernate-commons-annotations-4.0.5.Final.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/hibernate-commons-annotations-4.0.5.Final.jar!/"/>
+	</lib>
+	<lib name="hibernate-jpa-2.1-api-1.0.0.Final.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/hibernate-jpa-2.1-api-1.0.0.Final.jar!/"/>
+	</lib>
+	<lib name="hornetq-commons.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/hornetq-commons.jar!/"/>
+	</lib>
+	<lib name="hornetq-core-client.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/hornetq-core-client.jar!/"/>
+	</lib>
+	<lib name="hornetq-jms-client.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/hornetq-jms-client.jar!/"/>
+	</lib>
+	<lib name="jakarta-regexp-1.3.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/jakarta-regexp-1.3.jar!/"/>
+	</lib>
+	<lib name="jandex-1.1.0.Final.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/jandex-1.1.0.Final.jar!/"/>
+	</lib>
+	<lib name="javassist-3.18.1-GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/javassist-3.18.1-GA.jar!/"/>
+	</lib>
+	<lib name="jboss-jms-api.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/jboss-jms-api.jar!/"/>
+	</lib>
+	<lib name="jboss-logging-3.1.3.GA.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/jboss-logging-3.1.3.GA.jar!/"/>
+	</lib>
+	<lib name="jboss-logging-annotations-1.2.0.Beta1.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/jboss-logging-annotations-1.2.0.Beta1.jar!/"/>
+	</lib>
+	<lib name="jboss-mc.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/jboss-mc.jar!/"/>
+	</lib>
+	<lib name="jboss-transaction-api_1.2_spec-1.0.0.Final.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/jboss-transaction-api_1.2_spec-1.0.0.Final.jar!/"/>
+	</lib>
+	<lib name="jcl-over-slf4j-1.7.10.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/jcl-over-slf4j-1.7.10.jar!/"/>
+	</lib>
+	<lib name="jnp-client.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/jnp-client.jar!/"/>
+	</lib>
+	<lib name="netty.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/netty.jar!/"/>
+	</lib>
+	<lib name="noggit-0.5.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/noggit-0.5.jar!/"/>
+	</lib>
+	<lib name="slf4j-api-1.7.6.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/slf4j-api-1.7.6.jar!/"/>
+	</lib>
+	<lib name="slf4j-log4j12-1.7.10.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/slf4j-log4j12-1.7.10.jar!/"/>
+	</lib>
+	<lib name="solr-solrj-4.10.3.jar" scope="COMPILE">
+		<srcroot url="jar://$USER_HOME$/.ideaLibSources/solr-solrj-4.10.3-sources.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/solr-solrj-4.10.3.jar!/"/>
+	</lib>
+	<lib name="sqljdbc41.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/sqljdbc41.jar!/"/>
+	</lib>
+	<lib name="wstx-asl-3.2.7.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/wstx-asl-3.2.7.jar!/"/>
+	</lib>
+	<lib name="zookeeper-3.4.6.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/zookeeper-3.4.6.jar!/"/>
+	</lib>
+	<lib name="xmlbeans-2.6.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/xmlbeans-2.6.0.jar!/"/>
+	</lib>
+	<lib name="crypt.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/lib/jar/crypt.jar!/"/>
+	</lib>
+	<lib name="c3p0-0.9.5.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/c3p0-0.9.5.2.jar!/"/>
+	</lib>
+	<lib name="commons-logging-1.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/commons-logging-1.2.jar!/"/>
+	</lib>
+	<lib name="hibernate-c3p0-4.3.11.Final.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/hibernate-c3p0-4.3.11.Final.jar!/"/>
+	</lib>
+	<lib name="hibernate-core-4.3.11.Final.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/hibernate-core-4.3.11.Final.jar!/"/>
+	</lib>
+	<lib name="log4j-1.2.17.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/log4j-1.2.17.jar!/"/>
+	</lib>
+	<lib name="KeyManagementService.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/lib/jar/KeyManagementService.jar!/"/>
+	</lib>
+	<lib name="RMJavaSdk.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/lib/jar/RMJavaSdk.jar!/"/>
+	</lib>
+	<lib name="poi-3.11-20141221.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/poi-3.11-20141221.jar!/"/>
+	</lib>
+	<lib name="poi-ooxml-3.11-20141221.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/poi-ooxml-3.11-20141221.jar!/"/>
+	</lib>
+	<lib name="poi-ooxml-schemas-3.11-20141221.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/poi-ooxml-schemas-3.11-20141221.jar!/"/>
+	</lib>
+	<lib name="poi-scratchpad-3.11-20141221.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/poi-scratchpad-3.11-20141221.jar!/"/>
+	</lib>
+	<lib name="nextlabs-document-extractor.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/lib/jar/nextlabs-document-extractor.jar!/"/>
+	</lib>
+	<lib name="nextlabs-sc-common.jar" scope="COMPILE">
+		<srcroot url="file://$MODULE_DIR$/../CommonLibrary/src"/>
+		<relative-module-src project-related="file://$PROJECT_DIR$/CommonLibrary/src"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/lib/jar/nextlabs-sc-common.jar!/"/>
+	</lib>
+	<lib name="httpclient-4.5.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/httpclient-4.5.2.jar!/"/>
+	</lib>
+	<lib name="httpclient-cache-4.5.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/httpclient-cache-4.5.2.jar!/"/>
+	</lib>
+	<lib name="httpclient-win-4.5.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/httpclient-win-4.5.2.jar!/"/>
+	</lib>
+	<lib name="httpcore-4.4.4.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/httpcore-4.4.4.jar!/"/>
+	</lib>
+	<lib name="httpmime-4.5.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/httpmime-4.5.2.jar!/"/>
+	</lib>
+	<lib name="fluent-hc-4.5.2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/fluent-hc-4.5.2.jar!/"/>
+	</lib>
+	<lib name="commons-codec-1.9.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/commons-codec-1.9.jar!/"/>
+	</lib>
+	<lib name="json-20160810.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/Extractor/xlib/jar/json-20160810.jar!/"/>
+	</lib>
+</component>

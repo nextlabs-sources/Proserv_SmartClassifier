@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<hibernate-configuration>
+    <session-factory>
+		
+        <!-- Database connection settings -->
+        <property name="connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
+        <property name="connection.url">jdbc:sqlserver://10.23.58.110:1433;database=sc</property>
+        <property name="connection.username">sa</property>
+        <property name="connection.password">sa549f6ba05c840e5f43ef63e06a8ae1a</property>
+        <!-- SQL dialect -->
+        <property name="dialect">org.hibernate.dialect.SQLServer2012Dialect</property>
+		
+        <!-- Echo all executed SQL to stdout -->
+        <!--<property name="show_sql">true</property>-->
+        <!--<property name="format_sql">true</property>-->
+        <!--<property name="use_sql_comments">true</property>-->
+		
+        <!-- Drop and re-create the database schema on startup -->
+        <!--  <property name="hbm2ddl.auto">update</property> -->
+        <property name="hibernate.c3p0.min_size">1</property>
+  		<property name="hibernate.c3p0.max_size">10</property>
+  		<property name="hibernate.c3p0.timeout">300</property>
+  		<property name="hibernate.c3p0.max_statements">50</property>
+  		<property name="hibernate.c3p0.idle_test_period">30</property>
+		<property name="hibernate.connection.autoReconnect">true</property>
+		
+		<mapping class="com.nextlabs.smartclassifier.database.entity.Action"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.ActionParam"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.ActionPlugin"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.ActionPluginParam"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.Criteria"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.CriteriaGroup"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.DataProvider"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.DocumentExtractor"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.DocumentRecord"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.DocumentSizeLimit"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.DocumentTypeAssociation"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.EventLog"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.ExcludedMetadataField"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.ExcludeRepoFolder"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.ExecutionTimeSlot"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.ExecutionWindow"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.ExecutionWindowAssociation"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.ExecutionWindowSet"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.Extractor"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.Heartbeat"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.JMSProfile"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.MetadataField"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.RepoFolder"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.Rule"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.RuleEngine"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.RuleExecution"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.RuleHistory"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.SourceAuthentication"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.SystemConfigGroup"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.SystemConfig"/>
+		<mapping class="com.nextlabs.smartclassifier.database.entity.Watcher"/>
+    </session-factory>
+</hibernate-configuration>

@@ -1,0 +1,739 @@
+<!-- Query form -->
+<div class="sc-resource animate-show animate-hide" style="height: 100%" data-ng-show="showFilters">
+	<form id="adHocReportDetailsForm"
+		class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-valid-maxlength"
+		novalidate="" name="adHocReportDetailsForm">
+		<div class="no-margin sc-details-page-title-panel">
+			<div class="sc-details-page-title">
+				<div class="sc-vertical-middle-div">
+					<p class="sc-details-page-edit-subject">
+						{{'adHocReport.label' | translate}}
+					</p>
+				</div>
+			</div>
+			<div class="sc-details-page-btn-div">
+				<a class="btn btn-default sc-details-page-discard-btn"
+					data-ng-click="discardAdHocReportChanges(adHocReportDetailsForm)">
+					{{'button.discard' | translate}}
+				</a>
+				<a class="btn btn-default sc-btn-save-page"
+					data-ng-click="showActions = !showActions;">
+					{{'button.action' | translate}}
+				</a>
+				<div class="sc-action-list" data-ng-show="showActions" data-ng-mouseleave="showActions=false">
+					<table width="150px" class="table table-hover" style="font-size: 18px; background: white;">
+						<tr>
+							<td data-ng-click="saveAdHocReportChanges(adHocReportDetailsForm)">
+								{{'button.save' | translate}}
+							</td>
+						</tr>
+						<tr data-ng-if="reportID != 'custom'">
+							<td data-ng-click="saveAdHocReportChangesAs(adHocReportDetailsForm)">
+								{{'button.saveas' | translate}}
+							</td>
+						</tr>
+						<tr>
+							<td data-ng-click="manageAdHocReport()">
+								{{'button.manage' | translate}}
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<table class="sc-hide-panel-button" data-ng-click="showFilters=!showFilters" data-ng-show="showFilters && isSearched">
+				<tr>
+					<td><div class="sc-hide-panel-button-left"></div></td>
+					<td><div class="sc-hide-panel-button-main">{{'button.filters' | translate}}&nbsp;&nbsp;<i class="fa fa-angle-up"></i></div></td>
+					<td><div class="sc-hide-panel-button-right"></div></td>
+				</tr>
+			</table>
+		</div>
+		<div class="sc-details-page-bottom-panel">
+			<div class="sc-details-page-summary-div" style="padding: 55px 0px 20px 0px;">
+				<a href="">
+					<div class="sc-details-page-summary-row"
+						data-ng-class="{'sc-details-page-summary-row-selected':isActive('adHocReportFilter')}">
+						<label for="adHocReportFilter" style="margin-top: 10px">
+							{{'adHocReport.summary.look.for.filter.label' | translate}}
+						</label>
+						<div class="wrapper" ng-show="!adHocReport.filterGroups.length">
+							<span class="sc-details-page-summary-content">
+								<{{'adHocReport.summary.filter.alt' | translate}}>
+							</span>
+						</div>
+						<div class="wrapper" ng-show="adHocReport.filterGroups.length">
+							<span class="block-span sc-details-page-summary-content"
+								data-ng-repeat="(index, filterGroup) in adHocReport.filterGroups">
+								<span ng-bind-html="'( '"></span>
+								<span data-ng-repeat="(findex, filter) in filterGroup.filters">
+									{{filter.fieldName}}&nbsp;{{filter.operator}}&nbsp;
+									<span class="sc-details-page-summary-content" data-ng-show="filter.value">
+										{{filter.value}}
+									</span>
+									<span class="sc-details-page-summary-content" data-ng-show="!filter.value">
+										<{{'adHocReport.summary.value.alt' | translate}}>
+									</span>
+									<label data-ng-if="findex !== filterGroup.filters.length - 1">&nbsp;{{'or.label' | translate}}&nbsp;</label>
+								</span>
+								<span ng-bind-html="' )'"></span>
+								<label data-ng-if="index !== adHocReport.filterGroups.length - 1">&nbsp;{{'and.label' | translate}}&nbsp;</label>
+							</span>
+						</div>
+						
+						<label for="adHocReportFilter" style="margin-top: 10px">
+							{{'adHocReport.summary.range.label' | translate}}
+						</label>
+						<div ng-show="adHocReport.range.option == 'Any'">
+							<span class="block-span sc-details-page-summary-content">
+								<{{'adHocReport.summary.range.any.alt' | translate}}>
+							</span>
+						</div>
+						<div ng-show="adHocReport.range.option == 'Predefined'">
+							<span class="block-span sc-details-page-summary-content">
+								{{adHocReport.range.display | translate}}
+							</span>
+						</div>
+						<div ng-show="adHocReport.range.option == 'Custom'">
+							<span class="block-span sc-details-page-summary-content">
+								{{range.from | date:longDatetimeFormat}}&nbsp;{{'adHocReport.summary.to.label' | translate}}&nbsp;{{range.to | date:longDatetimeFormat}}
+							</span>
+						</div>
+						
+						<label for="adHocReportFilter" style="margin-top: 10px">
+							{{'adHocReport.summary.with.label' | translate}}
+						</label>
+						<div>
+							<span class="block-span sc-details-page-summary-content">
+								{{'adHocReport.summary.status.' + adHocReport.eventStatus + '.alt' | translate}}
+							</span>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="sc-details-page-editor-div">
+				<div id="adHocReportFilter" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline">
+						{{'adHocReport.editor.filter.label' | translate}}
+					</span>
+				</div>
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label class="sc-label-inline" for="filter" style="vertical-align: middle;">{{'adHocReport.editor.filter.range.label' | translate}}</label>
+						<div class="sc-inline dropdown" data-uib-dropdown style="width: 30%; vertical-align: middle;">
+							<button class="form-control sc-button-common" type="button" data-uib-dropdown-toggle ng-disabled="disabled" required>
+								<span class="sc-dropdown-btn-label">
+									{{adHocReport.range.display | translate}}
+								</span>
+								<span class="sc-dropdown-btn-expand-icon"></span>
+							</button>
+							<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+								<li role="menuitem" data-ng-repeat="range in rangeList"
+									data-ng-click="updateRange(range)"
+									class="sc-clickable-dropdown">{{range.display | translate}}
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data" data-ng-if="isCustomRange">
+						<table style="background-color: #f1f1f1; width: 50%">
+							<tr valign="middle" height="68px">
+								<td width="80%">
+									<label style="padding: 0px 10px;" for="filter">{{'adHocReport.editor.filter.range.custom.from.label' | translate}}</label>
+								</td>
+								<td align="right">
+									<table>
+										<tr vertical-align="middle">
+											<td width="20%">
+												<div name="rangeFrom" id="rangeFrom" class="sc-inline">
+													<div class="sc-date-picker">
+														<span class="input-group">
+															<input type="text" class="form-control" name="rangeFrom"
+																id="rangeFrom" uib-datepicker-popup="dd/MM/yyyy"
+																data-ng-model="range.from"
+																is-open="rangeFromPopUp.opened" show-button-bar="true"
+																close-text="{{'close.label'|translate}}"
+																current-text="{{'today.label'|translate}}"
+																clear-text="{{'clear.label'|translate}}" />
+															<span class="input-group-btn">
+																<button type="button" class="btn btn-default"
+																	data-ng-click="rangeFromOpen()">
+																	<i class="fa fa-calendar"></i>
+																</button>
+															</span>
+														</span>
+													</div>
+												</div>
+											</td>
+											<td height="68">
+												<uib-timepicker data-ng-model="range.from" class="sc-inline sc-timepicker" 
+													minute-step="1" show-meridian="true"
+													template-url="ui/app/templates/timepicker.html"></uib-timepicker>
+											</td>
+										</tr>
+										<tr>
+											<td class="sc-padding-cell-left">
+												<div style="margin: 0px;" class="sc-validation-block"
+													ng-messages="adHocReportDetailsForm.rangeFrom.$error"
+													ng-if="adHocReportDetailsForm.rangeFrom.$touched && range.from == null">
+													<p class="ng-binding ng-scope">{{'adHocReport.editor.range.from.validation.required' | translate}}</p>
+												</div>
+											</td>
+											<td class="sc-padding-cell-left">
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr valign="middle" height="68px">
+								<td>
+									<label style="padding: 0px 10px;" for="filter">{{'adHocReport.editor.filter.range.custom.to.label' | translate}}</label>
+								</td>
+								<td align="right">
+									<table>
+										<tr vertical-align="middle">
+											<td width="20%">
+												<div name="rangeTo" id="rangeTo" class="sc-inline">
+													<div class="sc-date-picker">
+														<span class="input-group">
+															<input type="text" class="form-control" name="rangeTo"
+																id="rangeTo" uib-datepicker-popup="dd/MM/yyyy"
+																data-ng-model="range.to"
+																is-open="rangeToPopUp.opened" show-button-bar="true"
+																close-text="{{'close.label'|translate}}"
+																current-text="{{'today.label'|translate}}"
+																clear-text="{{'clear.label'|translate}}" />
+															<span class="input-group-btn">
+																<button type="button" class="btn btn-default"
+																	data-ng-click="rangeToOpen()">
+																	<i class="fa fa-calendar"></i>
+																</button>
+															</span>
+														</span>
+													</div>
+												</div>
+											</td>
+											<td height="68">
+												<uib-timepicker data-ng-model="range.to" class="sc-inline sc-timepicker" 
+													minute-step="1" show-meridian="true"
+													template-url="ui/app/templates/timepicker.html"></uib-timepicker>
+											</td>
+										</tr>
+										<tr>
+											<td class="sc-padding-cell-left">
+												<div style="margin: 0px;" class="sc-validation-block"
+													ng-messages="adHocReportDetailsForm.rangeTo.$error"
+													ng-if="adHocReportDetailsForm.rangeTo.$touched && range.to == null">
+													<p class="ng-binding ng-scope">{{'adHocReport.editor.range.to.validation.required' | translate}}</p>
+												</div>
+											</td>
+											<td class="sc-padding-cell-left">
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="eventStatus" class="sc-label-inline">{{'adHocReport.editor.event.status.label' | translate}}</label>
+						<div class="sc-inline">
+							<md-radio-group data-ng-model="adHocReport.eventStatus">
+								<md-radio-button value="A" class="md-primary sc-radio-inline sc-inline">
+									{{'all.label' | translate}}
+								</md-radio-button>
+								<md-radio-button value="S" class="md-primary sc-radio-inline sc-inline">
+									{{'success.label' | translate}}
+								</md-radio-button>
+								<md-radio-button value="F" class="md-primary sc-radio-inline sc-inline">
+									{{'fail.label' | translate}}
+								</md-radio-button>
+								<md-radio-button value="R" class="md-primary sc-radio-inline sc-inline">
+									{{'rollback.label' | translate}}
+								</md-radio-button>
+							</md-radio-group>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label data-ng-if="adHocReport.filterGroups && adHocReport.filterGroups.length > 0">
+							{{'adHocReport.editor.filter.execute.label' | translate}}
+						</label>
+						<div data-ng-if="!adHocReport.filterGroups || adHocReport.filterGroups.length === 0">
+							<label class="center-inline">{{'adHocReport.editor.filter.execute.alt' | translate}}</label>
+						</div>
+						<div class="sc-criteria-group-div" data-ng-repeat="(index, filterGroup) in adHocReport.filterGroups">
+							<i class="fa fa-times-circle-o sc-component-del-icon" style="transform: translate(50%, -50%)" data-ng-click="removeFilterGroup(index)"> </i>
+							<div class="sc-criteria-group-sub-div">
+								<table class="sc-criteria-table">
+									<tr>
+										<td width="5%" rowspan="{{filterGroup.filters.length + 1}}"
+											style="border-right: 1px solid #CCCCCC"
+											data-ng-if="filterGroup.filters.length  > 1">
+											<span>{{'or.label' | translate}}</span>
+										</td>
+                                    </tr>
+									<tr	data-ng-repeat="(findex, filter) in filterGroup.filters">
+										<td width="20%">
+											<div class="sc-full-width dropdown" data-uib-dropdown>
+												<button class="form-control sc-button-common" type="button" data-uib-dropdown-toggle ng-disabled="disabled" required>
+													<span class="sc-dropdown-btn-label" data-ng-show="filter.fieldName">
+														{{filter.fieldName}}
+													</span>
+													<span class="sc-dropdown-btn-expand-icon"></span>
+												</button>
+												<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+													<li role="menuitem" data-ng-repeat="fieldName in fieldNameList"
+														data-ng-click="setFilterFieldName(filter, fieldName)"
+														class="sc-clickable-dropdown">{{fieldName}}
+													</li>
+												</ul>
+											</div>
+										</td>
+										<td width="15%">
+											<div class="sc-full-width dropdown" data-uib-dropdown>
+												<button class="form-control sc-button-common" type="button" data-uib-dropdown-toggle ng-disabled="disabled" required>
+													<span class="sc-dropdown-btn-label" data-ng-show="!filter.operator">
+														{{'adHocReport.editor.filter.operator.dropdown' | translate}}
+													</span>
+													<span class="sc-dropdown-btn-label" data-ng-show="filter.operator">
+														{{filter.operator}}
+													</span>
+													<span class="sc-dropdown-btn-expand-icon"></span>
+												</button>
+												<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+													<li role="menuitem" data-ng-repeat="operator in operatorList"
+														data-ng-click="setFilterOperator(filter, operator)"
+														class="sc-clickable-dropdown">{{operator}}
+													</li>
+												</ul>
+											</div>
+										</td>
+										<td width="60%">
+											<input data-ng-show="filter.fieldName != 'Rule Name' && filter.fieldName != 'Action'"
+												data-ng-class="{'has-error': adHocReportDetailsForm['filter-' + index + '-' + findex].$dirty && adHocReportDetailsForm['filter-' + index + '-' + findex].$invalid}"
+												class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-full sc-details-page-common-input"
+												placeholder="{{'adHocReport.editor.filter.place.holder' | translate}}"
+												data-ng-model="filter.value" name="{{'filter-' + index + '-' + findex}}"
+												required max-length="1000" ng-maxlength="1000"
+												uib-tooltip="{{getTooltipMessage(adHocReportDetailsForm['filter-' + index + '-' + findex])}}"
+												tooltip-trigger="mouseenter" tooltip-placement="bottom">
+											<input data-ng-show="filter.fieldName == 'Rule Name' || filter.fieldName == 'Action'"
+												data-ng-class="{'has-error': adHocReportDetailsForm['filter-' + index + '-' + findex].$dirty && adHocReportDetailsForm['filter-' + index + '-' + findex].$invalid}"
+												class="sc-input-dropdown-input sc-details-page-editor-input-placeholder sc-details-page-common-input"
+												placeholder="{{'adHocReport.editor.filter.place.holder' | translate}}"
+												data-ng-model="filter.value" name="{{'filter-' + index + '-' + findex}}"
+												required max-length="1000" ng-maxlength="1000"
+												uib-tooltip="{{getTooltipMessage(adHocReportDetailsForm['filter-' + index + '-' + findex])}}"
+												tooltip-trigger="mouseenter" tooltip-placement="bottom">
+											<div class="sc-input-dropdown-dropdown btn-group"
+												data-uib-dropdown data-ng-show="filter.fieldName == 'Rule Name' || filter.fieldName == 'Action'">
+												<button class="form-control sc-button-common"
+													type="button" data-uib-dropdown-toggle
+													ng-disabled="disabled">
+													<span class="sc-dropdown-btn-expand-icon"></span>
+												</button>
+												<ul class="uib-dropdown-menu sc-input-dropdown-menu" style="width: 400px;"
+													role="menu" aria-labelledby="">
+													<li role="menuitem" data-ng-repeat="rule in ruleList"
+														data-ng-if="filter.fieldName == 'Rule Name'"
+														data-ng-click="setFilterValue(filter, rule.name)"
+														class="sc-clickable-dropdown">{{rule.name}}
+													</li>
+													<li role="menuitem" data-ng-repeat="action in actionList"
+														data-ng-if="filter.fieldName == 'Action'"
+														data-ng-click="setFilterValue(filter, action.name)"
+														class="sc-clickable-dropdown">{{action.name}}
+													</li>
+												</ul>
+											</div>
+										</td>
+										<td width="5%">
+											<div class="fa fa-trash-o sc-bigger-icon sc-inline"	data-ng-click="removeFilter(filterGroup, index, findex)"></div>
+										</td>
+									</tr>
+								</table>
+								<a data-ng-click="addFilter(filterGroup)" class="btn btn-default"
+									style="margin-right: 1%; margin-top: 1%; margin-bottom: 1%">
+									<i class="fa fa-plus uppercase"></i>
+									&nbsp;&nbsp;{{'adHocReport.editor.add.filter.button' | translate}}
+								</a>
+							</div>
+							<div class="sc-rule-criteria-and" data-ng-show="index != adHocReport.filterGroups.length - 1">
+								{{'and.label'| translate}}
+							</div>
+						</div>
+						<a data-ng-click="addFilterGroup()" class="btn btn-default"
+							data-ng-if="!adHocReport.filterGroups || adHocReport.filterGroups.length  === 0"
+							style="margin-right: 2%; margin-top: 2%">
+							<i class="fa fa-plus uppercase"></i>
+							&nbsp;&nbsp;{{'adHocReport.editor.add.filter.group.button.first' | translate}}
+						</a>
+						<a data-ng-click="addFilterGroup()" class="btn btn-default"
+							data-ng-if="adHocReport.filterGroups.length > 0" style="margin-top: 2%">
+							<i class="fa fa-plus uppercase"></i>&nbsp;&nbsp;
+							{{'adHocReport.editor.add.filter.group.button' | translate}}
+						</a>
+						<div style="margin: 20px 0px;">
+							<a class="btn btn-default sc-btn-save-page" data-ng-click="search(adHocReportDetailsForm)">
+								{{'search.button' | translate}} 
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!-- Query result -->
+<div class="sc-resource" style="height: 100%" data-ng-show="isSearched">
+	<div class="no-margin sc-details-page-title-panel">
+		<div data-ng-show="!showFilters">
+			<div class="sc-details-page-title">
+				<div class="sc-vertical-middle-div">
+					<p class="sc-details-page-edit-subject">
+						{{'adHocReport.label' | translate}}
+					</p>
+				</div>
+			</div>
+			<div class="sc-details-page-btn-div">
+				<form id="exportReportForm" action="rest/v1/reportQuery/export/" target="_top" data-ng-show="false" method="post">
+					<input id="exportQuery" name="exportQuery" type="text">
+				</form>
+				<button class="btn btn-default sc-ps-btn sc-btn-export sc-ps-btn-sc-big sc-ps-import-export-line" 
+					data-ng-click="exportReport()" data-ng-disabled="!documentList.length" title="{{'report.export.title' | translate}}">
+				</button>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<table class="sc-show-panel-button" data-ng-click="showFilters=!showFilters" data-ng-show="!showFilters">
+			<tr>
+				<td><div class="sc-show-panel-button-left"></div></td>
+				<td><div class="sc-show-panel-button-main">{{'button.filters' | translate}}&nbsp;&nbsp;<i class="fa fa-angle-down"></i></div></td>
+				<td><div class="sc-show-panel-button-right"></div></td>
+			</tr>
+		</table>
+	</div>
+	<div class="sc-details-page-bottom-panel">
+		<!-- Sub filter area -->
+		<div class="sc-details-page-summary-div" style="padding: 55px 0px 20px 0px;">
+			<table style="width: 100%;" data-ng-show="refinable">
+				<tr>
+					<td>
+						<span class="sc-result-refine">{{'adHocReport.result.refine.by.label' | translate}}</span>
+					</td>
+				</tr>
+			</table>
+			<!-- Repository Type -->
+			<table class="sc-result-refine-type" data-ng-if="repositoryTypeFacet.length > 1">
+				<tr>
+					<td width="85%" class="sc-result-refine-type-category">{{'adHocReport.result.refine.by.repository.type.label' | translate}}</td>
+					<td width="15%">
+						<a class="sc-result-refine-type-clear" 
+							data-ng-click="clearFacet(repositoryTypeFacet)"
+							data-ng-show="clearRepositoryType">{{'adHocReport.result.clear.refine.by.label' | translate}}</a>
+					</td>
+				</tr>
+				<tr data-ng-repeat="repositoryType in repositoryTypeFacet">
+					<td colspan="2" class="sc-result-refine-type-data-select">
+						<label class="nobold sc-inline-block-on-table sc-green-checkbox-radio-label">
+							<input type="checkbox" class="sc-green-checkbox-radio ng-untouched ng-valid ng-prestine" 
+								data-ng-model="repositoryType.$checked" data-ng-change="refineResult()">
+							<span>
+								<span class="sc-green-checkbox-radio-bgrd-holder"></span>
+							</span>
+						</label>
+						<a class="sc-inline-block-on-table sc-result-refine-type-data" data-ng-click="repositoryType.$checked = !repositoryType.$checked; refineResult();">
+							{{repositoryType.displayName}}
+							<span>&nbsp;({{repositoryType.count}})</span>
+						</a>
+					</td>
+				</tr>
+			</table>
+			<!-- Event Stage -->
+			<table class="sc-result-refine-type" data-ng-if="eventStageFacet.length > 1">
+				<tr>
+					<td width="85%" class="sc-result-refine-type-category">{{'adHocReport.result.refine.by.event.stage.label' | translate}}</td>
+					<td width="15%">
+						<a class="sc-result-refine-type-clear" 
+							data-ng-click="clearFacet(eventStageFacet)"
+							data-ng-show="clearEventStage">{{'adHocReport.result.clear.refine.by.label' | translate}}</a>
+					</td>
+				</tr>
+				<tr data-ng-repeat="eventStage in eventStageFacet">
+					<td colspan="2" class="sc-result-refine-type-data-select">
+						<label class="nobold sc-inline-block-on-table sc-green-checkbox-radio-label">
+							<input type="checkbox" class="sc-green-checkbox-radio ng-untouched ng-valid ng-prestine" 
+								data-ng-model="eventStage.$checked" data-ng-change="refineResult()">
+							<span>
+								<span class="sc-green-checkbox-radio-bgrd-holder"></span>
+							</span>
+						</label>
+						<a class="sc-inline-block-on-table sc-result-refine-type-data" data-ng-click="eventStage.$checked = !eventStage.$checked; refineResult();">
+							{{eventStage.displayName}}
+							<span>&nbsp;({{eventStage.count}})</span>
+						</a>
+					</td>
+				</tr>
+			</table>
+			<!-- Rule Name -->
+			<table class="sc-result-refine-type" data-ng-if="ruleNameFacet.length > 1">
+				<tr>
+					<td width="85%" class="sc-result-refine-type-category">{{'adHocReport.result.refine.by.rule.name.label' | translate}}</td>
+					<td width="15%">
+						<a class="sc-result-refine-type-clear" 
+							data-ng-click="clearFacet(ruleNameFacet)"
+							data-ng-show="clearRuleName">{{'adHocReport.result.clear.refine.by.label' | translate}}</a>
+					</td>
+				</tr>
+				<tr data-ng-repeat="ruleName in ruleNameFacet track by $index">
+					<td colspan="2" class="sc-result-refine-type-data-select">
+						<label class="nobold sc-inline-block-on-table sc-green-checkbox-radio-label">
+							<input type="checkbox" class="sc-green-checkbox-radio ng-untouched ng-valid ng-prestine" 
+								data-ng-model="ruleName.$checked" data-ng-change="refineResult()">
+							<span>
+								<span class="sc-green-checkbox-radio-bgrd-holder"></span>
+							</span>
+						</label>
+						<a class="sc-inline-block-on-table sc-result-refine-type-data" data-ng-click="ruleName.$checked = !ruleName.$checked; refineResult();">
+							{{ruleName.displayName}}
+							<span>&nbsp;({{ruleName.count}})</span>
+						</a>
+					</td>
+				</tr>
+			</table>
+			<!-- Action Name -->
+			<table class="sc-result-refine-type" data-ng-if="actionNameFacet.length > 1">
+				<tr>
+					<td width="85%" class="sc-result-refine-type-category">{{'adHocReport.result.refine.by.action.label' | translate}}</td>
+					<td width="15%">
+						<a class="sc-result-refine-type-clear" 
+							data-ng-click="clearFacet(actionNameFacet)"
+							data-ng-show="clearActionName">{{'adHocReport.result.clear.refine.by.label' | translate}}</a>
+					</td>
+				</tr>
+				<tr data-ng-repeat="actionName in actionNameFacet track by $index">
+					<td colspan="2" class="sc-result-refine-type-data-select">
+						<label class="nobold sc-inline-block-on-table sc-green-checkbox-radio-label">
+							<input type="checkbox" class="sc-green-checkbox-radio ng-untouched ng-valid ng-prestine" 
+								data-ng-model="actionName.$checked" data-ng-change="refineResult()">
+							<span>
+								<span class="sc-green-checkbox-radio-bgrd-holder"></span>
+							</span>
+						</label>
+						<a class="sc-inline-block-on-table sc-result-refine-type-data" data-ng-click="actionName.$checked = !actionName.$checked; refineResult();">
+							{{actionName.displayName}}
+							<span>&nbsp;({{actionName.count}})</span>
+						</a>
+					</td>
+				</tr>
+			</table>
+			<!-- Event Status -->
+			<table class="sc-result-refine-type" data-ng-if="eventStatusFacet.length > 1">
+				<tr>
+					<td width="85%" class="sc-result-refine-type-category">{{'adHocReport.result.refine.by.event.status.label' | translate}}</td>
+					<td width="15%">
+						<a class="sc-result-refine-type-clear" 
+							data-ng-click="clearFacet(eventStatusFacet)"
+							data-ng-show="clearEventStatus">{{'adHocReport.result.clear.refine.by.label' | translate}}</a>
+					</td>
+				</tr>
+				<tr data-ng-repeat="eventStatus in eventStatusFacet track by $index">
+					<td colspan="2" class="sc-result-refine-type-data-select">
+						<label class="nobold sc-inline-block-on-table sc-green-checkbox-radio-label">
+							<input type="checkbox" class="sc-green-checkbox-radio ng-untouched ng-valid ng-prestine" 
+								data-ng-model="eventStatus.$checked" data-ng-change="refineResult()">
+							<span>
+								<span class="sc-green-checkbox-radio-bgrd-holder"></span>
+							</span>
+						</label>
+						<a class="sc-inline-block-on-table sc-result-refine-type-data" data-ng-click="eventStatus.$checked = !eventStatus.$checked; refineResult();">
+							{{eventStatus.displayName}}
+							<span>&nbsp;({{eventStatus.count}})</span>
+						</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="sc-details-page-editor-div sc-query-result-page">
+			<div class="sc-report-filter-summary">
+				<div style="border-radius: 5px; background: #fff2ea; vertical-align: middle;">
+					<!-- Time Range -->
+					<div class="sc-inline">
+						<p class="sc-inline sc-grey-text sc-italic">{{'adHocReport.editor.filter.range.label' | translate}}:</p>
+						<p class="sc-inline" data-ng-if="query.range.option == 'Any'">
+							&quot;{{query.range.display | translate}}&quot;
+						</p>
+						<p class="sc-inline" data-ng-if="query.range.option == 'Predefined'">
+							&quot;{{query.range.display | translate}}&quot;
+						</p>
+						<p class="sc-inline" data-ng-if="query.range.option == 'Custom'">
+							&quot;{{query.range.from | date:shortDatetimeFormat}}&nbsp;{{'adHocReport.summary.to.label' | translate}}&nbsp;{{query.range.to | date:shortDatetimeFormat}}&quot;
+						</p>
+					</div>
+					<!-- Event Status -->
+					<div class="sc-inline">
+						<p class="sc-inline sc-grey-text sc-italic">{{'adHocReport.editor.event.status.label' | translate}}:</p>
+						<p class="sc-inline" data-ng-if="query.eventStatus == 'A'">
+							&quot;{{'all.label' | translate}}&quot;
+						</p>
+						<p class="sc-inline" data-ng-if="query.eventStatus == 'S'">
+							&quot;{{'success.label' | translate}}&quot;
+						</p>
+						<p class="sc-inline" data-ng-if="query.eventStatus == 'F'">
+							&quot;{{'fail.label' | translate}}&quot;
+						</p>
+					</div>
+					<!-- Other -->
+					<div class="sc-inline" data-ng-if="query.filterGroups && query.filterGroups.length > 0">
+						<p class="sc-inline sc-grey-text sc-italic">{{'other.label' | translate}}:</p>
+						<div class="sc-inline" data-ng-repeat="(index, filterGroup) in query.filterGroups">
+							<p class="sc-inline sc-report-filter-summary-group sc-italic" data-ng-if="index > 0">{{'and.label' | translate}}</p>
+							<p class="sc-inline">(</p>
+							<div class="sc-inline" data-ng-repeat="(findex, filter) in filterGroup.filters">
+								<p class="sc-inline sc-report-filter-summary-group sc-italic" data-ng-if="findex > 0">{{'or.label' | translate}}</p>
+								<p class="sc-inline" style="padding: 0px;">&quot;{{filter.fieldName}}&nbsp;{{filter.operator}}&nbsp;{{filter.value}}&quot;</p>
+							</div>
+							<p class="sc-inline">)</p>
+						</div>
+					</div>
+				</div>
+				<div class="sc-inline" style="margin: 10px 0px; width: 100%;">
+					<div class="sc-inline" style="width: 70%;">
+						<p class="sc-inline sc-report-count" style="vertical-align: middle;">{{'report.result.total' | translate}}:&nbsp;{{totalRecordCount}}</p>
+						<p class="sc-inline sc-report-count" style="vertical-align: middle;">{{'report.document.total' | translate}}:&nbsp;{{totalDocumentCount}}</p>
+					</div>
+					<div class="sc-inline" style="width: 300px;">
+						<div class="sc-inline sc-sort-by-title">
+							{{"sort.by.label"|translate}}
+						</div>
+						<div class="sc-inline dropdown" style="vertical-align: middle; width: 70%;" data-uib-dropdown>
+							<button class="form-control sc-button-common" type="button" data-uib-dropdown-toggle ng-disabled="disabled" required>
+								<span class="sc-dropdown-btn-label">
+									{{sortingOrder.display | translate}}
+								</span>
+								<span class="sc-dropdown-btn-expand-icon"></span>
+							</button>
+							<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+								<li role="menuitem" data-ng-repeat="sortingOrder in sortingOrderList"
+									data-ng-click="updateSortingOrder(sortingOrder)"
+									class="sc-clickable-dropdown">{{sortingOrder.display | translate}}
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div data-ng-if="documentList.length" style="margin: 0px 0px 20px 0px;">
+				<table style="width: 100%;">
+					<thead>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="(index, document) in documentList track by $index">
+							<td class="sc-result-details-on-table" style="width: 100%; padding: 0px 20px;">
+								<div class="sc-inline-block-on-table" style="width: 100%;">
+									<table class="sc-document-report-table sc-slim-row-table">
+										<tr>
+											<td width="70%">
+												<p class="sc-inline sc-grey-text">{{'report.result.file.name.label' | translate}}:</p>
+												<p class="sc-inline sc-bold-text-on-table">{{document.fileName}}</p>
+											</td>
+											<td width="25%"">
+												<p class="sc-inline sc-grey-text">{{'report.result.file.repository.type.label' | translate}}:</p>
+												<p class="sc-inline">{{document.repositoryType}}</p>
+											</td>
+											<td width="5%" style="text-align: right;" rowspan="2">
+												<div class="sc-rule-action-inline-btn fa fa-minus sc-bigger-icon sc-inline"
+													data-ng-click="collapseDocument(index)"
+													data-ng-show="!documentCollapse[index]">
+												</div>
+												<div class="sc-rule-action-inline-btn fa fa-plus sc-bigger-icon sc-inline"
+													data-ng-click="expandDocument(index, document)"
+													data-ng-show="documentCollapse[index]">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<p class="sc-inline sc-grey-text">{{'report.result.directory.label' | translate}}:</p>
+												<p class="sc-inline">{{document.filePath}}</p>
+											</td>
+										</tr>
+									</table>
+									<!-- Document details expansion -->
+									<div uib-collapse="documentCollapse[index]" class="sc-document-report-details">
+										<table width="100%" class="table table-hover">
+											<tr data-ng-repeat="event in document.eventList track by $index">
+												<td>
+													<table width="100%" class="sc-slim-row-table">
+														<tr>
+															<td width="25%">
+																<p class="sc-inline sc-grey-text">{{'report.result.event.timestamp.label' | translate}}:</p>
+																<p class="sc-inline" data-ng-bind="event.timestamp | date:longDatetimeFormat" data-ng-if="event.timestamp != 0"></p>
+															</td>
+															<td width="25%">
+																<p class="sc-inline sc-grey-text">{{'report.result.event.stage.label' | translate}}:</p>
+																<p class="sc-inline">{{event.stage}}</p>
+															</td>
+															<td width="30%">
+																<p class="sc-inline sc-grey-text" data-ng-if="event.actionName">{{'report.result.event.action.name.label' | translate}}:</p>
+																<p class="sc-inline" data-ng-if="event.actionName">{{event.actionName}}</p>
+															</td>
+															<td width="20%">
+																<p class="sc-inline sc-grey-text">{{'report.result.event.status.label' | translate}}:</p>
+																<p class="sc-inline sc-event-status-success" data-ng-if="event.status == 'Success'">{{event.status}}</p>
+																<p class="sc-inline sc-event-status-fail" data-ng-if="event.status == 'Fail'">{{event.status}}</p>
+																<p class="sc-inline sc-event-status-rollback" data-ng-if="event.status == 'Roll-back'">{{event.status}}</p>
+															</td>
+														</tr>
+														<tr data-ng-if="event.ruleName">
+															<td colspan="2">
+																<p class="sc-inline sc-grey-text">{{'report.result.event.rule.name.label' | translate}}:</p>
+																<p class="sc-inline">{{event.ruleName}}</p>
+															</td>
+															<td colspan="2">
+																<p class="sc-inline sc-grey-text">{{'report.result.rule.execution.type.label' | translate}}:</p>
+																<p class="sc-inline">{{event.ruleExecutionType}}</p>
+															</td>
+														</tr>
+														<tr>
+															<td colspan="4">
+																<table>
+																	<tr>
+																		<td style="vertical-align: top; padding: 0px;">
+																			<p class="sc-inline sc-grey-text">{{'report.result.event.message.label' | translate}}:</p>
+																		</td>
+																		<td style="vertical-align: top; padding: 0px;">
+																			<p class="sc-inline">{{event.message}}</p>
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</table>
+										<div data-ng-if="document.eventList.length < document.totalEventCount">
+											<button type="button" class="btn btn-default sc-btn-loadmore" data-ng-click="loadDocumentEvent(document)">
+												{{'button.load.more' | translate}}
+											</button>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div data-ng-show="documentList.length < totalDocumentCount">
+					<button type="button" class="btn btn-default sc-btn-loadmore" data-ng-click="loadDocument()">
+						{{'button.load.more' | translate}}
+					</button>
+				</div>
+			</div>
+			<div data-ng-if="!documentList.length" class="sc-empty-resource-list-box">
+				<p style="text-align: center;">{{'empty.list.msg' | translate}}</p>
+			</div>
+		</div>
+	</div>
+</div>

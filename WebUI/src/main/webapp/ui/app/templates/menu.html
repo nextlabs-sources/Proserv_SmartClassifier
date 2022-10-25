@@ -1,0 +1,39 @@
+<div class="sc-menu sc-layout-full-height-auto">
+	<div data-ng-repeat="tab in tabs">
+		<div data-ng-if="!tab.children && !(tab.requireAdmin && !userInfo.admin)" class="sc-menu-item-box">
+			<a class="sc-menu-item"
+				data-ng-class="{'sc-menu-selected':isActiveTab(tab.url)}"
+				data-ng-click="onClickTab(tab)" ui-sref="{{tab.url}}"> 
+				<span class="sc-menu-icon">
+					<i class="fa" ng-include="'ui/img/menu/' + tab.icon"></i>
+				</span>
+				{{tab.title | translate}}
+			</a>
+		</div>
+
+		<div data-ng-if="tab.children && !(tab.requireAdmin && !userInfo.admin)" class="sc-sub-menu-item-box">
+			<div data-ng-class="sc-menu-item-expanded">
+				<div class="sc-menu-non-selectable sc-menu-item" 
+					data-ng-class="{'sc-menu-selected':isActiveTab(tab.url)}">
+					<span class="sc-menu-icon">
+						<i class="fa" ng-include="'ui/img/menu/' + tab.icon"></i>
+					</span>
+					{{tab.title	| translate}}
+				</div>
+			</div>
+			<div class="sc-sub-menu">
+				<div data-ng-repeat="subtab in tab.children"
+					class="sc-menu-item-box">
+					<a class="sc-sub-menu-item sc-menu-item"
+						data-ng-class="{'sc-menu-selected':isActiveTab(subtab.url)}"
+						data-ng-click="onClickTab(subtab)" ui-sref="{{subtab.url}}">
+						<span class="sc-menu-icon">
+							<i class="fa" ng-include="'ui/img/menu/' + subtab.icon"></i>
+						</span>
+						{{subtab.title | translate}} 
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

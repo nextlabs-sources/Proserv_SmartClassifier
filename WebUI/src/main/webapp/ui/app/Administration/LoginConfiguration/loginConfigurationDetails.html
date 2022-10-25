@@ -1,0 +1,304 @@
+<div data-ng-if="!detailsFound" class="sc-empty-resource-list-box">
+	<p style="text-align: center">
+		{{'loginConfiguration.details.not.found' | translate}}
+	</p>
+</div>
+<div data-http-loader class="sc-data-loading">
+	<p style="text-align: center" class="sc-vertical-middle-div">
+		{{'data.loading' | translate}}
+	</p>
+</div>
+<div class="sc-resource" data-ng-if="detailsFound" style="height: 100%">
+	<form id="loginConfigurationDetailsForm"
+		class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-vaid-maxlength"
+		novalidate="" name="loginConfigurationDetailsForm">
+		<div class="no-margin sc-details-page-title-panel">
+			<div class="sc-details-page-back-btn-div ">
+				<button class="sc-details-page-back-btn btn btn-default"
+					type="button" data-ng-click="backToLoginConfigurationList(loginConfigurationDetailsForm)">
+					<i class="fa fa-arrow-left" data-ng-class=""> </i>
+				</button>
+			</div>
+			<div class="sc-details-page-title">
+				<div class="sc-vertical-middle-div">
+					<p class="sc-details-page-edit-text" data-ng-if="loginConfigurationID != 'create'">
+						{{"edit.label" | translate}}
+					</p>
+					<p class="sc-details-page-edit-text" data-ng-if="loginConfigurationID == 'create'">
+						{{"create.label" | translate}}
+					</p>
+					<p class="sc-details-page-edit-subject">{{loginConfiguration.name}}</p>
+				</div>
+			</div>
+			
+			<div class="sc-details-page-btn-div">
+				<a class="btn btn-default sc-details-page-discard-btn"
+					data-ng-click="discardLoginConfigurationChanges(loginConfigurationDetailsForm)">
+					{{"button.discard" | translate}}
+				</a>
+				<a class="btn btn-default sc-btn-save-page"
+					data-ng-click="saveLoginConfigurationChanges(loginConfigurationDetailsForm)">
+					{{"button.save" | translate}}
+				</a>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="sc-details-page-bottom-panel">
+			<div class="sc-details-page-summary-div">
+				<a href="" data-ng-click="scrollTo('loginConfigurationInfo')">
+					<div class="sc-details-page-summary-row"
+						data-ng-class="{'sc-details-page-summary-row-selected':isActive('loginConfigurationInfo')}">
+						<label for="loginConfigurationInfo">
+							{{"this.label" | translate}} {{'loginConfiguration.label'|translate}}
+						</label>
+						<div class="wrapper">
+							<span ng-hide="loginConfiguration.name.length"
+								class="sc-details-page-summary-content">
+									<{{'loginConfiguration.summary.loginConfiguration.name.alt' | translate}}>
+							</span>
+							<span class="sc-details-page-summary-content"
+								ng-show="loginConfiguration.name.length">{{loginConfiguration.name}}</span>
+						</div>
+						<label for="loginConfigurationInfo" style="margin-top: 10px">
+							{{'loginConfiguration.summary.type.label'| translate}}
+						</label>
+						<div>
+							<span>{{'loginConfiguration.' + loginConfiguration.type | translate}}</span>
+						</div>
+					</div>
+				</a>
+				<a href="" data-ng-click="scrollTo('userAttributeMapping')">
+					<div class="sc-details-page-summary-row"
+						data-ng-class="{'sc-details-page-summary-row-selected':isActive('userAttributeMapping')}">
+						<label for="loginConfigurationInfo" style="margin-top: 10px">
+							{{'loginConfiguration.summary.user.attribute.label'| translate}}
+						</label>
+						<div>
+							<span class="block-span" data-ng-repeat="userAttributeMapping in loginConfiguration.userAttributeMapping">
+								{{userAttributeMapping.from}}&nbsp;{{'loginConfiguration.summary.mapped.to.alt' | translate}}&nbsp;{{userAttributeMapping.to}}
+							</span>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="sc-details-page-editor-div">
+				<div id="loginConfigurationInfo" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline">
+						{{"loginConfiguration.editor.configuration.info.label" | translate}}
+					</span>
+				</div>
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label for="type">
+							{{"loginConfiguration.editor.type.label" | translate}}
+						</label>
+						<div id="type"
+							class="sc-details-page-editor-data-right btn-group btn-block"
+							data-uib-dropdown>
+							<button class="form-control sc-button-common dropdown-toggle" type="button"
+								data-uib-dropdown-toggle ng-disabled="disabled">
+								<span class="sc-dropdown-btn-label">
+									{{'loginConfiguration.' + loginConfiguration.type | translate}}
+								</span>
+								<span class="sc-dropdown-btn-expand-icon"></span>
+							</button>
+							<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu"
+								aria-labelledby="">
+								<li role="menuitem" data-ng-repeat="loginConfigurationType in loginConfigurationTypes"
+									data-ng-click="changeLoginConfigurationType(loginConfigurationType)"
+									class="sc-clickable-dropdown">
+										{{'loginConfiguration.' + loginConfigurationType | translate}}
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="name">
+							{{"loginConfiguration.editor.name.label" | translate}}
+						</label>
+						<input id="name"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'loginConfiguration.editor.name.place.holder' | translate}}"
+							data-ng-model="loginConfiguration.name" name="name" required
+							ng-maxlength="100" max-length="100">
+						<div class="sc-validation-block"
+							ng-messages="loginConfigurationDetailsForm.name.$error"
+							ng-if="loginConfigurationDetailsForm.name.$touched">
+							<p ng-message="maxlength">
+								{{"loginConfiguration.editor.name.validation.max.length" | translate}}
+							</p>
+							<p ng-message="required">
+								{{"loginConfiguration.editor.name.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="url">
+							{{"loginConfiguration.editor.url.label" | translate}}
+						</label>
+						<input id="url"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'loginConfiguration.editor.url.place.holder' | translate}}"
+							data-ng-model="loginConfiguration.configurationData.url" name="url" required>
+						<div class="sc-validation-block"
+							ng-messages="loginConfigurationDetailsForm.url.$error"
+							ng-if="loginConfigurationDetailsForm.url.$touched">
+							<p ng-message="required">
+								{{"loginConfiguration.editor.url.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="domain">
+							{{"loginConfiguration.editor.domain.label" | translate}}
+						</label>
+						<input id="domain"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'loginConfiguration.editor.domain.place.holder' | translate}}"
+							data-ng-model="loginConfiguration.configurationData.domain" name="domain" required>
+						<div class="sc-validation-block"
+							ng-messages="loginConfigurationDetailsForm.domain.$error"
+							ng-if="loginConfigurationDetailsForm.domain.$touched">
+							<p ng-message="required">
+								{{"loginConfiguration.editor.domain.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="rootDN">
+							{{"loginConfiguration.editor.root.dn.label" | translate}}
+						</label>
+						<input id="rootDN"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'loginConfiguration.editor.root.dn.place.holder' | translate}}"
+							data-ng-model="loginConfiguration.configurationData.rootDN" name="rootDN" required>
+						<div class="sc-validation-block"
+							ng-messages="loginConfigurationDetailsForm.rootDN.$error"
+							ng-if="loginConfigurationDetailsForm.rootDN.$touched">
+							<p ng-message="required">
+								{{"loginConfiguration.editor.root.dn.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="username">
+							{{"loginConfiguration.editor.username.label" | translate}}
+						</label>
+						<input id="username"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'loginConfiguration.editor.username.place.holder' | translate}}"
+							data-ng-model="loginConfiguration.configurationData.username" name="username" required>
+						<div class="sc-validation-block"
+							ng-messages="loginConfigurationDetailsForm.username.$error"
+							ng-if="loginConfigurationDetailsForm.username.$touched">
+							<p ng-message="required">
+								{{"loginConfiguration.editor.username.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="password">
+							{{"loginConfiguration.editor.password.label" | translate}}
+						</label>
+						<input id="password" type="password"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'loginConfiguration.editor.password.place.holder' | translate}}"
+							data-ng-model="loginConfiguration.configurationData.password" name="password" required>
+						<div class="sc-validation-block"
+							ng-messages="loginConfigurationDetailsForm.password.$error"
+							ng-if="loginConfigurationDetailsForm.password.$touched">
+							<p ng-message="required">
+								{{"loginConfiguration.editor.password.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="userFilter">
+							{{"loginConfiguration.editor.user.filter.label" | translate}}
+						</label>
+						<input id="userFilter"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'loginConfiguration.editor.user.filter.place.holder' | translate}}"
+							data-ng-model="loginConfiguration.configurationData.userFilter" name="userFilter" required>
+						<div class="sc-validation-block"
+							ng-messages="loginConfigurationDetailsForm.userFilter.$error"
+							ng-if="loginConfigurationDetailsForm.userFilter.$touched">
+							<p ng-message="required">
+								{{"loginConfiguration.editor.user.filter.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="userSearchBase">
+							{{"loginConfiguration.editor.user.search.base.label" | translate}}
+						</label>
+						<input id="userSearchBase"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'loginConfiguration.editor.user.search.base.place.holder' | translate}}"
+							data-ng-model="loginConfiguration.configurationData.userSearchBase" name="userSearchBase" required>
+						<div class="sc-validation-block"
+							ng-messages="loginConfigurationDetailsForm.userSearchBase.$error"
+							ng-if="loginConfigurationDetailsForm.userSearchBase.$touched">
+							<p ng-message="required">
+								{{"loginConfiguration.editor.user.search.base.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<a data-ng-click="connectLDAP(loginConfiguration)" class="btn btn-default">
+							<i class="fa uppercase" />{{"loginConfiguration.editor.connect.button" | translate}}
+						</a>
+					</div>
+				</div>
+				
+				<div id="userAttributeMapping" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline">
+						{{"loginConfiguration.editor.user.attributes.info.label" | translate}}
+					</span>
+				</div>
+				<div class="sc-details-page-editor-info">
+					<p class="count ng-binding ng-scope" data-ng-if="isConnected && loginConfiguration.userAttributeMapping.length == 1">
+						{{loginConfiguration.userAttributeMapping.length}}&nbsp;Attribute
+					</p>
+					<p class="count ng-binding ng-scope" data-ng-if="isConnected && loginConfiguration.userAttributeMapping.length > 1">
+						{{loginConfiguration.userAttributeMapping.length}}&nbsp;Attributes
+					</p>
+					<!-- 
+					<div class="sc-details-page-btn-div-right">
+						<a data-ng-click="addUserAttribute()" class="btn btn-default" ng-disabled="enable">
+							<i class="fa uppercase" />{{"loginConfiguration.editor.add.attribute.button" | translate}}
+						</a>
+					</div>
+					 -->
+					<div class="sc-details-page-editor-data">
+						<table class="table sc-create-page-common-table sc-create-page-editable-table">
+							<thead>
+								<th class="ng-binding">{{"loginConfiguration.editor.user.attributes.name.header" | translate}}</th>
+								<th class="ng-binding">{{"loginConfiguration.editor.user.attributes.map.to.header" | translate}}</th>
+							</thead>
+							<tbody>
+								<tr data-ng-repeat="(index, userAttributeMapping) in loginConfiguration.userAttributeMapping">
+									<td data-ng-if="isConnected" width=50%>
+										<div class="sc-full-width dropdown" data-uib-dropdown>
+											<button class="form-control sc-button-common" type="button" data-uib-dropdown-toggle ng-disabled="disabled" required>
+												<span class="sc-dropdown-btn-label">{{userAttributeMapping.from}}</span>
+												<span class="sc-dropdown-btn-expand-icon"></span>
+											</button>
+											<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+												<li role="menuitem" data-ng-repeat="ldapAttribute in ldapAttributeList | orderBy"
+													data-ng-click="mapUserAttribute(index, ldapAttribute)"
+													class="sc-clickable-dropdown">{{ldapAttribute}}</li>
+											</ul>
+										</div>
+									</td>
+									<td data-ng-if="!isConnected" width=50% style="vertical-align:middle">{{userAttributeMapping.from}}</td>
+									<td width=50% style="vertical-align:middle">{{userAttributeMapping.to}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

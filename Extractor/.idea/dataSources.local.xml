@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="SQL Server - Extractor@10.23.58.110" uuid="d5ab1e2c-f3da-4729-8b88-17dc202b3354">
+      <secret-storage>master_key</secret-storage>
+      <user-name>sa</user-name>
+      <schema-pattern>EXTRACTOR.*</schema-pattern>
+      <default-schemas>EXTRACTOR.*</default-schemas>
+    </data-source>
+  </component>
+</project>

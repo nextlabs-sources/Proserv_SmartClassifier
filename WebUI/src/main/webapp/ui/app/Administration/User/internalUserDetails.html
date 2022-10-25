@@ -1,0 +1,205 @@
+<div data-ng-if="!detailsFound" class="sc-empty-resource-list-box">
+	<p style="text-align: center">
+		{{'user.details.not.found' | translate}}
+	</p>
+</div>
+<div data-http-loader class="sc-data-loading">
+	<p style="text-align: center" class="sc-vertical-middle-div">
+		{{'data.loading' | translate}}
+	</p>
+</div>
+<div class="sc-resource" data-ng-if="detailsFound" style="height: 100%">
+	<form id="userDetailsForm"
+		class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-vaid-maxlength"
+		novalidate="" name="userDetailsForm">
+		<div class="no-margin sc-details-page-title-panel">
+			<div class="sc-details-page-back-btn-div ">
+				<button class="sc-details-page-back-btn btn btn-default"
+					type="button" data-ng-click="backToUserList(userDetailsForm)">
+					<i class="fa fa-arrow-left" data-ng-class=""> </i>
+				</button>
+			</div>
+			<div class="sc-details-page-title">
+				<div class="sc-vertical-middle-div">
+					<p class="sc-details-page-edit-text" data-ng-if="userID != 'create'">
+						{{"edit.label" | translate}}
+					</p>
+					<p class="sc-details-page-edit-text" data-ng-if="userID == 'create'">
+						{{"create.label" | translate}}
+					</p>
+					<p class="sc-details-page-edit-subject">{{user.firstName}}&nbsp;{{user.lastName}}</p>
+				</div>
+			</div>
+			
+			<div class="sc-details-page-btn-div">
+				<a class="btn btn-default sc-details-page-discard-btn"
+					data-ng-click="discardUserChanges(userDetailsForm)">
+					{{"button.discard" | translate}}
+				</a>
+				<a class="btn btn-default sc-btn-save-page"
+					data-ng-click="saveUserChanges(userDetailsForm)">
+					{{"button.save" | translate}}
+				</a>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="sc-details-page-bottom-panel">
+			<div class="sc-details-page-summary-div">
+				<a href="" data-ng-click="scrollTo('userInfo')">
+					<div class="sc-details-page-summary-row"
+						data-ng-class="{'sc-details-page-summary-row-selected':isActive('userInfo')}">
+						<label for="userInfo">
+							{{"this.label" | translate}} {{'user.label'|translate}}
+						</label>
+						<div class="wrapper">
+							<span ng-hide="user.firstName.length || user.lastName.length"
+								class="sc-details-page-summary-content">
+									<{{'user.summary.user.display.name.alt' | translate}}>
+							</span>
+							<span class="sc-details-page-summary-content"
+								ng-show="user.firstName.length || user.lastName.length">{{user.firstName}}&nbsp;{{user.lastName}}</span>
+						</div>
+						<label for="userInfo" style="margin-top: 10px">
+							{{'user.summary.username.label'| translate}}
+						</label>
+						<div>
+							<span>{{user.username}}</span>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="sc-details-page-editor-div">
+				<div id="userInfo" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline">
+						{{"user.editor.user.info.label" | translate}}
+					</span>
+				</div>
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label for="firstName">
+							{{"user.editor.first.name.label" | translate}}
+						</label>
+						<input id="firstName"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'user.editor.first.name.place.holder' | translate}}"
+							data-ng-model="user.firstName" name="firstName" required
+							ng-maxlength="70" max-length="70">
+						<div class="sc-validation-block"
+							ng-messages="userDetailsForm.firstName.$error"
+							ng-if="userDetailsForm.firstName.$touched">
+							<p ng-message="maxlength">
+								{{"user.editor.first.name.validation.max.length" | translate}}
+							</p>
+							<p ng-message="required">
+								{{"user.editor.first.name.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="lastName">
+							{{"user.editor.last.name.label" | translate}}
+						</label>
+						<input id="lastName"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'user.editor.last.name.place.holder' | translate}}"
+							data-ng-model="user.lastName" name="lastName" required
+							ng-maxlength="35" max-length="35">
+						<div class="sc-validation-block"
+							ng-messages="userDetailsForm.lastName.$error"
+							ng-if="userDetailsForm.lastName.$touched">
+							<p ng-message="maxlength">
+								{{"user.editor.last.name.validation.max.length" | translate}}
+							</p>
+							<p ng-message="required">
+								{{"user.editor.last.name.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="username">
+							{{"user.editor.username.label" | translate}}
+						</label>
+						<input id="username"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'user.editor.username.place.holder' | translate}}"
+							data-ng-model="user.username" name="username" required
+							data-ng-disabled="!isCreated"
+							ng-maxlength="100" max-length="100">
+						<div class="sc-validation-block"
+							ng-messages="userDetailsForm.username.$error"
+							ng-if="userDetailsForm.username.$touched">
+							<p ng-message="maxlength">
+								{{"user.editor.username.validation.max.length" | translate}}
+							</p>
+							<p ng-message="required">
+								{{"user.editor.username.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div data-ng-if="isCreated" class="sc-details-page-editor-data">
+						<label for="password">
+							{{"user.editor.password.label" | translate}}
+						</label>
+						<input id="password" type="password"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'user.editor.password.place.holder' | translate}}"
+							data-ng-model="user.password" name="password" required ng-pattern="passwordRegex" 
+							data-ng-minlength="7" ng-maxlength="12" max-length="12"
+							data-ng-change="checkPasswordMatching()">
+						<div class="sc-validation-block"
+							ng-messages="userDetailsForm.password.$error"
+							ng-if="userDetailsForm.password.$touched">
+							<p ng-message="pattern">
+								{{"user.editor.password.validation.pattern" | translate}}
+							</p>
+							<p ng-message="minlength">
+								{{"user.editor.password.validation.minLength" | translate}}
+							</p>
+							<p ng-message="maxlength">
+								{{"user.editor.password.validation.maxLength" | translate}}
+							</p>
+							<p ng-message="required">
+								{{"user.editor.password.validation.required" | translate}}
+							</p>
+						</div>
+					</div>
+					<div data-ng-if="isCreated" class="sc-details-page-editor-data">
+						<label for="confirmPassword">
+							{{"user.editor.confirm.password.label" | translate}}
+						</label>
+						<input id="confirmPassword" type="password"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'user.editor.confirm.password.place.holder' | translate}}"
+							data-ng-model="user.confirmPassword" name="confirmPassword" required ng-pattern="passwordRegex" 
+							data-ng-minlength="7" ng-maxlength="12" max-length="12"
+							data-ng-change="checkPasswordMatching()">
+						<div class="sc-validation-block"
+							ng-messages="userDetailsForm.confirmPassword.$error"
+							ng-if="userDetailsForm.confirmPassword.$touched">
+							<p ng-message="pattern">
+								{{"user.editor.confirm.password.validation.pattern" | translate}}
+							</p>
+							<p ng-message="minlength">
+								{{"user.editor.confirm.password.validation.minLength" | translate}}
+							</p>
+							<p ng-message="maxlength">
+								{{"user.editor.confirm.password.validation.maxLength" | translate}}
+							</p>
+							<p ng-message="required">
+								{{"user.editor.confirm.password.validation.required" | translate}}
+							</p>
+							<p ng-if="!passwordMatching" class="ng-binding ng-scope">
+								{{"user.editor.confirm.password.validation.mismatch" | translate}}
+							</p>
+						</div>
+					</div>
+					<div data-ng-if="isCreated" class="sc-details-page-editor-data">
+						<div>
+							<label class="center-inline">{{"user.footnote" | translate}}</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

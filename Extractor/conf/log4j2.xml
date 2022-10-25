@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+   <Properties>
+      <Property name="logdir">../logs/</Property>
+      <Property name="layout">%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%t] %c{1} - %msg%n</Property>
+   </Properties>
+   <Appenders>
+      <Console name="CONSOLE" target="SYSTEM_OUT">
+         <PatternLayout pattern="${layout}" />
+      </Console>
+      <RollingRandomAccessFile name="NEXTLABS" fileName="${logdir}/Extractor.log" filePattern="${logdir}/extractor.-%d{MM-dd-yyyy}-%i.log.zip" immediateFlush="false">
+         <PatternLayout>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%t] %c{1} - %msg%n</pattern>
+         </PatternLayout>
+         <Policies>
+            <TimeBasedTriggeringPolicy />
+            <SizeBasedTriggeringPolicy size="20 MB" />
+         </Policies>
+         <DefaultRolloverStrategy max="30" />
+      </RollingRandomAccessFile>
+   </Appenders>
+   <Loggers>
+      <Root level="INFO">
+         <AppenderRef ref="CONSOLE" />
+		 <AppenderRef ref="NEXTLABS" />
+      </Root>
+      <AsyncLogger name="com.bluejungle" level="INFO" additivity="false" includeLocation="true">
+         <AppenderRef ref="NEXTLABS" />
+      </AsyncLogger>
+      <AsyncLogger name="com.nextlabs" level="INFO" additivity="false" includeLocation="true"> 
+         <AppenderRef ref="NEXTLABS" />
+      </AsyncLogger>
+   </Loggers>
+</Configuration>

@@ -1,0 +1,119 @@
+<!-- build_xlib.xml
+
+Description:
+	This ANT script constructs <project root>/xlib.
+
+	To use this script, you must update properties is <project root>/scripts/build.properties or overide 
+	them from commandline (using -D option). For example:
+		
+		set PATH=C:\depot\external\apache-ant\apache-ant-1.8.4\bin;%PATH%
+		ant -XX:MaxPermSize=512m -Dnlbuildroot=C:/depot/PolicyStudio/dev/BuildScript_1205 -Dexternal.dir=c:/depot/external -Dnlexternaldir=c:/depot/external -f scripts/build_xlib.xml
+		
+	or
+		
+		set PATH=C:\depot\external\apache-ant\apache-ant-1.8.4\bin;%PATH%
+		set ANT_OPTS=-XX:MaxPermSize=512m -Dnlbuildroot=%NLBUILDROOT% -Dexternal.dir=%NLEXTERNALDIR% -Dnlexternaldir=%NLEXTERNALDIR% 
+		ant -f scripts/build_xlib.xml -v	
+-->
+
+<project name="build_xlib" default="all" basedir=".">
+
+    <property file="${basedir}/build.properties"/>
+    <property name="tomcat_dir" location="${nlbuildroot}/build/tomcat"/>
+    <property name="lib_dir" location="${nlbuildroot}/lib" />
+	<property name="xlib_dir" location="${nlbuildroot}/xlib" />
+	<property name="xlib_jar_dir" location="${nlbuildroot}/xlib/jar" />
+    <property name="LicenseChecker_dir" location="${nlbuildroot}/LicenseChecker" />
+    <property name="DBConnectionTest_dir" location="${nlbuildroot}/DBConnectionTest" />
+	<property name="java_dir" location="${nlbuildroot}/build/java" />
+
+    <echoproperties/>
+    <echo message="INFO: Dump properties completed"/>
+
+    <!-- Sanity checks -->
+
+    <!--Check if Nextlabs BuildRoot is set-->
+    <fail message="nlbuildroot is not set" unless="nlbuildroot"/>
+    <fail message="nlbuildroot is empty">
+        <condition>
+            <equals arg1="${nlbuildroot}" arg2="" trim="true"/>
+        </condition>
+    </fail>
+
+    <!--Check if Nextlabs BuildRoot actually exists-->
+    <available file="${nlbuildroot}" type="dir" property="local.nlbuildroot_exists"/>
+    <fail message="nlbuildroot directory does not exist - ${nlbuildroot}" unless="local.nlbuildroot_exists"/>
+
+    <!--Check if nlexternaldir is set-->
+    <fail message="nlexternaldir is not set" unless="nlexternaldir"/>
+    <fail message="nlexternaldir is empty">
+        <condition>
+            <equals arg1="${nlexternaldir}" arg2="" trim="true"/>
+        </condition>
+    </fail>
+
+    <!--Check if nlexternaldir actually exists-->
+    <available file="${nlexternaldir}" type="dir" property="local.nlexternaldir_exists"/>
+    <fail message="nlexternaldir directory does not exist - ${nlexternaldir}" unless="local.nlexternaldir_exists"/>
+
+    <echo message="INFO: Sanity check completed (no error)"/>
+
+    <!-- Targets -->
+    <target name="all" depends="clean, prepare_internal_jar, prepare_external_jar"/>
+
+    <target name="clean">
+        <delete dir="${tomcat_dir}"/>
+        <delete dir="${DBConnectionTest_dir}"/>
+        <delete dir="${LicenseChecker_dir}"/>
+    	<delete dir="${xlib_jar_dir}"/>
+    </target>
+
+    <target name="prepare_internal_jar">
+        <unzip src="${xlib_destiny_build_artifacts_zip_file}" dest="${lib_dir}" overwrite="yes">
+            <patternset>
+                <include name="agent/lib/crypt.jar"/>
+                <include name="agent/lib/common-framework.jar"/>
+            </patternset>
+            <mapper type="flatten"/>
+        </unzip>
+
+        <unzip src="${xlib_dbconnectionutil_build_artifacts_bin_zip_file}" dest="${DBConnectionTest_dir}" overwrite="yes" />
+
+        <unzip src="${xlib_license_checker_build_artifacts_bin_zip_file}" dest="${LicenseChecker_dir}" overwrite="yes" />
+
+		
+		<delete>
+  			<fileset dir="${DBConnectionTest_dir}/lib/" includes="log4j-*.jar"/>
+		</delete>
+		 <copy file="${nlexternaldir}/log4j/apache-log4j-2.17.1/log4j-api-2.17.1.jar" todir="${DBConnectionTest_dir}/lib"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/log4j/apache-log4j-2.17.1/log4j-core-2.17.1.jar" todir="${DBConnectionTest_dir}/lib"
+    	              preservelastmodified="true" overwrite="false" verbose="true"/>
+
+		<delete>
+  			<fileset dir="${LicenseChecker_dir}/lib/" includes="log4j-*.jar"/>
+		</delete>
+		 <copy file="${nlexternaldir}/log4j/apache-log4j-2.17.1/log4j-api-2.17.1.jar" todir="${LicenseChecker_dir}/lib"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/log4j/apache-log4j-2.17.1/log4j-core-2.17.1.jar" todir="${LicenseChecker_dir}/lib"
+    	              preservelastmodified="true" overwrite="false" verbose="true"/>
+
+    </target>
+
+    <target name="prepare_external_jar">
+        <!--copy libraries for LicenseChecker-->
+    	<copy file="${nlexternaldir}/sqlserver/mssql-jdbc/mssql-jdbc-9.4.1.jre11.jar" todir="${LicenseChecker_dir}/lib"
+    	      preservelastmodified="true" overwrite="false" verbose="true"/>
+        <!--copy libraries for DbConnectionTest-->
+    	
+    	<!--prepare Java for Installer -->
+    	<mkdir dir="${java_dir}"/>
+    	<copy todir="${java_dir}/">
+            <fileset dir="${nlexternaldir}/openjdk/jdk-11.0.14.1+1-win64/">
+                <exclude name="**/lib/src.zip"/>
+            	<exclude name="**/jmods/**"/>
+            	<exclude name="**/legal/**"/>
+            </fileset>
+        </copy>
+    </target>
+</project>

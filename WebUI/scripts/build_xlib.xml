@@ -1,0 +1,241 @@
+<!-- build_xlib.xml
+
+Description:
+	This ANT script constructs <project root>/xlib.
+
+	To use this script, you must update properties is <project root>/scripts/build.properties or overide 
+	them from commandline (using -D option). For example:
+		
+		set PATH=C:\depot\external\apache-ant\apache-ant-1.8.4\bin;%PATH%
+		ant -XX:MaxPermSize=512m -Dnlbuildroot=C:/depot/PolicyStudio/dev/BuildScript_1205 -Dexternal.dir=c:/depot/external -Dnlexternaldir=c:/depot/external -f scripts/build_xlib.xml
+		
+	or
+		
+		set PATH=C:\depot\external\apache-ant\apache-ant-1.8.4\bin;%PATH%
+		set ANT_OPTS=-XX:MaxPermSize=512m -Dnlbuildroot=%NLBUILDROOT% -Dexternal.dir=%NLEXTERNALDIR% -Dnlexternaldir=%NLEXTERNALDIR% 
+		ant -f scripts/build_xlib.xml -v	
+-->
+
+<project name="build_xlib" default="all" basedir=".">
+    <!-- Debug
+    <echoproperties />
+    <fail message="INFO: Debug" />
+    -->
+
+    <!-- Property files -->
+    <property file="${basedir}/build.properties"/>
+
+    <!-- Global properties -->
+    <property name="lib_dir" location="${nlbuildroot}/lib"/>
+    <property name="xlib_dir" location="${nlbuildroot}/xlib"/>
+    <property name="lib_jar_dir" value="${lib_dir}/jar"/>
+    <property name="xlib_jar_dir" value="${xlib_dir}/jar"/>
+    <property name="xlib_exe_dir" value="${xlib_dir}/exe"/>
+    <property name="xlib_exe_32bit_dir" value="${xlib_exe_dir}/x86"/>
+    <property name="xlib_exe_64bit_dir" value="${xlib_exe_dir}/x64"/>
+	<property name="tomcat_dir" value="${nlbuildroot}/xlib/tomcat"/>
+
+
+    <!-- TBD: psexternaldir is a temporary variable. It will be removed with all files
+        under lib are extracted automatically from build artifacts. -->
+    <property name="psexternaldir" location="${nlbuildroot}/lib"/>
+
+    <!-- Dump properties -->
+    <echoproperties/>
+
+    <echo message="INFO: Dump properties completed"/>
+
+    <!-- Sanity checks -->
+    <fail message="nlbuildroot is not set" unless="nlbuildroot"/>
+    <fail message="nlbuildroot is empty">
+        <condition>
+            <equals arg1="${nlbuildroot}" arg2="" trim="true"/>
+        </condition>
+    </fail>
+    <available file="${nlbuildroot}" type="dir" property="local.nlbuildroot_exists"/>
+    <fail message="nlbuildroot directory does not exist - ${nlbuildroot}" unless="local.nlbuildroot_exists"/>
+
+    <fail message="nlexternaldir is not set" unless="nlexternaldir"/>
+    <fail message="nlexternaldir is empty">
+        <condition>
+            <equals arg1="${nlexternaldir}" arg2="" trim="true"/>
+        </condition>
+    </fail>
+    <available file="${nlexternaldir}" type="dir" property="local.nlexternaldir_exists"/>
+    <fail message="nlexternaldir directory does not exist - ${nlexternaldir}" unless="local.nlexternaldir_exists"/>
+
+
+    <echo message="INFO: Sanity check completed (no error)"/>
+
+    <!-- Targets -->
+
+    <target name="all" depends="clean, prepare_internal_jar, prepare_external_jar"/>
+
+    <target name="prepare_internal_jar">
+        <unzip src="${lib_destiny_build_artifacts_zip_file}" dest="${lib_jar_dir}" overwrite="yes">
+            <patternset>
+                <include name="agent/lib/crypt.jar"/>
+            </patternset>
+            <mapper type="flatten"/>
+        </unzip>
+    </target>
+
+    <target name="prepare_external_jar">
+        <mkdir dir="${xlib_jar_dir}"/>
+        <copy file="${nlexternaldir}/hibernate/hibernate-release-4.3.11.Final/lib/antlr-2.7.7.jar"
+              todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/apache-poi/poi-3.11/poi-3.11-20141221.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/apache-poi/poi-3.11/poi-ooxml-3.11-20141221.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/apache-poi/poi-3.11/poi-ooxml-schemas-3.11-20141221.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/apache-poi/poi-3.11/ooxml-lib/xmlbeans-2.6.0.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/cas-client/cas-client-3.4.1/cas-client-core-3.4.1.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/commons-configuration/commons-configuration-1.8/commons-configuration-1.8.jar"
+              todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/commons-lang/commons-lang-2.6/commons-lang-2.6.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/commons-logging/commons-logging-1.2/commons-logging-1.2.jar"
+              todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/hibernate/hibernate-release-4.3.11.Final/lib/dom4j-1.6.1.jar"
+              todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/gson/gson-2.9/gson-2.9.0.jar" todir="${xlib_jar_dir}" preservelastmodified="true"
+    	      overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/hibernate/hibernate-release-4.3.11.Final/lib/hibernate-commons-annotations-4.0.5.Final.jar"
+              todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/hibernate/hibernate-release-4.3.11.Final/lib/hibernate-core-4.3.11.Final.jar"
+              todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/hibernate/hibernate-release-4.3.11.Final/lib/hibernate-jpa-2.1-api-1.0.0.Final.jar"
+              todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jboss-logging/jboss-logging-3.1.2.GA/jboss-logging-3.1.2.GA.jar"
+              todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/api/javax.ws.rs-api-2.1.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/aopalliance-repackaged-2.5.0-b42.jar"
+              todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/hk2-api-2.5.0-b42.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/hk2-locator-2.5.0-b42.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/hk2-utils-2.5.0-b42.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/javassist-3.22.0-CR2.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/javax.annotation-api-1.2.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/javax.inject-2.5.0-b42.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/javax.servlet-api-3.0.1.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/jaxb-api-2.2.7.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/org.osgi.core-4.2.0.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/osgi-resource-locator-1.0.1.jar"
+              todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/persistence-api-1.0.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/ext/validation-api-1.1.0.Final.jar"
+              todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/lib/jersey-client.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/lib/jersey-common.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/lib/jersey-container-servlet.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/lib/jersey-container-servlet-core.jar"
+              todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/lib/jersey-media-jaxb.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/lib/jersey-server.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jaxrs-ri/jaxrs-ri-2.27/lib/jersey-hk2.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jcifs/jcifs-1.3.18/jcifs-1.3.18.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/log4j/apache-log4j-2.17.1/log4j-api-2.17.1.jar" todir="${xlib_jar_dir}"
+    	      preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/log4j/apache-log4j-2.17.1/log4j-core-2.17.1.jar" todir="${xlib_jar_dir}"
+    	   	  preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/log4j/apache-log4j-2.17.1/log4j-1.2-api-2.17.1.jar" todir="${xlib_jar_dir}"
+    		  preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/log4j/apache-log4j-2.17.1/log4j-jul-2.17.1.jar" todir="${xlib_jar_dir}"
+    		  preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/solr/solr-8.11.1/server/lib/ext/disruptor-3.4.2.jar" todir="${xlib_jar_dir}"
+    	      preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/javamail/javamail-1.4.4/mail.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/jta/jta-1.1/jta-1.1.jar" todir="${xlib_jar_dir}" preservelastmodified="true"
+              overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/opencsv/opencsv-3.8/opencsv-3.8.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/quartz/quartz-2.2.2/lib/quartz-2.2.2.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/quartz/quartz-2.2.2/lib/quartz-jobs-2.2.2.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/solr/solr-8.11.1/dist/solrj-lib/commons-io-2.8.0.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/solr/solr-8.11.1/dist/solr-solrj-8.11.1.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/slf4j/slf4j-1.7.36/slf4j-api-1.7.36.jar" todir="${xlib_jar_dir}"
+    	      preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/solr/solr-8.11.1/dist/solrj-lib/zookeeper-3.6.2.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/commons-codec/commons-codec-1.15/commons-codec-1.15.jar"
+    	      todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/apache-httpcomponents/client/4.5.13/lib/commons-logging-1.2.jar"
+    	      todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/apache-httpcomponents/client/4.5.13/lib/fluent-hc-4.5.13.jar" todir="${xlib_jar_dir}"
+    	      preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/apache-httpcomponents/client/4.5.13/lib/httpclient-4.5.13.jar"
+    	      todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/apache-httpcomponents/client/4.5.13/lib/httpclient-cache-4.5.13.jar"
+    	      todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/apache-httpcomponents/client/4.5.13/lib//httpclient-win-4.5.13.jar"
+    	      todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/apache-httpcomponents/client/4.5.13/lib/httpmime-4.5.13.jar" todir="${xlib_jar_dir}"
+    	      preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/solr/solr-8.11.1/dist/solrj-lib/httpcore-4.4.14.jar" todir="${xlib_jar_dir}"
+    	      preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<!-- Database library -->
+    	<copy file="${nlexternaldir}/c3p0/c3p0-0.9.5.5/lib/c3p0-0.9.5.5.jar"
+    	      todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/c3p0/c3p0-0.9.5.5/lib/mchange-commons-java-0.2.19.jar"
+    	      todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+        <copy file="${nlexternaldir}/tomcat/apache-tomcat-8.0.33/x86_64/lib/tomcat-jdbc.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+    	
+        <copy file="${nlexternaldir}/javax.activation/1.2.0/javax.activation-api-1.2.0.jar" todir="${xlib_jar_dir}"
+              preservelastmodified="true" overwrite="false" verbose="true"/>
+    	
+    	<copy file="${nlexternaldir}/tomcat/extra-libraries/tomcat-juli.jar"
+    	      todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/tomcat/extra-libraries/tomcat-juli-adapters.jar"
+    	      todir="${xlib_jar_dir}" preservelastmodified="true" overwrite="false" verbose="true"/>
+    	
+    	<!--copy libraries for tomcat-->
+        <mkdir dir="${tomcat_dir}"/>
+        <copy todir="${tomcat_dir}/">
+            <fileset dir="${nlexternaldir}/tomcat/apache-tomcat-9.0.58/">
+                <exclude name="**/examples/**"/>
+            	<exclude name="**/docs/**"/>
+            	<exclude name="**/host-manager**"/>
+            	<exclude name="**/manager/**"/>
+            	<exclude name="**/bin/*.sh"/>
+            </fileset>
+        </copy>
+    	
+        <copy file="${nlexternaldir}/tomcat/extra-libraries/urlrewritefilter-4.0.3.jar" todir="${tomcat_dir}/lib"
+        	  preservelastmodified="true" overwrite="false" verbose="true"/>
+    	<copy file="${nlexternaldir}/sqlserver/mssql-jdbc/mssql-jdbc-9.4.1.jre11.jar" todir="${tomcat_dir}/lib"
+    		  preservelastmodified="true" overwrite="false" verbose="true"/>
+    	
+    </target>
+
+    <target name="clean">
+        <delete dir="${xlib_dir}"/>
+    </target>
+</project>

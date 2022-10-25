@@ -1,0 +1,64 @@
+<div class="no margin sc-page-title">
+	<div class="sc-page-title-left">
+		<div class="sc-vertical-middle-div">{{'users.label'| translate}}</div>
+	</div>
+	<div class="sc-page-title-right sc-title-button-box">
+		<a data-ng-click="createNewExternalUser()"
+			class="sc-vertical-middle-div btn btn-default sc-btn-big"
+			id="sc-btn-create-external-user"> <i class="fa fa-plus uppercase"></i>&nbsp;&nbsp;
+			{{"user.external.button.create" | translate}}
+		</a>
+		<a data-ng-click="createNewInternalUser()"
+			class="sc-vertical-middle-div btn btn-default sc-btn-save-page"
+			id="sc-btn-create-user"> <i class="fa fa-plus uppercase"></i>&nbsp;&nbsp;
+			{{"user.internal.button.create" | translate}}
+		</a>
+	</div>
+</div>
+
+<div data-ng-if="userList.length" class="sc-list-container">
+	<div data-ng-if="userList.length" class="sc-operation"></div>
+	<table class="sc-list-table table table-hover">
+		<thead>
+		</thead>
+		<tbody>
+			<tr data-ng-repeat="user in userList">
+				<td class="sc-component-details-on-table">
+					<div data-ng-if="user.type == 'I'" class="sc-inline-block-on-table sc-clickable"
+						style="width: 50%" data-ng-click="openUser(user)">
+						<p class="sc-bold-text-on-table">{{user.firstName}}&nbsp;{{user.lastName}}</p>
+						<p class="sc-grey-text-on-table">{{'user.' + user.type | translate}}</p>
+					</div>
+					<div data-ng-if="user.type == 'L'" class="sc-inline-block-on-table"
+						style="width: 50%">
+						<p class="sc-bold-text-on-table">{{user.firstName}}&nbsp;{{user.lastName}}</p>
+						<p class="sc-grey-text-on-table">{{'user.' + user.type | translate}}</p>
+					</div>
+					<div class="sc-user-option-block">
+						<div class="sc-align-right">
+							<button
+								class="btn btn-default sc-component-option sc-btn-icon-big sc-btn-bkgrd-hover sc-btn-no-bkgrd sc-btn-no-border"
+								data-ng-click="openOption(user, !openOption(user), $event)"></button>
+						</div>
+						<div
+							data-ng-include="'ui/app/Administration/User/partials/useroption-template.html'"
+							class="fade-in fade-out sc-option-large"
+							data-ng-show="isOptionOpen(user)">
+						</div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<div data-ng-show="userList.length < total">
+		<button type="button" class="btn btn-default sc-btn-loadmore"
+			data-ng-click="loadMore()">
+			{{"button.load.more" | translate}}
+		</button>
+	</div>
+</div>
+
+<div data-ng-if="!userList.length" class="sc-empty-resource-list-box">
+	<p style="text-align: center">{{'empty.list.msg' | translate}}</p>
+</div>

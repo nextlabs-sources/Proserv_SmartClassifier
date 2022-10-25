@@ -1,0 +1,3 @@
+INSERT INTO JMS_PROFILES (ID, DISPLAY_NAME, DESCRIPTION, TYPE, PROVIDER_URL, INITIAL_CONTEXT_FACTORY, SERVICE_NAME, CONNECTION_RETRY_INTERVAL, USERNAME, PASSWORD, CREATED_ON) 
+VALUES (id, 'Queue (@hostname)', 'JMS for sending document extaction information to extractor.', 'Q', 'tcp://@hostname:61616?sslEnabled=true', 'org.apache.activemq.artemis.jndi.ActiveMQInitialContextFactory', 'NextlabsQueue', 5, 'scadmin', 'sa549f6ba05c840e5f43ef63e06a8ae1a', CONVERT (datetime2,GETDATE(),120));
+-EOL-

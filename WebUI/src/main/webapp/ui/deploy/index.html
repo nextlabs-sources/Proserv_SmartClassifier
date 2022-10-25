@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<!-- If IE use the latest rendering engine -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="ui/lib/bootstrap/3.3.5/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="ui/lib/jquery-ui/1.11.0/jquery-ui.min.css" rel="stylesheet">
+<link href="ui/lib/jquery-ui/1.11.0/theme.css" rel="stylesheet">
+<link href="ui/lib/font-awesome/4.4.0/css/font-awesome.min.css"
+	rel="stylesheet">
+<link href="ui/lib/angular-ui-switch/angular-ui-switch.css"
+	rel="stylesheet">
+<link href="ui/lib/angular-material/1.0.0/angular-material.min.css"
+	rel="stylesheet">
+<link href="ui/lib/ng-tags-input/3.0/ng-tags-input.min.css"
+	rel="stylesheet">
+<link href="ui/lib/ng-tags-input/3.0/ng-tags-input.bootstrap.min.css"
+	rel="stylesheet">
+<link href="ui/lib/angular-chart/1.1.1/angular-chart.css"
+    rel="stylesheet">
+<link href="ui/css/style.css" rel="stylesheet">
+<link href="ui/css/font/fira.css" rel="stylesheet">
+<link href="nxce.ico" rel="shortcut icon" type="image/x-icon" />
+<script type="text/javascript" src="ui/config/config.js"></script>
+</head>
+
+<body data-ng-app="mainApp">
+	<div class="sc-layout">
+		<div class="sc-header">
+			<div class="sc-header-logo sc-inline"></div>
+			<div class="sc-header-name sc-inline">
+				<a href="#/Overview/overview.html">{{'smart.classifier.label'|
+					translate}}</a>
+			</div>
+			<div class="btn-group sc-login-wrapper" uib-dropdown
+				data-ng-hide="true">
+				<button id="split-button" type="button"
+					class="btn btn-sm sc-login-button-override">Christina
+					Voronstova</button>
+				<button type="button" class="btn btn-sm sc-login-button-override"
+					uib-dropdown-toggle>
+					<span class="caret sc-login-caret-override"></span> <span
+						class="sr-only">Split button!</span>
+				</button>
+				<ul class="uib-dropdown-menu sc-login-dropdown-menu-override"
+					role="menu" aria-labelledby="split-button">
+					<li role="menuitem">Super Admin</li>
+					<li role="menuitem">Last Login: 15 June 2015, 3:15 PM</li>
+					<li class="divider"></li>
+					<li role="menuitem"><a href="#">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row no-margin sc-layout-height">
+
+			<div class="no-margin sc-layout-full-width sc-layout-full-height"
+				data-ng-controller="appController">
+				<div class=" sc-layout-full-height" data-ng-class="getMenuClass()">
+					<div class="sc-layout-full-height" data-ng-cloak
+						ng-include="'ui/app/templates/menu.html'"
+						style="overflow-y: auto; overflow-x: hidden"></div>
+				</div>
+				<div class="sc-layout-full-height"
+					data-ng-class="getMainContentClass()">
+					<div class="no-padding sc-layout-full-width sc-layout-main-view"
+						id="sc-main-content">
+						<div class="sc-layout-full-height" data-ng-class="transition"
+							data-ng-cloak ui-view></div>
+					</div>
+					<div class="sc-copyright">
+						<div style="color: #666666;" class="sc-inline">{{'copy.right.label'
+							| translate}}</div>
+						<div class="sc-inline">{{'nextlabs.inc.label'| translate}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div data-http-loader class="sc-data-loading">
+		<!-- <p style="text-align: center" class="sc-vertical-middle-div">Loading...</p> -->
+		<div layout="row" layout-sm="column" layout-align="space-around"
+			class="sc-vertical-middle-div">
+			<md-progress-circular md-mode="indeterminate" md-diameter="120px"></md-progress-circular>
+		</div>
+	</div>
+
+
+
+	<script type="text/javascript" src="ui/lib/jquery/1.8.2/jquery.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/jquery-ui/1.11.0/jquery-ui.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular/1.8.2/angular.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular/1.8.2/angular-aria.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular/1.8.2/angular-sanitize.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular/1.8.2/angular-animate.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular/1.8.2/angular-messages.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular-ui-router/0.4.3/angular-ui-router.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular-ui/bootstrap/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular-ui/angular-ui-numeric.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular-ui-switch/angular-ui-switch.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular-translate/2.19.0/angular-translate.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular-material/1.0.0/angular-material.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular-translate/angular-translate-loader-static-files.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular-input-mask/angular-input-masks-standalone.min.js"></script>
+	<script type="text/javascript" src="ui/lib/chart-js/2.3.0/Chart.min.js"></script>
+	<script type="text/javascript"
+		src="ui/lib/angular-chart/1.1.1/angular-chart.min.js"></script>
+
+	<script type="text/javascript" src="ui/app/templates.js"></script>
+	<script type="text/javascript" src="ui/app/app.js"></script>
+
+</body>
+
+</html>

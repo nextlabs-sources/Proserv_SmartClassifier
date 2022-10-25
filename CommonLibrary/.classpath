@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="xlib/jar/hibernate-jpa-2.1-api-1.0.0.Final.jar"/>
+	<classpathentry kind="lib" path="lib/jar/crypt.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/commons-lang-2.6.jar" sourcepath="C:/Users/pkalra/.ideaLibSources/commons-lang-2.6-sources.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/commons-configuration-1.8.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/mail.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/quartz-2.2.2.jar" sourcepath="C:/Users/pkalra/.ideaLibSources/quartz-2.2.2-sources.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/hibernate-core-4.3.11.Final.jar" sourcepath="C:/Users/pkalra/.ideaLibSources/hibernate-core-4.3.11.Final-sources.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/commons-vfs2-2.0.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/javax.activation-api-1.2.0.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/log4j-api-2.17.1.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/log4j-core-2.17.1.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/solr-solrj-8.11.1.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/c3p0-0.9.5.5.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/commons-codec-1.15.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/disruptor-3.4.2.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/fluent-hc-4.5.13.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/gson-2.9.0.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/httpclient-4.5.13.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/httpclient-cache-4.5.13.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/httpclient-win-4.5.13.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/httpmime-4.5.13.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/jna-4.5.2.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/jna-platform-4.5.2.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/json-20211205.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/log4j-1.2-api-2.17.1.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/httpcore-4.4.14.jar"/>
+	<classpathentry kind="lib" path="lib/jar/rmjavasdk-ng.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job-scheduling-data
+	xmlns="http://www.quartz-scheduler.org/xml/JobSchedulingData"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.quartz-scheduler.org/xml/JobSchedulingData http://www.quartz-scheduler.org/xml/job_scheduling_data_2_0.xsd"
+	version="1.8">
+	
+	<schedule>
+		<job>
+			<name>PurgeEventLogJob</name>
+			<group>DatabaseMaintenanceGroup</group>
+			<description>Purge event log outside retention period</description>
+			<job-class>com.nextlabs.smartclassifier.job.PurgeEventLogJob</job-class>
+		</job>
+		<trigger>
+			<cron>
+				<name>PurgeEventLogJob</name>
+				<job-name>PurgeEventLogJob</job-name>
+				<job-group>DatabaseMaintenanceGroup</job-group>
+				<cron-expression>0 5 0 1/1 * ? *</cron-expression>
+			</cron>
+		</trigger>
+	</schedule>
+</job-scheduling-data>

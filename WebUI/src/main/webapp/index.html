@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<!-- If IE use the latest rendering engine -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Smart Classifier</title>
+<link href="ui/lib/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<link href="ui/lib/jquery-ui/1.11.0/jquery-ui.min.css" rel="stylesheet">
+<link href="ui/lib/jquery-ui/1.11.0/theme.css" rel="stylesheet">
+<link href="ui/lib/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="ui/lib/angular-ui-switch/angular-ui-switch.css" rel="stylesheet">
+<link href="ui/lib/angular-material/1.0.0/angular-material.min.css" rel="stylesheet">
+<link href="ui/lib/ng-tags-input/3.0/ng-tags-input.min.css" rel="stylesheet">
+<link href="ui/lib/ng-tags-input/3.0/ng-tags-input.bootstrap.min.css" rel="stylesheet">
+<link href="ui/lib/angular-chart/1.1.1/angular-chart.css" rel="stylesheet">
+<link href="ui/css/style.css" rel="stylesheet">
+<link href="ui/css/font/fira.css" rel="stylesheet">
+<link href="ui/lib/angular-toaster/toaster.min.css" rel="stylesheet">
+<link href="nxce.ico" rel="shortcut icon" type="image/x-icon" />
+<script type="text/javascript" src="ui/config/config.js"></script>
+</head>
+
+<body data-ng-app="mainApp" data-ng-controller="appController">
+	<div class="sc-layout" data-ng-controller="authenticationController">
+		<div class="sc-header">
+			<div class="sc-header-logo"></div>
+			<div class="sc-name">
+				<a href="#/Overview/overview.html">{{'smart.classifier.label'| translate}}</a>
+			</div>
+			<div class="btn-group sc-login-wrapper" uib-dropdown data-ng-mouseenter="showUserProfile()" data-ng-mouseleave="hideUserProfile()">
+				<button id="split-button" type="button" class="sc-login-button-override btn btn-sm" data-ng-click="showProfile=!showProfile">{{userInfo.firstName}}&nbsp;{{userInfo.lastName}}</button>
+				<i class="fa fa-angle-down" data-ng-click="showProfile=!showProfile"></i>
+				<div class="sc-user-profile animate-show animate-hide" data-ng-show="showProfile">
+					<div class="sc-login-dropdown-arrow-up"></div>
+					<div class="sc-login-dropdown-info">
+						<a href data-ng-click="showProfile=!showProfile; logout()" class="btn btn-default sc-logout-btn ng-binding">{{'smart.classifier.logout'
+							| translate}}</a>
+						<a href data-ng-if="userInfo.type == 'I'" data-ng-click="showProfile=!showProfile; changePassword()"
+							class="sc-change-password ng-binding">{{'smart.classifier.change.password' | translate}}</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row no-margin sc-layout-height">
+			<div class="no-margin sc-layout-full-width sc-layout-full-height">
+				<div class=" sc-layout-full-height" data-ng-class="getMenuClass()">
+					<div class="sc-layout-full-height" data-ng-cloak ng-include="'./ui/app/templates/menu.html'"
+						style="overflow-y: auto; overflow-x: hidden"></div>
+				</div>
+				<div class="sc-layout-full-height" data-ng-class="getMainContentClass()">
+					<div class="no-padding sc-layout-full-width sc-layout-main-view" id="sc-main-content">
+						<div class="sc-layout-full-height" data-ng-class="transition" data-ng-cloak ui-view></div>
+					</div>
+					<div class="sc-copyright">
+						<div style="color: #666666;" class="sc-inline">{{'copy.right.label' | translate}}</div>
+						<div class="sc-inline">{{'nextlabs.inc.label'| translate}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<toaster-container toaster-options="{'time-out': 5000, 'close-button':false, 'animation-class': 'toast-top-center'}"></toaster-container>
+	</div>
+
+	<div data-http-loader class="sc-data-loading">
+		<!-- <p style="text-align: center" class="sc-vertical-middle-div">Loading...</p> -->
+		<div layout="row" layout-sm="column" layout-align="space-around" class="sc-vertical-middle-div">
+			<md-progress-circular md-mode="indeterminate" md-diameter="120px"></md-progress-circular>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="ui/lib/jquery/1.8.2/jquery.js"></script>
+	<script type="text/javascript" src="ui/lib/jquery-ui/1.11.0/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular/1.8.2/angular.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular/1.8.2/angular-aria.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular/1.8.2/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular/1.8.2/angular-animate.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular/1.8.2/angular-messages.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular-ui-router/0.4.3/angular-ui-router.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular-ui/bootstrap/ui-bootstrap-tpls-0.14.3.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular-ui/angular-ui-numeric.js"></script>
+	<script type="text/javascript" src="ui/lib/angular-ui-switch/angular-ui-switch.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular-translate/2.19.0/angular-translate.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular-material/1.0.0/angular-material.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular-translate/angular-translate-loader-static-files.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular-input-mask/angular-input-masks-standalone.min.js"></script>
+	<script type="text/javascript" src="ui/lib/chart-js/2.3.0/Chart.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular-chart/1.1.1/angular-chart.min.js"></script>
+	<script type="text/javascript" src="ui/lib/angular-toaster/toaster.min.js"></script>
+
+	<script type="text/javascript" src="ui/build/templates.js"></script>
+	<script type="text/javascript" src="ui/app/app.js"></script>
+	<script type="text/javascript" src="ui/app/User/services/authenticationService.js"></script>
+	<script type="text/javascript" src="ui/app/User/services/passwordService.js"></script>
+	<script type="text/javascript" src="ui/app/services/generalService.js"></script>
+	<script type="text/javascript" src="ui/app/services/loggerService.js"></script>
+	<script type="text/javascript" src="ui/app/services/networkService.js"></script>
+	<script type="text/javascript" src="ui/app/services/configService.js"></script>
+	<script type="text/javascript" src="ui/app/services/sharedService.js"></script>
+	<script type="text/javascript" src="ui/app/services/dialogService.js"></script>
+	<script type="text/javascript" src="ui/app/services/statusCodeService.js"></script>
+	<script type="text/javascript" src="ui/app/services/autoCloseOptionService.js"></script>
+	<script type="text/javascript" src="ui/app/SCServices/services/scServicesService.js"></script>
+	<script type="text/javascript" src="ui/app/Rules/services/ruleService.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/JMS/services/jmsService.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/Plugins/services/pluginService.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/ExecutionWindow/services/executionWindowService.js"></script>
+	<script type="text/javascript" src="ui/app/services/collectionService.js"></script>
+	<script type="text/javascript" src="ui/app/Report/AdHoc/services/adHocReportService.js"></script>
+	<script type="text/javascript" src="ui/app/IndexDatabaseQuery/services/indexDatabaseQueryService.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/General/services/generalSettingsService.js"></script>
+	<script type="text/javascript" src="ui/app/Administration/LoginConfiguration/services/loginConfigurationService.js"></script>
+	<script type="text/javascript" src="ui/app/Administration/User/services/userService.js"></script>
+
+	<script type="text/javascript" src="ui/app/Login/loginController.js"></script>
+	<script type="text/javascript" src="ui/app/Overview/overviewController.js"></script>
+	<script type="text/javascript" src="ui/app/SCServices/servicesListController.js"></script>
+	<script type="text/javascript" src="ui/app/SCServices/serviceDetailsController.js"></script>
+	<script type="text/javascript" src="ui/app/SCServices/watcherController.js"></script>
+	<script type="text/javascript" src="ui/app/SCServices/ruleEngineController.js"></script>
+	<script type="text/javascript" src="ui/app/SCServices/extractorController.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/JMS/jmsListController.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/JMS/jmsDetailsController.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/Plugins/pluginListController.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/Plugins/pluginDetailsController.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/ExecutionWindow/executionWindowListController.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/ExecutionWindow/executionWindowDetailsController.js"></script>
+	<script type="text/javascript" src="ui/app/Rules/ruleListController.js"></script>
+	<script type="text/javascript" src="ui/app/Rules/ruleDetailsController.js"></script>
+	<script type="text/javascript" src="ui/app/IndexDatabaseQuery/indexDatabaseQueryController.js"></script>
+	<script type="text/javascript" src="ui/app/IndexDatabaseQuery/indexDatabaseQueryResultController.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/License/licenseController.js"></script>
+	<script type="text/javascript" src="ui/app/services/summaryService.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/General/generalSettingsController.js"></script>
+	<script type="text/javascript" src="ui/app/User/authenticationController.js"></script>
+	<script type="text/javascript" src="ui/app/Administration/LoginConfiguration/loginConfigurationListController.js"></script>
+	<script type="text/javascript" src="ui/app/Administration/LoginConfiguration/loginConfigurationDetailsController.js"></script>
+	<script type="text/javascript" src="ui/app/Administration/User/userListController.js"></script>
+	<script type="text/javascript" src="ui/app/Administration/User/externalUserDetailsController.js"></script>
+	<script type="text/javascript" src="ui/app/Administration/User/internalUserDetailsController.js"></script>
+	<script type="text/javascript" src="ui/app/User/authenticationController.js"></script>
+	<script type="text/javascript" src="ui/app/appController.js"></script>
+	<script type="text/javascript" src="ui/app/directives/httpLoader.js"></script>
+	<script type="text/javascript" src="ui/app/directives/multiParam.js"></script>
+	<script type="text/javascript" src="ui/app/directives/friendlyDate.js"></script>
+	<script type="text/javascript" src="ui/app/Report/AdHoc/services/adHocReportService.js"></script>
+	<script type="text/javascript" src="ui/app/Report/AdHoc/services/adHocReportQueryService.js"></script>
+	<script type="text/javascript" src="ui/app/Report/AdHoc/adHocReportDetailsController.js"></script>
+	<script type="text/javascript" src="ui/app/Report/AdHoc/adHocReportListController.js"></script>
+	
+	<!-- Repository Credentials -->
+	<script type="text/javascript" src="ui/app/Settings/RepositoryCredentials/repoCredentialsDetailsController.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/RepositoryCredentials/repoCredentialsListController.js"></script>
+	<script type="text/javascript" src="ui/app/Settings/RepositoryCredentials/services/repoCredentialsService.js"></script>
+</body>
+</html>

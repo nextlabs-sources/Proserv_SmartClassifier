@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="hornetq-commons">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/xlib/jar/hornetq-commons.jar!/" />
+      <root url="jar://$PROJECT_DIR$/xlib/jar/hornetq-core-client.jar!/" />
+      <root url="jar://$PROJECT_DIR$/xlib/jar/hornetq-jms-client.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

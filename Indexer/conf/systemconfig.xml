@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system-configuration>
+	
+	<jetty-port>
+		<value>8093</value>
+	</jetty-port>
+	
+	<war-file-location>
+		<value>..//xlib//solr-8.10.1.war</value>
+	</war-file-location>
+	
+	<indexer-home-folder>
+		<value>..//xlib//solr//</value>
+	</indexer-home-folder>
+	
+	<jnp-port>
+		<value>1099</value>
+	</jnp-port>
+	
+	<jnp-rmiport>
+		<value>1098</value>
+	</jnp-rmiport>
+	
+	<jnp-host>
+		<value>10.63.0.190</value>
+	</jnp-host>
+	
+	<netty-host>
+		<value>10.63.0.190</value>
+	</netty-host>
+	
+	<netty-port>
+		<value>5455</value>
+	</netty-port>
+	
+</system-configuration>

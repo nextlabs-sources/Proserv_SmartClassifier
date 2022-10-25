@@ -1,0 +1,392 @@
+<!-- build_compile.xml
+
+Description:
+	This ANT script publishes installers and build artifacts to s:/build.
+	
+	To use this script, you must update properties is <project root>/scripts/build.properties or overide 
+	them from commandline (using -D option). For example:
+		
+		set PATH=C:\depot\external\apache-ant\apache-ant-1.8.4\bin;%PATH%
+		ant -XX:MaxPermSize=512m -Dnlbuildroot=C:/depot/PolicyStudio/dev/BuildScript_1205 -Dexternal.dir=c:/depot/external -Dnlexternaldir=c:/depot/external -Dbuild_number=10001 -f scripts/build_publish.xml
+		
+	or
+		
+		set PATH=C:\depot\external\apache-ant\apache-ant-1.8.4\bin;%PATH%
+		set ANT_OPTS=-XX:MaxPermSize=512m -Dnlbuildroot=%NLBUILDROOT% -Dexternal.dir=%NLEXTERNALDIR% -Dnlexternaldir=%NLEXTERNALDIR% -Dbuild_number=10001 
+		ant -f scripts/build_publish.xml -v	
+-->
+<project name="build_compile" default="all" basedir=".">
+	<!-- Propery files -->
+	<property file="${basedir}/build.properties" />
+	<property environment="env" />
+	
+	<!-- Global properties -->
+	<property name="xlib_dir" location="${nlbuildroot}/xlib" />
+	<property name="xlib_jar_dir" location="${xlib_dir}/jar" />
+	<property name="lib_dir" location="${nlbuildroot}/lib" />
+	<property name="lib_jar_dir" location="${lib_dir}/jar" />
+	<property name="xlib_exe_x86_dir" location="${xlib_dir}/exe/x86" />
+	<property name="xlib_exe_x64_dir" location="${xlib_dir}/exe/x64" />
+	<property name="build_dir" location="${nlbuildroot}/build" />
+	<property name="classes_dir" value="${build_dir}/classes" />
+	<property name="package_dir" value="${build_dir}/${package_name}" />
+	<property name="dist_zip_file_name" value="${package_name}-${version_str}-${version_build_short}-${build_date_long}.zip" />
+	
+	<!-- Dump properties -->
+	<echoproperties />
+	
+	<echo message="INFO: Dump properties completed" />
+	
+	<!-- Sanity checks -->
+	<fail message="nlbuildroot is not set" unless="nlbuildroot" />
+	<fail message="nlbuildroot is empty">
+		<condition>
+			<equals arg1="${nlbuildroot}" arg2="" trim="true" />
+		</condition>
+	</fail>
+	<available file="${nlbuildroot}" type="dir" property="local.nlbuildroot_exists" />
+	<fail message="nlbuildroot directory does not exist - ${nlbuildroot}" unless="local.nlbuildroot_exists" />
+	
+	<echo message="INFO: Sanity check completed (no error)" />
+	
+	<path id="compile.classpath">
+		<fileset dir="${xlib_jar_dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${lib_jar_dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	
+	<!-- Global tasks -->
+	<tstamp>
+		<format property="local.now" pattern="EEE, d MMM yyyy HH:mm:ss Z" />
+	</tstamp>
+	
+	<echo message="version_str = ${version_str}" />
+	<echo message="time = ${local.now}" />
+	
+	<!-- Targets -->
+	<target name="all" description="Default for all" depends="clean, compile, package" />
+	
+	<target name="clean" description="Delete all build artifacts" depends="">
+		<delete includeemptydirs="true" dir="${build_dir}" />
+	</target>
+	
+	<target name="compile" description="Compile the project" depends="clean">
+		<mkdir dir="${classes_dir}" />
+		
+		<javac debug="on" debuglevel="lines,vars,source" srcdir="${nlbuildroot}/src" destdir="${classes_dir}">
+			<classpath refid="compile.classpath" />
+			<include name="**/*.java" />
+			<!--exclude name="**/Test*.java" /-->
+		</javac>
+		<!--  Action plug-ins  -->
+		<jar destfile="${build_dir}/plugins/add-tag-action.jar">
+			<fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharedfolders/addtag/*.class" />
+			<manifest>
+				<attribute name="Java-Version" value="${java.version}" />
+				<attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+				<attribute name="Implementation-Title" value="${product_name}" />
+				<attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+				<attribute name="Implementation-Time" value="${local.now}" />
+			</manifest>
+			<service type="com.nextlabs.smartclassifier.plugin.action.Action">
+				<provider classname="com.nextlabs.smartclassifier.plugin.action.sharedfolders.addtag.AddTag" />
+			</service>
+		</jar>
+
+		<jar destfile="${build_dir}/plugins/copy-file-action.jar">
+			<fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharedfolders/copy/*.class" />
+			<manifest>
+				<attribute name="Java-Version" value="${java.version}" />
+				<attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+				<attribute name="Implementation-Title" value="${product_name}" />
+				<attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+				<attribute name="Implementation-Time" value="${local.now}" />
+			</manifest>
+			<service type="com.nextlabs.smartclassifier.plugin.action.Action">
+				<provider classname="com.nextlabs.smartclassifier.plugin.action.sharedfolders.copy.CopyFile" />
+			</service>
+		</jar>
+
+		<jar destfile="${build_dir}/plugins/delete-file-action.jar">
+			<fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharedfolders/delete/*.class" />
+			<manifest>
+				<attribute name="Java-Version" value="${java.version}" />
+				<attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+				<attribute name="Implementation-Title" value="${product_name}" />
+				<attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+				<attribute name="Implementation-Time" value="${local.now}" />
+			</manifest>
+			<service type="com.nextlabs.smartclassifier.plugin.action.Action">
+				<provider classname="com.nextlabs.smartclassifier.plugin.action.sharedfolders.delete.DeleteFile" />
+			</service>
+		</jar>
+
+		<jar destfile="${build_dir}/plugins/encrypt-file-action.jar">
+			<fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharedfolders/skydrm/encrypt/*.class" />
+			<manifest>
+				<attribute name="Java-Version" value="${java.version}" />
+				<attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+				<attribute name="Implementation-Title" value="${product_name}" />
+				<attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+				<attribute name="Implementation-Time" value="${local.now}" />
+			</manifest>
+			<service type="com.nextlabs.smartclassifier.plugin.action.Action">
+				<provider classname="com.nextlabs.smartclassifier.plugin.action.sharedfolders.skydrm.encrypt.SkyDRMEncryptFile" />
+			</service>
+		</jar>
+
+		<jar destfile="${build_dir}/plugins/decrypt-file-action.jar">
+			<fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharedfolders/skydrm/decrypt/*.class" />
+			<manifest>
+				<attribute name="Java-Version" value="${java.version}" />
+				<attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+				<attribute name="Implementation-Title" value="${product_name}" />
+				<attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+				<attribute name="Implementation-Time" value="${local.now}" />
+			</manifest>
+			<service type="com.nextlabs.smartclassifier.plugin.action.Action">
+				<provider classname="com.nextlabs.smartclassifier.plugin.action.sharedfolders.skydrm.decrypt.SkyDRMDecryptFile" />
+			</service>
+		</jar>
+
+		<jar destfile="${build_dir}/plugins/send-email-action.jar">
+			<fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharedfolders/mail/*.class" />
+			<manifest>
+				<attribute name="Java-Version" value="${java.version}" />
+				<attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+				<attribute name="Implementation-Title" value="${product_name}" />
+				<attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+				<attribute name="Implementation-Time" value="${local.now}" />
+			</manifest>
+			<service type="com.nextlabs.smartclassifier.plugin.action.Action">
+				<provider classname="com.nextlabs.smartclassifier.plugin.action.sharedfolders.mail.SendEmail" />
+			</service>
+		</jar>
+
+		<jar destfile="${build_dir}/plugins/move-file-action.jar">
+			<fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharedfolders/move/*.class" />
+			<manifest>
+				<attribute name="Java-Version" value="${java.version}" />
+				<attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+				<attribute name="Implementation-Title" value="${product_name}" />
+				<attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+				<attribute name="Implementation-Time" value="${local.now}" />
+			</manifest>
+			<service type="com.nextlabs.smartclassifier.plugin.action.Action">
+				<provider classname="com.nextlabs.smartclassifier.plugin.action.sharedfolders.move.MoveFile" />
+			</service>
+		</jar>
+
+		<jar destfile="${build_dir}/plugins/remove-tag-action.jar">
+			<fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharedfolders/removetag/*.class" />
+			<manifest>
+				<attribute name="Java-Version" value="${java.version}" />
+				<attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+				<attribute name="Implementation-Title" value="${product_name}" />
+				<attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+				<attribute name="Implementation-Time" value="${local.now}" />
+			</manifest>
+			<service type="com.nextlabs.smartclassifier.plugin.action.Action">
+				<provider classname="com.nextlabs.smartclassifier.plugin.action.sharedfolders.removetag.RemoveTag" />
+			</service>
+		</jar>
+
+        <!--SharePoint actions-->
+        <jar destfile="${build_dir}/plugins/add-tag-action-SP.jar">
+            <fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharepoint/addtag/*.class" />
+            <manifest>
+                <attribute name="Java-Version" value="${java.version}" />
+                <attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+                <attribute name="Implementation-Title" value="${product_name}" />
+                <attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+                <attribute name="Implementation-Time" value="${local.now}" />
+            </manifest>
+            <service type="com.nextlabs.smartclassifier.plugin.action.Action">
+                <provider classname="com.nextlabs.smartclassifier.plugin.action.sharepoint.addtag.AddTag" />
+            </service>
+        </jar>
+
+        <jar destfile="${build_dir}/plugins/copy-file-action-SP.jar">
+            <fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharepoint/copy/*.class" />
+            <manifest>
+                <attribute name="Java-Version" value="${java.version}" />
+                <attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+                <attribute name="Implementation-Title" value="${product_name}" />
+                <attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+                <attribute name="Implementation-Time" value="${local.now}" />
+            </manifest>
+            <service type="com.nextlabs.smartclassifier.plugin.action.Action">
+                <provider classname="com.nextlabs.smartclassifier.plugin.action.sharepoint.copy.CopyFile" />
+            </service>
+        </jar>
+
+        <jar destfile="${build_dir}/plugins/delete-file-action-SP.jar">
+            <fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharepoint/delete/*.class" />
+            <manifest>
+                <attribute name="Java-Version" value="${java.version}" />
+                <attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+                <attribute name="Implementation-Title" value="${product_name}" />
+                <attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+                <attribute name="Implementation-Time" value="${local.now}" />
+            </manifest>
+            <service type="com.nextlabs.smartclassifier.plugin.action.Action">
+                <provider classname="com.nextlabs.smartclassifier.plugin.action.sharepoint.delete.DeleteFile" />
+            </service>
+        </jar>
+
+        <jar destfile="${build_dir}/plugins/protect-file-action-SP.jar">
+            <fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharepoint/protect/*.class" />
+            <manifest>
+                <attribute name="Java-Version" value="${java.version}" />
+                <attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+                <attribute name="Implementation-Title" value="${product_name}" />
+                <attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+                <attribute name="Implementation-Time" value="${local.now}" />
+            </manifest>
+            <service type="com.nextlabs.smartclassifier.plugin.action.Action">
+                <provider classname="com.nextlabs.smartclassifier.plugin.action.sharepoint.protect.EncryptFile" />
+            </service>
+        </jar>
+
+        <jar destfile="${build_dir}/plugins/removeprotection-file-action-SP.jar">
+            <fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharepoint/removeprotection/*.class" />
+            <manifest>
+                <attribute name="Java-Version" value="${java.version}" />
+                <attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+                <attribute name="Implementation-Title" value="${product_name}" />
+                <attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+                <attribute name="Implementation-Time" value="${local.now}" />
+            </manifest>
+            <service type="com.nextlabs.smartclassifier.plugin.action.Action">
+                <provider classname="com.nextlabs.smartclassifier.plugin.action.sharepoint.removeprotection.DecryptFile" />
+            </service>
+        </jar>
+
+        <jar destfile="${build_dir}/plugins/email-notify-action-SP.jar">
+            <fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharepoint/notify/*.class" />
+            <manifest>
+                <attribute name="Java-Version" value="${java.version}" />
+                <attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+                <attribute name="Implementation-Title" value="${product_name}" />
+                <attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+                <attribute name="Implementation-Time" value="${local.now}" />
+            </manifest>
+            <service type="com.nextlabs.smartclassifier.plugin.action.Action">
+                <provider classname="com.nextlabs.smartclassifier.plugin.action.sharepoint.notify.EMailNotify" />
+            </service>
+        </jar>
+
+        <jar destfile="${build_dir}/plugins/move-file-action-SP.jar">
+            <fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharepoint/move/*.class" />
+            <manifest>
+                <attribute name="Java-Version" value="${java.version}" />
+                <attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+                <attribute name="Implementation-Title" value="${product_name}" />
+                <attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+                <attribute name="Implementation-Time" value="${local.now}" />
+            </manifest>
+            <service type="com.nextlabs.smartclassifier.plugin.action.Action">
+                <provider classname="com.nextlabs.smartclassifier.plugin.action.sharepoint.move.MoveFile" />
+            </service>
+        </jar>
+
+        <jar destfile="${build_dir}/plugins/remove-tag-action-SP.jar">
+            <fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharepoint/removetag/*.class" />
+            <manifest>
+                <attribute name="Java-Version" value="${java.version}" />
+                <attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+                <attribute name="Implementation-Title" value="${product_name}" />
+                <attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+                <attribute name="Implementation-Time" value="${local.now}" />
+            </manifest>
+            <service type="com.nextlabs.smartclassifier.plugin.action.Action">
+                <provider classname="com.nextlabs.smartclassifier.plugin.action.sharepoint.removetag.RemoveTag" />
+            </service>
+        </jar>
+
+        <jar destfile="${build_dir}/plugins/set-column-value-SP.jar">
+            <fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/action/sharepoint/setcolumnvalue/*.class" />
+            <manifest>
+                <attribute name="Java-Version" value="${java.version}" />
+                <attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+                <attribute name="Implementation-Title" value="${product_name}" />
+                <attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+                <attribute name="Implementation-Time" value="${local.now}" />
+            </manifest>
+            <service type="com.nextlabs.smartclassifier.plugin.action.Action">
+                <provider classname="com.nextlabs.smartclassifier.plugin.action.sharepoint.setcolumnvalue.SetColumnValue" />
+            </service>
+        </jar>
+
+		<!--  DataProvider plug-ins  -->
+		<jar destfile="${build_dir}/plugins/csv-dataprovider.jar">
+			<fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/dataprovider/csv/*.class" />
+			<manifest>
+				<attribute name="Java-Version" value="${java.version}" />
+				<attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+				<attribute name="Implementation-Title" value="${product_name}" />
+				<attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+				<attribute name="Implementation-Time" value="${local.now}" />
+			</manifest>
+			<service type="com.nextlabs.smartclassifier.plugin.dataprovider.DataProvider">
+				<provider classname="com.nextlabs.smartclassifier.plugin.dataprovider.csv.CSVDataProvider" />
+			</service>
+		</jar>
+
+		<jar destfile="${build_dir}/plugins/db-dataprovider.jar">
+			<fileset dir="${classes_dir}" includes="**/com/nextlabs/smartclassifier/plugin/dataprovider/db/*.class" />
+			<manifest>
+				<attribute name="Java-Version" value="${java.version}" />
+				<attribute name="Implementation-Vendor" value="NextLabs, Inc." />
+				<attribute name="Implementation-Title" value="${product_name}" />
+				<attribute name="Implementation-Version" value="${version_str} (${build_number})" />
+				<attribute name="Implementation-Time" value="${local.now}" />
+			</manifest>
+			<service type="com.nextlabs.smartclassifier.plugin.dataprovider.DataProvider">
+				<provider classname="com.nextlabs.smartclassifier.plugin.dataprovider.db.DBDataProvider" />
+			</service>
+		</jar>
+	</target>
+	
+	<target name="package" description="builds each plugin module">
+		<mkdir dir="${package_dir}" />
+		<mkdir dir="${package_dir}/xlib" />
+		<mkdir dir="${package_dir}/conf" />
+		<mkdir dir="${package_dir}/logs" />
+		<mkdir dir="${package_dir}/setup" />
+		<mkdir dir="${package_dir}/plugins" />
+		
+		<copy todir="${package_dir}" overwrite="true">
+			<fileset file="${build_dir}/*.jar" />
+			<fileset file="${nlbuildroot}/README.txt" />
+		</copy>
+		
+		<copy todir="${package_dir}/plugins" overwrite="true">
+			<fileset file="${build_dir}/plugins/*.jar" />
+		</copy>
+		
+		<copy todir="${package_dir}/xlib" overwrite="true">
+			<fileset dir="${xlib_jar_dir}">
+			</fileset>
+			<fileset dir="${lib_jar_dir}">
+			</fileset>
+		</copy>
+		
+		<copy todir="${package_dir}/conf" overwrite="true">
+			<fileset dir="${nlbuildroot}/conf/">
+			</fileset>
+		</copy>
+		
+		<fixcrlf srcdir="${package_dir}/conf" includes="**/*.*" eol="unix" eof="remove" />
+		
+		<zip destfile="${build_dir}/${dist_zip_file_name}" encoding="UTF-8">
+			<fileset dir="${build_dir}">
+				<include name="${package_name}/**" />
+			</fileset>
+		</zip>
+	</target>
+</project>
+

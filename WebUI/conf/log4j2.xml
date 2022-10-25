@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+   <Properties>
+      <Property name="logdir">${sys:catalina.base}/logs/</Property>
+      <Property name="layout">%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%t] %c{1} - %msg%n</Property>
+   </Properties>
+   <Appenders>
+      <Console name="CONSOLE" target="SYSTEM_OUT">
+         <PatternLayout pattern="${layout}" />
+      </Console>
+      <RollingRandomAccessFile name="NEXTLABS" fileName="${logdir}/WebUI.log" filePattern="${logdir}/webui.-%d{MM-dd-yyyy}-%i.log.zip" immediateFlush="false">
+         <PatternLayout>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%t] %c{1} - %msg%n</pattern>
+         </PatternLayout>
+         <Policies>
+            <TimeBasedTriggeringPolicy />
+            <SizeBasedTriggeringPolicy size="20 MB" />
+         </Policies>
+         <DefaultRolloverStrategy max="30" />
+      </RollingRandomAccessFile>
+      <RollingRandomAccessFile name="CATALINA" fileName="${logdir}/catalina.log" filePattern="${logdir}/catalina.%d{yyyy-MM-dd}-%i.log.zip" immediateFlush="false">
+         <PatternLayout pattern="${layout}" />
+         <Policies>
+            <TimeBasedTriggeringPolicy />
+            <SizeBasedTriggeringPolicy size="20 MB" />
+         </Policies>
+         <DefaultRolloverStrategy max="30" />
+      </RollingRandomAccessFile>
+   </Appenders>
+   <Loggers>
+      <Root level="INFO">
+		 <AppenderRef ref="CONSOLE"/>
+		 <AppenderRef ref="NEXTLABS" />
+      </Root>
+	  <AsyncLogger name="org.apache.catalina" level="INFO" additivity="false"> 
+         <AppenderRef ref="CATALINA" />
+      </AsyncLogger>
+      <AsyncLogger name="com.nextlabs" level="DEBUG" additivity="false"> 
+         <AppenderRef ref="NEXTLABS" />
+      </AsyncLogger>
+	  <AsyncLogger name="perfStatsLogger" level="OFF">
+      </AsyncLogger>
+	  <AsyncLogger name="org.hibernate" level="ERROR">
+      </AsyncLogger>
+      <AsyncLogger name="org.apereo.cas" level="WARN">
+      </AsyncLogger>
+	  <AsyncLogger name="com.mchange" level="ERROR">
+      </AsyncLogger>
+   </Loggers>
+</Configuration>

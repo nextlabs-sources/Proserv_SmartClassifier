@@ -1,0 +1,267 @@
+<div data-ng-controller="ruleEngineController" class="sc-layout-full-height">
+
+	<div class="sc-details-page-summary-div">
+		<a href="" data-ng-click="scrollTo('ruleEngineInfo')">
+			<div class="sc-details-page-summary-row" data-ng-class="{'sc-details-page-summary-row-selected':isActive('ruleEngineInfo')}">
+				<label for="ruleEngineInfo"> {{"this.label" | translate}} {{'ruleEngine.label'|translate}}</label>
+				<div class="wrapper">
+					<span ng-hide="service.name.length" class="sc-details-page-summary-content">{{'ruleEngine.summary.ruleEngine.name.alt' |
+						translate}} </span>
+					<span class="sc-details-page-summary-content" ng-show="service.name.length"> {{service.name}}</span>
+				</div>
+			</div>
+		</a>
+		<a href="" data-ng-click="scrollTo('hostName')">
+			<div class="sc-details-page-summary-row" data-ng-class="{'sc-details-page-summary-row-selected':isActive('hostName')}">
+				<label for="hostName"> {{'on.label' | translate}}</label>
+				<div class="wrapper">
+					<span ng-hide="service.hostname.length" class="sc-details-page-summary-content">({{'ruleEngine.summary.ruleEngine.hostname.alt'
+						| translate}}) </span>
+					<span class="sc-details-page-summary-content" ng-show="service.hostname.length"> {{service.hostname}}</span>
+				</div>
+			</div>
+		</a>
+		<a href="" data-ng-click="scrollTo('onDemandRuleFrequency')">
+			<div class="sc-details-page-summary-row" data-ng-class="{'sc-details-page-summary-row-selected':isActive('onDemandRuleFrequency')}">
+				<label for="onDemandRuleFrequency"> {{"ruleEngine.summary.onDemandRule.frequency.label" | translate}}</label>
+				<div class="wrapper">
+					<span class="sc-details-page-summary-content">{{serviceTempObject.onDemandIntervalTemp}}</span>
+					<span>{{ serviceTempObject.onDemandIntervalUnit + '.label' | translate}}</span>
+				</div>
+			</div>
+		</a>
+		<a href="" data-ng-click="scrollTo('scheduledRuleFrequency')">
+			<div class="sc-details-page-summary-row" data-ng-class="{'sc-details-page-summary-row-selected':isActive('scheduledRuleFrequency')}">
+				<label for="scheduledRuleFrequency"> {{"and.label" | translate}} {{"ruleEngine.summary.scheduledRule.frequency.label" |
+					translate}}</label>
+				<div class="wrapper">
+					<span class="sc-details-page-summary-content">{{serviceTempObject.scheduledIntervalTemp}}</span>
+					<span>{{ serviceTempObject.scheduledIntervalUnit + '.label' | translate}}</span>
+				</div>
+			</div>
+		</a>
+		<a href="" data-ng-click="scrollTo('executionWindow')">
+			<div class="sc-details-page-summary-row" data-ng-class="{'sc-details-page-summary-row-selected':isActive('executionWindow')}">
+				<label for="executionWindow"> {{"and.label" | translate}} {{"is.label.lowercase" | translate}} {{"using.label" | translate}}
+					{{"execution.windows.label" | translate}}</label>
+				<div class="wrapper">
+					<span ng-hide="service.executionWindowSets.length > 0" class="sc-details-page-summary-content"><{{'component.summary.component.execution.windows.alt'
+						| translate}}> </span>
+					<span ng-show="service.executionWindowSets.length > 0" class="sc-details-page-summary-content"
+						data-ng-repeat="executionWindow in service.executionWindowSets"> {{executionWindow.name + (($index <
+						service.executionWindowSets.length-1) ? ", " : "")}} </span>
+				</div>
+			</div>
+		</a>
+		<a href="" data-ng-click="scrollTo('sync')">
+			<div class="sc-details-page-summary-row" data-ng-class="{'sc-details-page-summary-row-selected':isActive('sync')}">
+				<label for="sync"> {{"and.label" | translate}} {{"component.summary.conf.reload.label" | translate}}</label>
+				<div class="wrapper" data-ng-show="serviceTempObject.configReloadIntervalTemp">
+					<span> {{serviceTempObject.configReloadIntervalTemp}}</span>
+					<span>{{ serviceTempObject.configReloadIntervalUnit + '.label' | translate}}</span>
+				</div>
+
+				<div>
+					<span data-ng-hide="serviceTempObject.configReloadIntervalTemp" class="sc-details-page-summary-content"><{{'component.summary.interval.alt'
+						| translate}}> </span>
+				</div>
+			</div>
+		</a>
+	</div>
+
+	<div class="sc-details-page-editor-div">
+
+		<div id="ruleEngineInfo" class="sc-details-page-editor-title">
+			<span class="sc-details-page-title-underline"> {{"ruleEngine.editor.ruleEngine.info.label" | translate}}</span>
+		</div>
+
+		<div class="sc-details-page-editor-info">
+			<div class="sc-details-page-editor-data">
+				<label for="name">{{"component.editor.name.label" | translate}}</label>
+				<input id="name" class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+					placeholder="{{'ruleEngine.editor.name.place.holder' | translate}}" data-ng-model="service.name" name="ruleEngineName" required
+					ng-maxlength="100" max-length="100">
+				<div class="sc-validation-block" ng-messages="serviceDetailsForm.ruleEngineName.$error"
+					ng-if="serviceDetailsForm.ruleEngineName.$touched">
+					<p ng-message="maxlength">{{"ruleEngine.editor.name.validation.max.length" | translate}}</p>
+					<p ng-message="required">{{"ruleEngine.editor.name.validation.required" | translate}}</p>
+				</div>
+			</div>
+
+			<div id="hostName" class="sc-details-page-editor-data">
+				<label for="hostname">{{"component.editor.hostname.label" | translate}}</label>
+				<p>{{service.hostname}}</p>
+			</div>
+
+			<div class="sc-details-page-editor-data">
+				<label for="onDemandRuleExecutionFrequency">{{"ruleEngine.editor.onDemandRule.execution.frequency.label" | translate}}</label>
+				<div class="wrapper" id="onDemandRuleExecutionFrequency">
+					<div numeric="{min:1}" class="sc-number-input-sm sc-details-page-common-input sc-inline" name="onDemandRuleExecutionFrequency"
+						data-ng-show="serviceTempObject.onDemandIntervalUnit == 'second'" data-ng-model="serviceTempObject.onDemandIntervalTemp"
+						data-ng-change="onDemandRuleIntervalEdit(serviceTempObject.onDemandIntervalTemp)"
+						ng-keyup="onDemandRuleIntervalEdit(serviceTempObject.onDemandIntervalTemp)"></div>
+
+					<div numeric="{min:1}" class="sc-number-input-sm sc-details-page-common-input sc-inline" name="onDemandRuleExecutionFrequency"
+						data-ng-show="serviceTempObject.onDemandIntervalUnit == 'min'" data-ng-model="serviceTempObject.onDemandIntervalTemp"
+						data-ng-change="onDemandRuleIntervalEdit(serviceTempObject.onDemandIntervalTemp)"
+						ng-keyup="onDemandRuleIntervalEdit(serviceTempObject.onDemandIntervalTemp)"></div>
+
+
+					<div class="sc-details-page-editor-data-right-small btn-group btn-block" data-uib-dropdown>
+						<button class="form-control sc-button-common" id="" type="button" data-uib-dropdown-toggle ng-disabled="disabled">
+							<span class="sc-dropdown-btn-label">{{serviceTempObject.onDemandIntervalUnit + '.label' | translate}}</span>
+							<span class="sc-dropdown-btn-expand-icon"></span>
+						</button>
+						<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+							<li role="menuitem" data-ng-click="changeOnDemandRuleIntervalUnit('second', serviceTempObject.onDemandIntervalTemp)"
+								class="sc-clickable-dropdown">{{'second.label' | translate}}</li>
+							<li role="menuitem" data-ng-click="changeOnDemandRuleIntervalUnit('min', serviceTempObject.onDemandIntervalTemp)"
+								class="sc-clickable-dropdown">{{'min.label' | translate}}</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="sc-details-page-editor-data">
+				<label for="ondemandrule-thread-count">{{"ruleEngine.editor.onDemandRules.threadcount.label" | translate}}</label>
+				<div id="ondemandrule-thread-count" numeric="{min:1,max:10}" class="sc-number-input-sm sc-details-page-common-input"
+					name="onDemandRuleThreadCount" data-ng-model="service.onDemandPoolSize" required></div>
+
+				<div class="sc-validation-block" ng-messages="serviceDetailsForm.onDemandRuleThreadCount.$error"
+					ng-if="serviceDetailsForm.onDemandRuleThreadCount.$touched">
+					<p ng-message="required">{{"ruleEngine.editor.onDemandRules.threadcount.label.validation.required" | translate}}</p>
+				</div>
+			</div>
+
+			<div class="sc-details-page-editor-data">
+				<label for="scheduledRuleExecutionFrequency">{{"ruleEngine.editor.scheduledRule.execution.frequency.label" | translate}}</label>
+				<div class="wrapper" id="scheduledRuleExecutionFrequency">
+					<div numeric="{min:1}" class="sc-number-input-sm sc-details-page-common-input sc-inline" name="scheduledRuleExecutionFrequency"
+						data-ng-show="serviceTempObject.scheduledIntervalUnit == 'second'" data-ng-model="serviceTempObject.scheduledIntervalTemp"
+						data-ng-change="onScheduledRuleIntervalEdit(serviceTempObject.scheduledIntervalTemp)"
+						ng-keyup="onScheduledRuleIntervalEdit(serviceTempObject.scheduledIntervalTemp)"></div>
+
+					<div numeric="{min:1}" class="sc-number-input-sm sc-details-page-common-input sc-inline" name="scheduledRuleExecutionFrequency"
+						data-ng-show="serviceTempObject.scheduledIntervalUnit == 'min'" data-ng-model="serviceTempObject.scheduledIntervalTemp"
+						data-ng-change="onScheduledRuleIntervalEdit(serviceTempObject.scheduledIntervalTemp)"
+						ng-keyup="onScheduledRuleIntervalEdit(serviceTempObject.scheduledIntervalTemp)"></div>
+
+
+					<div class="sc-details-page-editor-data-right-small btn-group btn-block" data-uib-dropdown>
+						<button class="form-control sc-button-common" id="" type="button" data-uib-dropdown-toggle ng-disabled="disabled">
+							<span class="sc-dropdown-btn-label">{{serviceTempObject.scheduledIntervalUnit + '.label' | translate}}</span>
+							<span class="sc-dropdown-btn-expand-icon"></span>
+						</button>
+						<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+							<li role="menuitem" data-ng-click="changeScheduledRuleIntervalUnit('second', serviceTempObject.scheduledIntervalTemp)"
+								class="sc-clickable-dropdown">{{'second.label' | translate}}</li>
+							<li role="menuitem" data-ng-click="changeScheduledRuleIntervalUnit('min', serviceTempObject.scheduledIntervalTemp)"
+								class="sc-clickable-dropdown">{{'min.label' | translate}}</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="sc-details-page-editor-data">
+				<label for="scheduledRule-thread-count">{{"ruleEngine.editor.scheduledRule.threadcount.label" | translate}}</label>
+				<div id="scheduledRule-thread-count" numeric="{min:1,max:20}" class="sc-number-input-sm sc-details-page-common-input"
+					name="scheduledRuleThreadCount" data-ng-model="service.scheduledPoolSize" required></div>
+
+				<div class="sc-validation-block" ng-messages="serviceDetailsForm.scheduledRuleThreadCount.$error"
+					ng-if="serviceDetailsForm.scheduledRuleThreadCount.$touched">
+					<p ng-message="required">{{"ruleEngine.editor.scheduledRules.threadcount.label.validation.required" | translate}}</p>
+				</div>
+			</div>
+		</div>
+
+		<div id="executionWindow" class="sc-details-page-editor-title">
+			<span class="sc-details-page-title-underline"> {{"component.editor.executionwindow.heading" | translate}}</span>
+		</div>
+
+		<div class="sc-details-page-editor-info">
+			<div class="sc-details-page-editor-data">
+				<label for="executionWindows" data-ng-if="!service.executionWindowSets.length" class="sc-details-page-editor-subheading">{{"component.editor.executionwindow.subheading.empty"
+					| translate}}</label>
+				<label for="executionWindows" data-ng-if="service.executionWindowSets.length" class="sc-details-page-editor-subheading">{{"component.editor.executionwindow.subheading"
+					| translate}}</label>
+				<div>
+					<div data-ng-repeat="(index, executionWindow) in service.executionWindowSets">
+						<div data-ng-class="getExecutionWindowRowClass(index)" class="sc-details-page-editor-data-right sc-data-list-row">
+							<table style="width: 100%">
+								<tr>
+									<td width="92%">
+										<div class="sc-inline">
+											<div>{{executionWindow.name}}</div>
+											<div class="sc-grey-text-on-table">{{returnScheduleString(executionWindow)}}</div>
+										</div>
+									</td>
+									<td width=" 8%">
+										<div class="sc-component-option-block fa fa-trash-o sc-bigger-icon sc-inline" data-ng-click="removeExecutionWindow(index)"></div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="sc-details-page-editor-data-right sc-execution-window-add">
+					<div id="executionWindows" class="sc-full-width" data-uib-dropdown>
+
+						<button class="form-control sc-button-common" id="executionWindowDropDown" type="button" data-uib-dropdown-toggle
+							ng-disabled="disabled">
+							<span class="sc-dropdown-btn-label">{{selectedExecutionWindowName}}</span>
+							<span class="sc-dropdown-btn-expand-icon" />
+						</button>
+						<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+							<li role="menuitem" data-ng-if="!serviceTempObject.associatedExecutionWindowSetsMap[executionWindow.id]"
+								data-ng-repeat="executionWindow in executionWindowCollection" data-ng-click="addToExecutionWindowList(executionWindow)"
+								class="sc-clickable-dropdown">
+								<div>{{executionWindow.name}}</div>
+								<div class="sc-grey-text-on-table">{{returnScheduleString(executionWindow)}}</div>
+							</li>
+							<div class="sc-horizontal-center-div" data-ng-if="checkEmptyExecutionWindowList()">{{'empty.list.msg'|translate}}</div>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="sync" class="sc-details-page-editor-title">
+			<span class="sc-details-page-title-underline"> {{"config.reload.label" | translate}}</span>
+		</div>
+		<div class="sc-details-page-editor-info">
+			<div class="sc-details-page-editor-data">
+				<label for="configuration-reload-interval">{{"component.editor.configure.reload.interval.label" | translate}}</label>
+				<div class="wrapper" id="configuration-reload-interval">
+					<div numeric="{min:5}" class="sc-number-input-sm sc-details-page-common-input sc-inline" name="configurationReloadInterval" required
+						data-ng-show="serviceTempObject.configReloadIntervalUnit == 'min'" data-ng-model="serviceTempObject.configReloadIntervalTemp"
+						data-ng-change="onConfigReloadIntervalEdit(serviceTempObject.configReloadIntervalTemp)"
+						ng-keyup="onConfigReloadIntervalEdit(serviceTempObject.configReloadIntervalTemp)"></div>
+
+					<div numeric="{min:1}" class="sc-number-input-sm sc-details-page-common-input sc-inline" name="configurationReloadInterval" required
+						data-ng-show="serviceTempObject.configReloadIntervalUnit == 'hour'" data-ng-model="serviceTempObject.configReloadIntervalTemp"
+						data-ng-change="onConfigReloadIntervalEdit(serviceTempObject.configReloadIntervalTemp)"
+						ng-keyup="onConfigReloadIntervalEdit(serviceTempObject.configReloadIntervalTemp)"></div>
+
+
+					<div class="sc-details-page-editor-data-right-small btn-group btn-block" data-uib-dropdown>
+						<button class="form-control sc-button-common" id="" type="button" data-uib-dropdown-toggle ng-disabled="disabled">
+							<span class="sc-dropdown-btn-label">{{serviceTempObject.configReloadIntervalUnit + '.label' | translate}}</span>
+							<span class="sc-dropdown-btn-expand-icon"></span>
+						</button>
+						<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+							<li role="menuitem" data-ng-click="changeConfigReloadIntervalUnit('min', serviceTempObject.configReloadIntervalTemp)"
+								class="sc-clickable-dropdown">{{'min.label' | translate}}</li>
+							<li role="menuitem" data-ng-click="changeConfigReloadIntervalUnit('hour', serviceTempObject.configReloadIntervalTemp)"
+								class="sc-clickable-dropdown">{{'hour.label' | translate}}</li>
+						</ul>
+					</div>
+
+					<div class="sc-validation-block" ng-messages="serviceDetailsForm.configurationReloadInterval.$error"
+						ng-if="serviceDetailsForm.configurationReloadInterval.$touched">
+						<p ng-message="required">{{"service.editor.reload.interval.validation.required" | translate}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

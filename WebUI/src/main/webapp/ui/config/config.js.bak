@@ -1,0 +1,9 @@
+var controlCenterConfig = {
+	"policyStudio":{
+
+		"isOnline" : false,
+		"logLevel": 1,
+		"baseUrl" : "http://10.23.58.100:8180/control-center-console",
+		"defaultPolicyListPageSize": 10
+	}
+}

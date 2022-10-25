@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>Installer</name>
+	<comment></comment>
+	<projects>
+		<project>Extractor</project>
+		<project>Indexer</project>
+		<project>RuleEngine</project>
+		<project>Watcher</project>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+</projectDescription>

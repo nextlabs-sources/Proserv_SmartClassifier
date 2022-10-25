@@ -1,0 +1,31 @@
+<div class="sc-login-container">
+	<div class="sc-login-left-panel">
+		<div style="padding: 50px 0 0 50px"> 
+			<div class="logo"></div>
+		</div>
+		<div class="welcome-msg">{{'login.welcome' | translate}}</div>
+	</div>	
+	<div class="sc-login-right-panel">
+		<div class="wrapper"> 
+			<div class="title"> Login to your account</div>
+			<div  class="login-box">
+			  	
+			  	<input type="text" name="username" placeholder="Username">
+			<br>
+			<br>
+			<input type="text" name="password" placeholder="Password">
+			<br>
+			<div style="padding: 40px 0 40px 0">
+				<span class="sc-search-include-subpolicy">
+					<switch class="sc-search-switch-include-sub"  data-ng-model="policy.effects"></switch>
+				</span>
+				<input name="" type="hidden" data-ng-model="policy.effects" value="{{policy.effects}}" data-ng-focus="highlightGrammar('policyEffect')">
+				<span>{{'keep me logged in' |translate}}</span>
+			</div>
+			
+			<a style="margin-left: 130px" class="btn btn-default sc-btn-save-page" data-ng-click="doLogin()">{{"LOGIN" | translate}}</a>
+			</div>
+		</div>
+	</div>
+
+</div>

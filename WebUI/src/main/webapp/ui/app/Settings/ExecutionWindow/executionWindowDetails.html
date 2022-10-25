@@ -1,0 +1,232 @@
+
+<div data-ng-if="!detailsFound" class="sc-empty-resource-list-box">
+	<p style="text-align: center">{{'executionWindow.details.not.found' | translate}}</p>
+</div>
+<div data-http-loader class="sc-data-loading">
+	<p style="text-align: center" class="sc-vertical-middle-div">{{'data.loading' | translate}}</p>
+</div>
+<div class="sc-resource" data-ng-if="detailsFound" style="height: 100%">
+	<form id="executionWindowDetailsForm" class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-vaid-maxlength" novalidate=""
+		name="executionWindowDetailsForm">
+		<div class="no-margin sc-details-page-title-panel">
+			<div class="sc-details-page-back-btn-div ">
+				<button class="sc-details-page-back-btn btn btn-default" type="button"
+					data-ng-click="backToExecutionWindowList(executionWindowDetailsForm)">
+					<i class="fa fa-arrow-left" data-ng-class=""> </i>
+				</button>
+			</div>
+			<div class="sc-details-page-title">
+				<div class="sc-vertical-middle-div">
+					<p class="sc-details-page-edit-text" data-ng-if="executionWindowID !='create'">{{"edit.label" | translate}}</p>
+					<p class="sc-details-page-edit-text" data-ng-if="executionWindowID =='create'">{{"create.label" | translate}}</p>
+					<p class="sc-details-page-edit-subject">{{executionWindow.name}}</p>
+				</div>
+			</div>
+
+			<div class="sc-details-page-btn-div">
+				<a class="btn btn-default sc-details-page-discard-btn" data-ng-click="discardExecutionWindowChanges(executionWindowDetailsForm)">{{"button.discard"
+					| translate}} </a>
+				<a class="btn btn-default sc-btn-save-page" data-ng-click="saveExecutionWindowChanges(executionWindowDetailsForm)">{{"button.save" |
+					translate}} </a>
+			</div>
+			<div class="clear"></div>
+
+
+		</div>
+		<div class="sc-details-page-bottom-panel">
+			<div class="sc-details-page-summary-div">
+				<a href="" data-ng-click="scrollTo('executionWindowInfo')">
+					<div class="sc-details-page-summary-row" data-ng-class="{'sc-details-page-summary-row-selected':isActive('executionWindowInfo')}">
+						<label> {{"this.label" | translate}} {{'executionWindow.label' | translate}}</label>
+						<div class="wrapper">
+							<span ng-hide="executionWindow.name.length" class="sc-details-page-summary-content"><{{'executionWindow.summary.name.alt' |
+								translate}}> </span>
+							<span class="sc-details-page-summary-content" ng-show="executionWindow.name.length"> {{executionWindow.name}}</span>
+						</div>
+					</div>
+				</a>
+				<a href="" data-ng-click="scrollTo('validity')">
+					<div class="sc-details-page-summary-row" data-ng-class="{'sc-details-page-summary-row-selected':isActive('validity')}">
+						<label> {{"component.summary.valid.from.label" | translate}} </label>
+						<div class="wrapper">
+							<span class="sc-details-page-summary-content"> {{validity.validFrom | date:'dd/MM/yyyy'}}</span>
+						</div>
+						<label data-ng-show="validity.expiringOnOption === 'never'"> {{"component.summary.never.expires.label" | translate}} </label>
+						<label data-ng-show="validity.expiringOnOption === 'specific'"> {{"component.summary.expiring.on.label" | translate}} </label>
+						<div class="wrapper" data-ng-show="validity.expiringOnOption === 'specific'">
+							<span class="sc-details-page-summary-content"> {{validity.expiringOn | date:'dd/MM/yyyy'}}</span>
+						</div>
+					</div>
+				</a>
+				<a href="" data-ng-click="scrollTo('schedule')">
+					<div class="sc-details-page-summary-row" data-ng-class="{'sc-details-page-summary-row-selected':isActive('schedule')}">
+						<label> {{"component.summary.schedule.label" | translate}} </label>
+						<div class="wrapper">
+							<span class="sc-details-page-summary-content"> {{getScheduleAsText()}}</span>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="sc-details-page-editor-div">
+
+				<div id="executionWindowInfo" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline"> {{"executionWindow.editor.info.label" | translate}}</span>
+				</div>
+
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label for="executionWindowName">{{"component.editor.name.label" | translate}}</label>
+						<input id="executionWindowName"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'executionWindow.editor.name.place.holder' | translate}}" data-ng-model="executionWindow.name"
+							name="executionWindowName" required ng-maxlength="50" max-length="50">
+						<div class="sc-validation-block" ng-messages="executionWindowDetailsForm.executionWindowName.$error"
+							ng-if="executionWindowDetailsForm.executionWindowName.$touched">
+							<p ng-message="maxlength">{{"executionWindow.editor.name.validation.max.length" | translate}}</p>
+							<p ng-message="required">{{"executionWindow.editor.name.validation.required" | translate}}</p>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="description">{{"executionWindow.editor.description.label" | translate}}</label>
+						<textarea id="description"
+							class="sc-details-page-editor-input-placeholder sc-component-text-area sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'executionWindow.editor.description.place.holder' | translate}}" data-ng-model="executionWindow.description"
+							name="description">
+						</textarea>
+					</div>
+				</div>
+
+				<div id="validity" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline"> {{"executionWindow.editor.validity.label" | translate}}</span>
+				</div>
+
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label for="validFrom" class="sc-label-inline">{{"executionWindow.editor.valid.from.label" | translate}}</label>
+						<div name="validFrom" id="validFrom" class="sc-inline">
+
+							<div class="sc-date-picker">
+								<p class="input-group">
+									<input type="text" class="form-control" name="validFrom" id="validFrom" uib-datepicker-popup="dd/MM/yyyy"
+										data-ng-model="validity.validFrom" is-open="validFromPopUp.opened" show-button-bar="true" close-text="{{'close.label'|translate}}"
+										current-text="{{'today.label'|translate}}" clear-text="{{'clear.label'|translate}}" />
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default" data-ng-click="validFromOpen()">
+											<i class="fa fa-calendar"></i>
+										</button>
+									</span>
+								</p>
+							</div>
+							<div class="sc-validation-block" ng-messages="executionWindowDetailsForm.validFrom.$error"
+								ng-if="executionWindowDetailsForm.validFrom.$touched">
+								<p ng-message="required">{{"executionWindow.editor.valid.from.validation.required" | translate}}</p>
+							</div>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label class="sc-label-inline">{{"executionWindow.editor.expiring.on.label" | translate}}</label>
+						<div class="sc-inline">
+							<md-radio-group data-ng-model="validity.expiringOnOption">
+								<md-radio-button value="specific"
+									class="md-primary sc-radio-inline sc-inline">{{'executionWindow.editor.specific.date.label' | translate}}
+								</md-radio-button> 
+								<md-radio-button value="never"
+									class="md-primary sc-radio-inline sc-inline"> {{'executionWindow.editor.never.label'| translate}}
+								</md-radio-button>
+							</md-radio-group>
+							<div data-ng-show="validity.expiringOnOption == 'specific'" class="sc-date-picker">
+								<p class="input-group">
+									<input type="text" class="form-control" name="expiringOn" id="expiringOn" uib-datepicker-popup="dd/MM/yyyy"
+										data-ng-model="validity.expiringOn" is-open="expiringOnPopUp.opened" ng-required="expiringOnOption =='specific'"
+										show-button-bar="true" close-text="{{'close.label'|translate}}" current-text="{{'today.label'|translate}}"
+										clear-text="{{'clear.label'|translate}}" />
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default" data-ng-click="expiringOnOpen()">
+											<i class="fa fa-calendar"></i>
+										</button>
+									</span>
+								</p>
+							</div>
+							<div class="sc-validation-block" ng-messages="executionWindowDetailsForm.expiringOn.$error"
+								ng-if="executionWindowDetailsForm.expiringOn.$touched && expiringOnOption == 'specific' && executionWindowDetailsForm.expiringOn.$error">
+								<p ng-message="required">{{"executionWindow.editor.expiring.on.validation.required" | translate}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="schedule" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline"> {{"executionWindow.editor.schedule.label" | translate}}</span>
+				</div>
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label for="schedule">{{"executionWindow.editor.execute.rule.label" | translate}}</label>
+						<div class="sc-grey-div">
+							<md-radio-group data-ng-model="executionWindow.scheduleType"> <md-radio-button value="D"
+								class="md-primary sc-radio-inline-with-background sc-inline">{{'daily.label' | translate}}</md-radio-button> <md-radio-button
+								value="W" class="md-primary sc-radio-inline-with-background sc-inline"> {{'weekly.label'| translate}} </md-radio-button> </md-radio-group>
+						</div>
+						<div class="sc-border-div" data-ng-show="executionWindow.scheduleType == 'D'">
+							<table class="sc-schedule-table-daily">
+								<tr data-ng-repeat="dailySchedule in dailySchedules" class="sc-table-row">
+									<td class="sc-padding-cell-left">
+										<span class="sc-inline sc-details-page-editor-label">{{'starts.at.label'| translate}} 
+									</td>
+									<td class="">
+										</span>
+										<uib-timepicker data-ng-model="dailySchedule.start" class="sc-inline sc-timepicker" hour-step="1" minute-step="1"
+											show-meridian="true" data-ng-change="checkEndTime(dailySchedule)"></uib-timepicker>
+									</td>
+									<td class="sc-padding-cell-left">
+										<span class="sc-inline sc-details-page-editor-label">{{'ends.at.label'| translate}} 
+									</td>
+									<td>
+										</span>
+										<uib-timepicker data-ng-model="dailySchedule.end" class="sc-inline sc-timepicker" data-ng-change="checkEndTime(dailySchedule)"
+											hour-step="1" minute-step="1" show-meridian="true"></uib-timepicker>
+										<div class="sc-validation-block-on-table" data-ng-if="!dailySchedule.validEndTime">{{'executionWindow.schedule.validation.end.time'
+											| translate}}</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div class="sc-border-div" data-ng-show="executionWindow.scheduleType == 'W'">
+							<div data-ng-repeat="weeklySchedule in weeklySchedules">
+
+								<div class="sc-schedule-execution-weekdays">
+									<div class="btn-group">
+										<div class="btn btn-primary" data-ng-repeat="day in dayOfTheWeek" data-ng-model="weeklySchedule.days[day]" uib-btn-checkbox
+											btn-checkbox-true="true" btn-checkbox-false="false">{{day + ".label"| translate}}</div>
+									</div>
+
+								</div>
+								<table class="sc-schedule-execution-table-weekly">
+									<tr>
+										<td class="sc-padding-cell-left sc-horizontal-center-div">
+											<span class="sc-inline sc-details-page-editor-label">{{'starts.at.label'| translate}} 
+										</td>
+										<td>
+											</span>
+											<uib-timepicker data-ng-model="weeklySchedule.start" class="sc-inline sc-timepicker" hour-step="1" minute-step="1"
+												show-meridian="true" data-ng-change="checkEndTime(weeklySchedule)"></uib-timepicker>
+										</td>
+										<td class="sc-padding-cell-left sc-horizontal-center-div">
+											<span class="sc-inline sc-details-page-editor-label">{{'ends.at.label'| translate}} 
+										</td>
+										<td>
+											</span>
+											<uib-timepicker data-ng-model="weeklySchedule.end" class="sc-inline sc-timepicker" data-ng-change="checkEndTime(weeklySchedule)"
+												hour-step="1" minute-step="1" show-meridian="true"></uib-timepicker>
+											<div class="sc-validation-block-on-table" data-ng-if="!weeklySchedule.validEndTime">{{'executionWindow.schedule.validation.end.time'
+												| translate}}</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

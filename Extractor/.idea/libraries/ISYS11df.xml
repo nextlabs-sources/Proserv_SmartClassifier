@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="ISYS11df">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/xlib/jar/ISYS11df.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,46 @@
+<div class="no margin sc-page-title">
+	<div class="sc-page-title-left">
+		<div class="sc-vertical-middle-div">{{'adHocReport.label'| translate}}</div>
+	</div>
+	<div class="sc-page-title-right sc-title-button-box">
+	</div>
+</div>
+
+<div data-ng-if="reportList.length" class="sc-list-container">
+	<table class="sc-list-table table table-hover">
+		<thead>
+		</thead>
+		<tbody>
+			<tr data-ng-repeat="report in reportList">
+				<td class="sc-rule-details-on-table">
+					<div class="sc-inline-block-on-table sc-clickable" 
+						style="width: 50%" data-ng-click="openReport(report)">
+						<p class="sc-bold-text-on-table">{{report.name}}</p>
+						<p class="sc-grey-text-on-table sc-inline">{{report.description}}</p>
+					</div>
+					<div data-ng-click="openReport(report)"
+						class="sc-inline-block-on-table sc-clickable">
+						<p class="sc-grey-text-on-table">{{report.createdBy}}</p>
+						<p class="sc-grey-text-on-table">{{report.createdOn | date : longDatetimeFormat}}</p>
+					</div>
+					<div class="sc-rule-option-block">
+						<div class="sc-align-right">
+							<button
+								class="btn btn-default sc-btn sc-btn-icon-big"
+								data-ng-click="deleteReport(report, $event)">
+								<i class="sc-icon-trash"></i>
+							</button>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div data-ng-show="reportList.length< total">
+		<button type="button" class="btn btn-default sc-btn-loadmore"
+			data-ng-click="loadMore()">{{"button.load.more" | translate}}</button>
+	</div>
+</div>
+<div data-ng-if="!reportList.length" class="sc-empty-resource-list-box">
+	<p style="text-align: center">{{'empty.list.msg' | translate}}</p>
+</div>

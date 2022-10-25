@@ -1,0 +1,173 @@
+#!/bin/bash
+#
+# DESCRIPTION
+#	Invoke dev build
+
+RED='\033[0;31m'
+GRE='\033[0;32m'
+DEF='\033[0m'
+
+Build () {
+
+    #1 = Component Name
+    #2 = ExternalDIR
+    #3 = Build Number
+    #4 = JAVA_HOME
+    #5 = ANT_HOME
+	#6 = --makexlib
+
+    pwd
+    cd ../$1
+	
+	if ! [ -z $6 ]; then
+		if [ $6 = "--makexlib" ]; then
+			./buildDev --makexlib $2 $3 $4 $5
+			if [ $? -eq 0 ];then
+				echo -e "${GRE} -- makexlib succeeded.${DEF}"
+			else
+				echo -e "${RED} -- makexlib failed."
+				exit $?
+			fi
+		fi
+	else
+			 ./buildDev -- $2 $3 $4 $5
+    
+    		if [ $? -eq 0 ];then
+     			echo -e "${GRE} -- compile succeeded.${DEF}"
+    		else
+     			echo -e "${RED} -- compile failed."
+     			exit $?
+    		fi
+	fi
+	
+}
+
+ echo -e "${GRE} Usage: $0 OUTPUT_DIRECTORY  [--makexlib]"
+
+if [ "$#" -lt 1 ]; then
+  echo -e "${RED} Usage: $0 OUTPUT_DIRECTORY [--makexlib]" >&2
+  exit 1
+fi
+
+if [ "$1" == "--makexlib" ]; then
+   echo -e "${RED} Usage: $0 OUTPUT_DIRECTORY"  [--makexlib] >&2
+  exit 1
+fi
+
+if ! [ -d "$1" ]; then
+  echo "Creating output directory: $1"
+  mkdir -p "$1"/Artifacts
+  mkdir -p "$1"/Installer
+else
+  echo "Output directory exists: $1"
+  echo "Deleting existing builds."
+  mkdir -p "$1"/Artifacts
+  rm -rf "$1"/Artifacts/*
+  mkdir -p "$1"/Installer
+  rm -rf "$1"/Installer/*
+fi
+
+echo "Setting environment variables."
+export NLEXTERNALDIR=D:/nxt-build/build/P4/source_main_external
+export BUILD_NUMBER=1
+export WORKSPACE=D:/git/smartclassifier
+export PRODUCTNAME="NextLabs Smart Classifier"
+export PRODUCTCAPTION="NextLabs Smart Classifier"
+export PRODUCTVERSION="2022.03"
+export PRODUCT_INSTALLER_FILENAME="${PRODUCTCAPTION}_${PRODUCTVERSION}.exe"
+export ANT_HOME=$NLEXTERNALDIR/apache-ant/apache-ant-1.10.7
+export JAVA_HOME=$NLEXTERNALDIR/openjdk/jdk-11.0.14.1+1-win64
+export BUILD_WITHOUT_S_DRIVE=1
+export LOCAL_BUILD_ARTIFACTS_SERVER=127.0.0.1
+ANT=$ANT_HOME/bin/ant
+
+echo "Setting properties."
+
+LOG_FILE=build.log
+INSTALLER_LOG_FILE=buildInstaller.log
+NSIS_PATH="$NLEXTERNALDIR"/nsis/3.0b1
+DIST_FOLDER_PATH=$1
+
+find ../ -type f -name 'setEnv' -print0 | xargs -0 dos2unix
+find ../ -type f -name 'configure' -print0 | xargs -0 dos2unix
+find ../ -type f -name "*.xml" -print0 | xargs -0 mac2unix
+
+
+if [ "$2" != "--installer" ]; then
+
+	echo "Building Common..."
+	Build Common $NLEXTERNALDIR $BUILD_NUMBER $JAVA_HOME $ANT_HOME $2
+	
+	echo "Building CAS Extension..."
+	Build CASExtension $NLEXTERNALDIR $BUILD_NUMBER $JAVA_HOME $ANT_HOME $2
+
+	echo "Building Common library..."
+	Build CommonLibrary $NLEXTERNALDIR $BUILD_NUMBER $JAVA_HOME $ANT_HOME $2
+	
+	echo "Building Watcher..."
+	Build Watcher $NLEXTERNALDIR $BUILD_NUMBER $JAVA_HOME $ANT_HOME $2
+	
+	echo "Building Indexer..."
+	Build Indexer $NLEXTERNALDIR $BUILD_NUMBER $JAVA_HOME $ANT_HOME $2
+	
+	echo "Building Queue..."
+	Build Queue $NLEXTERNALDIR $BUILD_NUMBER $JAVA_HOME $ANT_HOME $2
+	
+	echo "Building Document Extractor library..."
+	Build DocumentExtractor $NLEXTERNALDIR $BUILD_NUMBER $JAVA_HOME $ANT_HOME $2
+	
+	echo "Building Extractor..."
+	Build Extractor $NLEXTERNALDIR $BUILD_NUMBER $JAVA_HOME $ANT_HOME $2
+	
+	echo "Building Plugin..."
+	Build Plugin $NLEXTERNALDIR $BUILD_NUMBER $JAVA_HOME $ANT_HOME $2
+	
+	echo "Building RuleEngine..."
+	Build RuleEngine $NLEXTERNALDIR $BUILD_NUMBER $JAVA_HOME $ANT_HOME $2
+	
+	echo "Building Web UI."
+	Build WebUI $NLEXTERNALDIR $BUILD_NUMBER $JAVA_HOME $ANT_HOME $2
+
+fi
+
+if [ "$2" == "--makexlib" ]; then
+   echo -e "${GRE} xlib build completed." 
+  exit 0
+fi
+
+echo "Building installer..."
+"${NSIS_PATH}/Bin/makensis.exe" /V4 "${WORKSPACE}/Installer/build.nsi"
+
+if [ $? -eq 0 ];then
+   echo -e "${GRE} -- Installer built successfully.${DEF}"
+else
+   echo -e "${RED} -- Installer build failed."
+   exit $?
+fi
+
+echo -e "${GRE} Copying Build Artifacts. ${DEF}"
+
+mkdir -p "$DIST_FOLDER_PATH"/Artifacts
+
+cp ../{Watcher,Indexer,DocumentExtractor,Extractor,RuleEngine}/build/*.zip "$DIST_FOLDER_PATH"/Artifacts
+if [ $? -eq 0 ];then
+   echo -e "${GRE} -- Copied build artifacts successfully.${DEF}"
+else
+   echo -e "${RED} -- Copy failed."
+   exit $?
+fi
+
+echo "Copying Installer."
+
+mkdir -p "$DIST_FOLDER_PATH"/Installer
+
+cp "$WORKSPACE"/Installer/*.exe "$DIST_FOLDER_PATH"/Installer
+
+if [ $? -eq 0 ];then
+   echo -e "${GRE} -- Copied installer successfully.${DEF}"
+else
+   echo -e "${RED} -- Copy failed."
+   exit $?
+fi
+
+echo -e "${GRE} Done."

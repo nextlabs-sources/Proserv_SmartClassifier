@@ -1,0 +1,76 @@
+<div class="modal-header" data-ng-if="title">
+	<h3 class="modal-title">{{ title }}</h3>
+</div>
+<form id="exportOptionForm"
+		class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-valid-maxlength"
+		novalidate="" name="exportOptionForm">
+	<div class="modal-body">
+		<table width="100%">
+			<tr>
+				<td valign="top" style="width:25%;">
+					<div class="sc-details-page-editor-data" style="margin-bottom: 20px;">
+						<label for="reportFormat">{{"file.format.label" | translate}}</label>
+					</div>
+				</td>
+				<td style="width: 75%;">
+					<div class="sc-details-page-editor-data" align="left" style="margin-bottom: 20px;">
+						<div class="sc-inline" style="padding: 0px 40px;">
+							<md-radio-group data-ng-model="returnParam.exportFormat">
+								<md-radio-button value="csv" class="md-primary sc-radio-inline sc-inline">
+									{{'csv.label' | translate}}
+								</md-radio-button>
+								<md-radio-button value="xlsx" class="md-primary sc-radio-inline sc-inline">
+									{{'xlsx.label' | translate}}
+								</md-radio-button>
+							</md-radio-group>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="sc-details-page-editor-data" style="margin-bottom: 20px;">
+						<label for="sortBy">{{"sort.by.label" | translate}}</label>
+					</div>
+				</td>
+				<td>
+					<div class="sc-details-page-editor-data" align="left" style="margin-bottom: 20px; padding: 0px 40px;">
+						<div class="sc-half-width dropdown" data-uib-dropdown>
+							<button class="form-control sc-button-common" type="button" data-uib-dropdown-toggle ng-disabled="disabled" required>
+								<span class="sc-dropdown-btn-label" data-ng-show="returnParam.sortBy == 'timestamp'">
+									{{'adHocReport.sort.timestamp.label' | translate}}
+								</span>
+								<span class="sc-dropdown-btn-label" data-ng-show="returnParam.sortBy == 'directory'">
+									{{'adHocReport.sort.file.path.label' | translate}}
+								</span>
+								<span class="sc-dropdown-btn-label" data-ng-show="returnParam.sortBy == 'fileName'">
+									{{'adHocReport.sort.file.name.label' | translate}}
+								</span>
+								<span class="sc-dropdown-btn-expand-icon"></span>
+							</button>
+							<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+								<li role="menuitem"	data-ng-click="returnParam.sortBy = 'timestamp'"
+									class="sc-clickable-dropdown">{{'adHocReport.sort.timestamp.label' | translate}}
+								</li>
+								<li role="menuitem"	data-ng-click="returnParam.sortBy = 'directory'"
+									class="sc-clickable-dropdown">{{'adHocReport.sort.file.path.label' | translate}}
+								</li>
+								<li role="menuitem"	data-ng-click="returnParam.sortBy = 'fileName'"
+									class="sc-clickable-dropdown">{{'adHocReport.sort.file.name.label' | translate}}
+								</li>
+							</ul>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-confirm" type="button" ng-click="ok(exportOptionForm)">
+			{{"dialog.export" | translate}}
+		</button>
+		<button class="btn btn-warning" type="button" ng-click="cancel()">
+			{{"dialog.cancel" | translate}}
+		</button>
+	</div>
+</form>

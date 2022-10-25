@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="lib" path="xlib/jar/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/junit-4.12.jar"/>
+	<classpathentry kind="lib" path="lib/jar/nextlabs-sc-common.jar" sourcepath="/CommonLibrary/src"/>
+	<classpathentry kind="lib" path="xlib/jar/pdfbox-app-2.0.4.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/slf4j-api-1.7.36.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/log4j-api-2.17.1.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/log4j-core-2.17.1.jar"/>
+	<classpathentry kind="lib" path="lib/jar/crypt.jar"/>
+	<classpathentry kind="lib" path="lib/jar/rmjavasdk-ng.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="xlib/jar/poi-3.11-20141221.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/poi-ooxml-3.11-20141221.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/poi-ooxml-schemas-3.11-20141221.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/poi-scratchpad-3.11-20141221.jar"/>
+	<classpathentry kind="lib" path="xlib/jar/poi-visio-0.0.3-20150701.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CommonLibrary"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

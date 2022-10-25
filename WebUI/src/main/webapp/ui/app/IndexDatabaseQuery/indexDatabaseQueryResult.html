@@ -1,0 +1,212 @@
+<div class="sc-resource" style="height: 100%">
+	<form id="idqForm"
+		class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-vaid-maxlength"
+		novalidate="" name="idqForm">
+		<div class="no-margin sc-details-page-title-panel">
+			<div class="sc-details-page-back-btn-div ">
+				<button class="sc-details-page-back-btn btn btn-default"
+					type="button" data-ng-click="editQuery()">
+					<i class="fa fa-arrow-left" data-ng-class=""> </i>
+				</button>
+			</div>
+			<div class="sc-page-title-left">
+				<div class="sc-vertical-middle-div-inverse">
+					{{'idq.result.title'| translate}}
+				</div>
+			</div>
+			<div class="sc-details-page-btn-div">
+				<a class="btn btn-default sc-btn-export" data-ng-hide="true"
+					data-ng-click="querySolr(idqForm)">
+					{{"export.button" | translate}}
+				</a>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="sc-details-page-bottom-panel">
+			<div class="sc-details-page-summary-div">
+				<a href="">
+					<div class="sc-details-page-summary-row">
+						<label>{{"idq.summary.look.for.criteria.label" | translate}} </label>
+						<div class="wrapper">
+							<span ng-show="!query.criteria || query.criteria.length === 0"
+								class="sc-details-page-summary-content">
+								<{{'rule.summary.criterias.alt'	| translate}}>
+							</span>
+							<span data-ng-repeat="(index, cg) in query.criteria"
+								ng-show="query.criteria && query.criteria.length > 0"
+								class="sc-details-page-summary-content">
+								<span ng-bind-html="'(' | translate"></span>
+								<span data-ng-repeat="(cindex, cri) in cg.criterias">
+									<span data-ng-if="cri.dataSection !== 'M'">
+										{{"data.section." +	cri.dataSection + ".label" | translate}}
+									</span>
+									<span class="sc-rule-summary-mc" data-ng-if="cri.dataSection !== 'M'">
+										&nbsp;{{'matching.condition.' + cri.matchingCondition | translate}}&nbsp;
+									</span>
+									<span data-ng-if="cri.dataSection !== 'M'">{{cri.value}}</span>
+									<span data-ng-if="cri.dataSection === 'M'">{{cri.field}}&nbsp;</span>
+									<span data-ng-if="cri.dataSection === 'M'"
+										ng-bind-html="'meta.matching.condition.' + cri.matchingCondition | translate"
+										class="sc-rule-summary-mc">
+									</span>
+									<span data-ng-if="cri.dataSection === 'M'">
+										{{isDateCriteria(cri)?(cri.value | date:'dd/MM/yyyy'):cri.value}}
+									</span>
+									<label data-ng-if="cindex !== cg.criterias.length - 1">&nbsp;{{'or.label' | translate}}&nbsp;</label>
+								</span>
+								<span ng-bind-html="' )'"></span><br/>
+								<label data-ng-if="index !== query.criteria.length - 1">{{'and.label'| translate}}&nbsp;</label>
+							</span>
+						</div>
+					</div>
+				</a> 
+				<a href="">
+					<div class="sc-details-page-summary-row">
+						<label>{{"rule.summary.type.label" | translate}}</label>
+						<div class="wrapper">
+							<span>{{query.repositoryType}}</span>
+						</div>
+					</div>
+				</a>
+				<a href="" data-ng-click="scrollTo('directories')">
+					<div class="sc-details-page-summary-row"
+						 data-ng-class="{'sc-details-page-summary-row-selected':isActive('schedule')}">
+						<label>{{"idq.summary.directories.label" | translate}}</label>
+						<div class="wrapper">
+					   		<span data-ng-show="!query.directories || query.directories.length === 0"
+								class="sc-details-page-summary-content">
+								{{'idq.summary.directories.alt' | translate}}
+							</span>
+							<span data-ng-show="query.directories && query.directories.length > 0"
+								data-ng-repeat="(index, directoryGroup) in query.directories">
+								<span ng-bind-html="'( '"></span>
+								<span data-ng-repeat="(dindex, directory) in directoryGroup.criterias">
+									<span class="sc-rule-summary-mc">
+										{{'dir.matching.condition.' + directory.matchingCondition | translate}}&nbsp;
+									</span>
+									<span data-ng-show="directory.value && directory.value.length > 0">{{directory.value}}</br>
+									</span>
+									<label data-ng-if="dindex !== directoryGroup.criterias.length - 1">&nbsp;{{'or.label' | translate}}&nbsp;</label>
+								</span>
+								<span ng-bind-html="' )'"></span>
+								<label data-ng-if="index !== query.directories.length - 1">&nbsp;{{'and.label' | translate}}&nbsp;</label>
+							</span>
+					   </div>
+					</div>
+				</a>
+				<div class="sc-rule-summary-btn-div">
+					<a class="btn btn-default sc-btn-preview-rul"
+					   data-ng-click="editQuery()">
+					   {{"editQuery.button" | translate}}
+					</a>
+				</div>
+			</div>
+			<div class="sc-details-page-editor-div sc-idq-result-page">
+				<div data-ng-if="resultList.length" class="sc-operation">
+					<div class="sc-inline" style="width: 30%">
+						<table width="100%">
+							<tr>
+								<td width="50%">
+									<span class="sc-grey-text-on-table">
+										{{"idq.total.result" | translate}}
+									</span>
+								</td>
+								<td width="50%"><span class="sc-idq-total-result">{{total}}</span></td>
+							</tr>
+						</table>
+					</div>
+					<div id="sc-sort-by" class="sc-inline">
+						<div class="sc-inline sc-sort-by-title">{{"sort.by.label"|translate}}</div>
+						<div class="sc-sort-by-select sc-inline btn-group btn-block sc-search-status"
+							uib-dropdown>
+							<button class="form-control sc-button-common" type="button"
+								data-uib-dropdown-toggle ng-disabled="disabled">
+								<span class="sc-dropdown-btn-label">
+									{{ sortBy.value | translate}}
+								</span>
+								<span class="sc-dropdown-btn-expand-icon"></span>
+							</button>
+							<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+								<li role="menuitem" data-ng-repeat="sf in sortByFields"
+									data-ng-click="sortByField(sf)" class="sc-clickable-dropdown">
+									{{sf.value | translate}}
+								</li>
+							</ul>
+						</div>
+						<div class="sc-inline sc-sort-by-title">{{"sort.order.label"|translate}}</div>
+						<div class="sc-sort-by-select sc-inline btn-group btn-block sc-search-status" uib-dropdown>
+							<button class="form-control sc-button-common" id="" type="button"
+								data-uib-dropdown-toggle ng-disabled="disabled">
+								<span class="sc-dropdown-btn-label">{{sortOrder.label}}</span>
+								<span class="sc-dropdown-btn-expand-icon"></span>
+							</button>
+							<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+								<li role="menuitem" data-ng-repeat="so in sortOrders"
+									data-ng-click="sortByOrder(so)" class="sc-clickable-dropdown">
+									{{so.label}}
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div data-ng-if="resultList.length">
+					<table class="sc-list-table table table-hover">
+						<thead>
+						</thead>
+						<tbody>
+							<tr data-ng-repeat="result in resultList">
+								<td class="sc-result-details-on-table" style="width: 100%">
+									<div class="sc-inline-block-on-table" style="width: 100%">
+										<p class="sc-sm-margin sc-bold-text-on-table">{{result.documentName}}</p>
+										<p class="sc-sm-margin">
+											<span class="sc-inline">{{query.repositoryType === "SHARED FOLDER" ? (result.directory) : (result.folderURL)}}</span>
+										</p>
+										<table style="width:85%">
+											<tr>
+												<td width="33%">
+													<p class="sc-sm-margin">
+														<span class="sc-grey-text-on-table sc-inline">
+															{{'idq.result.author.label'	| translate}}:&nbsp;
+														</span>
+														<span class="sc-inline">{{result.author}}</span>
+													</p>
+												</td>
+												<td width="33%">
+													<p class="sc-grey-text-on-table sc-inline">
+														{{'idq.result.created.date.label' | translate}}:
+													</p>
+													<p class="sc-inline" data-ng-bind="result.createdOn | date : longDatetimeFormat"
+														data-ng-if="result.createdOn != 0">
+													</p>
+												</td>
+												<td width="33%">
+													<p class="sc-grey-text-on-table sc-inline">
+														{{'idq.result.modified.date.label' | translate}}:
+													</p>
+													<p class="sc-inline"
+														data-ng-bind="result.modifiedOn | date : longDatetimeFormat"
+														data-ng-if="result.modifiedOn != 0">
+													</p>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div data-ng-show="resultList.length< total">
+						<button type="button" class="btn btn-default sc-btn-loadmore"
+							data-ng-click="loadMore()">
+							{{"button.load.more" | translate}}
+						</button>
+					</div>
+				</div>
+				<div data-ng-if="!resultList.length"
+					 class="sc-empty-resource-list-box">
+					<p style="text-align: center">{{'empty.list.msg' | translate}}</p>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

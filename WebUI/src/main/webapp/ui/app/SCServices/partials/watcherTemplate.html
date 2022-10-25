@@ -1,0 +1,432 @@
+<div
+	data-ng-controller="watcherController"
+	class="sc-layout-full-height">
+	<div class="sc-details-page-summary-div">
+		<a
+			href=""
+			data-ng-click="scrollTo('watcherInfo')">
+			<div
+				class="sc-details-page-summary-row"
+				data-ng-class="{'sc-details-page-summary-row-selected':isActive('watcherInfo')}">
+				<label for="watcherInfo"> {{"this.label" | translate}} {{'watcher.label' | translate}}</label>
+				<div class="wrapper">
+					<span
+						ng-hide="service.name.length"
+						class="sc-details-page-summary-content"> {{'watcher.summary.watcher.name.alt' | translate}} </span>
+					<span
+						class="sc-details-page-summary-content"
+						ng-show="service.name.length"> {{service.name}}</span>
+				</div>
+			</div>
+		</a>
+		<a
+			href=""
+			data-ng-click="scrollTo('hostName')">
+			<div
+				class="sc-details-page-summary-row"
+				data-ng-class="{'sc-details-page-summary-row-selected':isActive('hostName')}">
+				<label for="hostName"> {{'on.label' | translate}}</label>
+				<div class="wrapper">
+					<span
+						ng-hide="service.hostname.length"
+						class="sc-details-page-summary-content">({{'watcher.summary.watcher.hostname.alt' | translate}}) </span>
+					<span
+						class="sc-details-page-summary-content"
+						ng-show="service.hostname.length"> {{service.hostname}}</span>
+				</div>
+			</div>
+		</a>
+		<a
+			href=""
+			data-ng-click="scrollTo('watchedFolders')">
+			<div
+				class="sc-details-page-summary-row"
+				data-ng-class="{'sc-details-page-summary-row-selected':isActive('watchedFolders')}">
+				<label> {{"watcher.summary.include.folders.label" | translate}} </label>
+				<div class="wrapper">
+					<div
+						class="sc-details-page-summary-content"
+						data-ng-repeat="folder in service.repositoryFolders">
+						<label data-ng-show="$index > 0"> {{"and.label" | translate}} </label>
+						<span>{{folder.path}}</span>
+						<div class="sc-details-page-summary-sub-content">
+							<label data-ng-show="folder.excludeRepositoryFolders.length > 0">
+								{{"watcher.summary.exclude.folders.label" | translate}} </label>
+							<div
+								class="sc-details-page-summary-content"
+								data-ng-repeat="sfolder in folder.excludeRepositoryFolders">
+								<span>{{ sfolder.path}}</span>
+							</div>
+						</div>
+					</div>
+					<span
+						data-ng-hide="service.repositoryFolders.length > 0"
+						class="sc-details-page-summary-content"><{{'watcher.summary.watcher.included.folders.alt' | translate}}> </span>
+				</div>
+			</div>
+		</a>
+		<a
+			href=""
+			data-ng-click="scrollTo('fileTypes')">
+			<div
+				class="sc-details-page-summary-row"
+				data-ng-class="{'sc-details-page-summary-row-selected':isActive('fileTypes')}">
+				<label for="fileTypes"> {{"watcher.summary.look.for.label" | translate}} </label>
+				<!-- <input id="attributesInfo" class="sc-details-page-left-summary-placeholder"  placeholder="<{{'createResource.summary.placeholder.Conditions' | translate}}/>" value="{{resource.attributes}}" data-ng-readonly="true"/> -->
+				<div class="wrapper">
+					<span
+						ng-hide="service.documentTypeAssociations.length > 0"
+						class="sc-details-page-summary-content">{{'component.summary.component.file.extn.alt' | translate}} </span>
+					<span
+						ng-show="service.documentTypeAssociations.length > 0"
+						class="sc-details-page-summary-content"
+						data-ng-repeat="documentType in service.documentTypeAssociations | orderBy:'documentExtractor.extension'">
+						{{(documentType.include) ? (documentType.documentExtractor.extension + (($index <
+						watcher.documentTypeAssociations.length-1)? ' ' : '')) : ''}} </span>
+					<!-- <label>{{"component.summary.look.for.extensions.label" | translate}} </label> -->
+				</div>
+			</div>
+		</a>
+
+		<a
+			href=""
+			data-ng-click="scrollTo('sync')">
+			<div
+				class="sc-details-page-summary-row"
+				data-ng-class="{'sc-details-page-summary-row-selected':isActive('sync')}">
+				<label for="sync"> {{"and.label" | translate}} {{"it.label" | translate}}
+					{{"component.summary.conf.reload.label" | translate}}</label>
+				<div
+					class="wrapper"
+					data-ng-show="serviceTempObject.configReloadIntervalTemp">
+					<span> {{serviceTempObject.configReloadIntervalTemp}}</span>
+					<span>{{ serviceTempObject.configReloadIntervalUnit + '.label' | translate}}</span>
+				</div>
+				<div>
+					<span
+						data-ng-hide="serviceTempObject.configReloadIntervalTemp"
+						class="sc-details-page-summary-content"><{{'component.summary.interval.alt' | translate}}> </span>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="sc-details-page-editor-div">
+
+		<div
+			id="watcherInfo"
+			class="sc-details-page-editor-title">
+			<span class="sc-details-page-title-underline"> {{"watcher.editor.watcher.info.label" | translate}}</span>
+		</div>
+
+		<div class="sc-details-page-editor-info">
+			<div class="sc-details-page-editor-data">
+				<label for="name">{{"component.editor.name.label" | translate}}</label>
+				<input
+					id="name"
+					class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+					placeholder="{{'watcher.editor.name.place.holder' | translate}}"
+					data-ng-model="service.name"
+					name="watcherName"
+					required
+					ng-maxlength="100"
+					maxlength="100">
+				<div
+					class="sc-validation-block"
+					ng-messages="serviceDetailsForm.watcherName.$error"
+					ng-if="serviceDetailsForm.watcherName.$touched">
+					<p ng-message="maxlength">{{"watcher.editor.name.validation.max.length" | translate}}</p>
+					<p ng-message="required">{{"watcher.editor.name.validation.required" | translate}}</p>
+				</div>
+			</div>
+
+			<div
+				id="hostName"
+				class="sc-details-page-editor-data">
+				<label for="hostname">{{"component.editor.hostname.label" | translate}}</label>
+				<span class="sc-details-page-editor-label">{{service.hostname}}</span>
+			</div>
+			<div class="sc-details-page-editor-data">
+				<label for="jmsProfile">{{"component.editor.jmsProfile.label" | translate}}</label>
+				<div
+					id="jmsProfile"
+					class="sc-details-page-editor-data-right btn-group btn-block"
+					data-uib-dropdown>
+					<button
+						class="form-control sc-button-common"
+						id=""
+						type="button"
+						data-uib-dropdown-toggle
+						ng-disabled="disabled">
+						<span class="sc-dropdown-btn-label">{{service.JMSProfile.displayName}}</span>
+						<span class="sc-dropdown-btn-expand-icon" />
+					</button>
+					<ul
+						class="uib-dropdown-menu sc-dropdown-menu"
+						role="menu"
+						aria-labelledby="">
+						<li
+							role="menuitem"
+							data-ng-repeat="jmsProfile in jmsList"
+							data-ng-click="changeJMSProfile(jmsProfile)"
+							class="sc-clickable-dropdown">{{jmsProfile.displayName}}</li>
+					</ul>
+				</div>
+			</div>
+			<div class="sc-details-page-editor-data">
+				<label for="file-monitor-thread-count">{{"watcher.editor.file.monitor.thread.count.label" | translate}}</label>
+				<div
+					id="file-monitor-thread-count"
+					numeric="{min:1,max:10}"
+					class="sc-number-input-sm sc-details-page-common-input"
+					name="fileMonitorThreadCount"
+					data-ng-model="service.fileMonitorCount"
+					required />
+
+				<div
+					class="sc-validation-block"
+					ng-messages="serviceDetailsForm.fileMonitorThreadCount.$error"
+					ng-if="serviceDetailsForm.fileMonitorThreadCount.$touched">
+					<p ng-message="required">{{"watcher.editor.file.monitor.thread.count.validation.required" | translate}}</p>
+				</div>
+			</div>
+		</div>
+
+		<div
+			id="watchedFolders"
+			class="sc-details-page-editor-title">
+			<span class="sc-details-page-title-underline"> {{"watched.folders.label.caps" | translate}}</span>
+		</div>
+
+		<div class="sc-details-page-editor-info">
+			<div class="sc-details-page-editor-data">
+				<label>{{'watcher.editor.directories.context' | translate}}</label>
+				<div
+					class="sc-watcher-include-directory-block"
+					data-ng-repeat="(index,inFolder) in service.repositoryFolders">
+					<i
+						class="fa fa-times-circle-o sc-component-del-icon"
+						style="transform: translate(50%, -50%)"
+						data-ng-click="removeInFolder(index)"> </i>
+					<div class="sc-watcher-include-directory">
+						<div class="sc-watcher-include-directory-internal-div">
+							<div class="sc-watcher-include-directory-internal-label">
+								<label for="repositoryTypeDropdown">{{'watcher.editor.select.repository' | translate}}{{'colon.label' |
+									translate}}</label>
+							</div>
+							<div
+								class="sc-watcher-include-directory-internal-dropdown"
+								uib-dropdown>
+								<button
+									id="repositoryTypeDropdown"
+									class="form-control sc-button-common"
+									type="button"
+									uib-dropdown-toggle
+									ng-disabled="disabled">
+									<span class="sc-dropdown-btn-label">{{inFolder.repositoryType}}</span>
+									<span class="sc-dropdown-btn-expand-icon"></span>
+								</button>
+								<ul
+									class="uib-dropdown-menu sc-dropdown-menu"
+									role="menu"
+									aria-labelledby="repositoryTypeDropdown"
+									uib-dropdown-menu>
+									<li
+										role="menuitem"
+										data-ng-repeat="repositoryType in repositoryTypes"
+										data-ng-click="changeRepositoryType(index, repositoryType)"
+										class="sc-clickable-dropdown">{{repositoryType}}</li>
+								</ul>
+							</div>
+						</div>
+						<div
+							class="sc-watcher-include-directory-internal-div"
+							data-ng-if="inFolder.repositoryType != 'SHARED FOLDER'">
+							<div class="sc-watcher-include-directory-internal-label">
+								<label for="credentialsDropDown">{{'watcher.editor.select.credentials' | translate}}{{'colon.label' |
+									translate}}</label>
+							</div>
+							<div
+								class="sc-watcher-include-directory-internal-dropdown"
+								uib-dropdown>
+								<button
+									id="credentialsDropDown"
+									class="form-control sc-button-common"
+									type="button"
+									uib-dropdown-toggle
+									ng-disabled="disabled">
+									<span class="sc-dropdown-btn-label">{{inFolder.sourceAuthentication.name}}</span>
+									<span class="sc-dropdown-btn-expand-icon"></span>
+								</button>
+								<ul
+									class="uib-dropdown-menu sc-dropdown-menu"
+									role="menu"
+									aria-labelledby="credentialsDropDown"
+									uib-dropdown-menu>
+									<li
+										role="menuitem"
+										data-ng-repeat="credential in credentialList"
+										data-ng-click="changeCredentials(index, credential)"
+										class="sc-clickable-dropdown">{{credential.name}}</li>
+								</ul>
+							</div>
+						</div>
+						<table style="width: 100%">
+							<tr>
+								<td width="99%">
+									<input
+										class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-full sc-details-page-common-input"
+										placeholder="{{inFolder.repositoryType == 'SHARED FOLDER' ? ('watcher.editor.include.place.holder' | translate) : ('watcher.editor.sharepoint.include.place.holder' | translate)}}"
+										data-ng-class="{ 'has-error': serviceDetailsForm['inFolder' + index].$dirty && serviceDetailsForm['inFolder' + index].$invalid}"
+										data-ng-model="inFolder.path"
+										name="inFolder{{index}}"
+										required
+										uib-tooltip="{{getTooltipMessage(serviceDetailsForm['inFolder' + index])}}"
+										maxlength="1000"
+										ng-maxlength="1000"
+										tooltip-trigger="mouseenter"
+										tooltip-placement="bottom">
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="sc-watcher-exclude-directories">
+						<table>
+							<tr data-ng-repeat="(xindex, exFolder) in inFolder.excludeRepositoryFolders">
+								<td width="10%">
+									<span>{{'exclude.label' | translate}}</span>
+								</td>
+								<td width="85%">
+									<input
+										data-ng-change="checkExFolder(inFolder, exFolder)"
+										data-ng-class="{'has-error': serviceDetailsForm['exFolder' + index + '' +
+									xindex].$dirty && serviceDetailsForm['exFolder' + index + '' +
+									xindex].$invalid}"
+										class="sc-details-page-editor-input-placeholder
+									sc-details-page-editor-data-full sc-details-page-common-input"
+										placeholder="{{inFolder.repositoryType == 'SHARED FOLDER' ? ('watcher.editor.exclude.place.holder' |
+									translate) : ('watcher.editor.sharepoint.exclude.place.holder' |
+									translate)}}"
+										data-ng-model="exFolder.path"
+										name="exFolder{{index}}{{xindex}}"
+										required
+										uib-tooltip="{{getTooltipMessage(serviceDetailsForm['exFolder' + index + '' +
+									xindex])}}"
+										maxlength="1000"
+										ng-maxlength="1000"
+										tooltip-trigger="mouseenter"
+										tooltip-placement="bottom">
+								<td width="5%">
+									<div
+										class="fa fa-trash-o sc-bigger-icon sc-inline"
+										data-ng-click="removeExcludeFolder(xindex, inFolder)"></div>
+								</td>
+							</tr>
+
+						</table>
+						<a
+							data-ng-click="addExcludeFolder(inFolder)"
+							class="btn btn-default">
+							<i class="fa fa-plus uppercase" />
+							&nbsp;&nbsp;{{"exclude.folder.button" | translate}}
+						</a>
+					</div>
+				</div>
+				<a
+					data-ng-click="addIncludeFolder()"
+					class="btn btn-default">
+					<i class="fa fa-plus uppercase"> </i>
+					&nbsp;&nbsp;{{"include.folder.button" | translate}}
+				</a>
+			</div>
+		</div>
+
+		<div
+			id="fileTypes"
+			class="sc-details-page-editor-title">
+			<span class="sc-details-page-title-underline"> {{"file.extension.label.caps" | translate}}</span>
+		</div>
+
+		<div class="sc-details-page-editor-info">
+			<div class="sc-details-page-editor-data">
+				<div
+					class="sc-details-page-watcher-switch sc-inline"
+					data-ng-repeat="documentType in service.documentTypeAssociations | orderBy:'documentExtractor.extension'">
+					<span>
+						<switch
+							class="sc-switch sc-inline"
+							data-ng-model="documentType.include" />
+					</span>
+					<span class="sc-inline">{{documentType.documentExtractor.extension}}</span>
+				</div>
+			</div>
+		</div>
+
+		<div
+			id="sync"
+			class="sc-details-page-editor-title">
+			<span class="sc-details-page-title-underline"> {{"config.reload.label" | translate}}</span>
+		</div>
+		<div class="sc-details-page-editor-info">
+			<div class="sc-details-page-editor-data">
+				<label>{{"component.editor.configure.reload.interval.label" | translate}}</label>
+				<div class="wrapper">
+					<div
+						numeric="{min:5}"
+						class="sc-number-input-sm sc-details-page-common-input sc-inline"
+						name="configurationReloadInterval"
+						required
+						id="configurationReloadInterval"
+						data-ng-if="serviceTempObject.configReloadIntervalUnit == 'min'"
+						data-ng-model="serviceTempObject.configReloadIntervalTemp"
+						data-ng-change="onConfigReloadIntervalEdit(serviceTempObject.configReloadIntervalTemp)"
+						ng-keyup="onConfigReloadIntervalEdit(serviceTempObject.configReloadIntervalTemp)" />
+
+					<div
+						numeric="{min:1}"
+						class="sc-number-input-sm sc-details-page-common-input sc-inline"
+						name="configurationReloadInterval"
+						required
+						id="configurationReloadInterval"
+						data-ng-if="serviceTempObject.configReloadIntervalUnit == 'hour'"
+						data-ng-model="serviceTempObject.configReloadIntervalTemp"
+						data-ng-change="onConfigReloadIntervalEdit(serviceTempObject.configReloadIntervalTemp)"
+						ng-keyup="onConfigReloadIntervalEdit(serviceTempObject.configReloadIntervalTemp)" />
+
+					<div
+						class="sc-details-page-editor-data-right-small btn-group btn-block"
+						data-uib-dropdown>
+						<button
+							class="form-control sc-button-common"
+							id=""
+							type="button"
+							data-uib-dropdown-toggle
+							ng-disabled="disabled">
+							<span class="sc-dropdown-btn-label">{{ serviceTempObject.configReloadIntervalUnit + '.label' | translate}}</span>
+							<span class="sc-dropdown-btn-expand-icon" />
+						</button>
+						<ul
+							class="uib-dropdown-menu sc-dropdown-menu"
+							role="menu"
+							aria-labelledby="">
+							<li
+								role="menuitem"
+								data-ng-click="changeConfigReloadIntervalUnit('min', serviceTempObject.configReloadIntervalTemp)"
+								class="sc-clickable-dropdown">{{'min.label' | translate}}</li>
+							<li
+								role="menuitem"
+								data-ng-click="changeConfigReloadIntervalUnit('hour', serviceTempObject.configReloadIntervalTemp)"
+								class="sc-clickable-dropdown">{{'hour.label' | translate}}</li>
+						</ul>
+					</div>
+					<div
+						class="sc-validation-block"
+						ng-messages="serviceDetailsForm.configurationReloadInterval.$error"
+						ng-if="serviceDetailsForm.configurationReloadInterval.$touched">
+						<p ng-message="required">{{"service.editor.reload.interval.validation.required" | translate}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>

@@ -1,0 +1,122 @@
+<div class="no margin sc-page-title" data-ng-if="serviceList.length">
+	<div class="sc-page-title-left">
+		<div class="sc-vertical-middle-div">{{title}}</div>
+	</div>
+</div>
+
+
+
+
+<div data-ng-if="serviceList.length" class="sc-list-container">
+	<div data-ng-if="serviceList.length" class="sc-operation">
+		<!-- <div id="sc-sort-by" class="sc-inline">
+		<div class="sc-inline sc-sort-by-title">{{"sort.by.label"|translate}}</div>
+		<div
+			class="sc-sort-by-select sc-inline btn-group btn-block sc-search-status"
+			uib-dropdown>
+			<button class="form-control sc-button-common" id="" type="button"
+				data-uib-dropdown-toggle ng-disabled="disabled">
+				<span class="sc-dropdown-btn-label">{{sortBy.label}}</span> <span
+					class="sc-dropdown-btn-expand-icon"></span>
+			</button>
+			<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu"
+				aria-labelledby="">
+				<li role="menuitem" data-ng-repeat="s in sortByFields"
+					data-ng-click="sortByField(s)" class="sc-clickable-dropdown">{{s.label}}</li>
+			</ul>
+		</div>
+		<div class="sc-inline sc-sort-by-title">{{"sort.order.label"|translate}}</div>
+		<div
+			class="sc-sort-by-select sc-inline btn-group btn-block sc-search-status"
+			uib-dropdown>
+			<button class="form-control sc-button-common" id="" type="button"
+				data-uib-dropdown-toggle ng-disabled="disabled">
+				<span class="sc-dropdown-btn-label">{{sortOrder.label}}</span> <span
+					class="sc-dropdown-btn-expand-icon"></span>
+			</button>
+			<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu"
+				aria-labelledby="">
+				<li role="menuitem" data-ng-repeat="s in sortOrders"
+					data-ng-click="sortByOrder(s)" class="sc-clickable-dropdown">{{s.label}}</li>
+			</ul>
+		</div>
+	</div> -->
+	</div>
+
+	<table class="sc-list-table table table-hover">
+		<thead>
+		</thead>
+		<tbody>
+			<tr data-ng-repeat="service in serviceList">
+				<td class="no-padding-important sc-component-status-on-table" data-ng-class="getServiceClass(service)">
+				</td>
+				<td class="sc-component-details-on-table">
+					<div class="sc-inline-block-on-table sc-clickable"
+						style="width: 30%" data-ng-click="openService(service)">
+						<p class="sc-bold-text-on-table">{{service.name}}</p>
+						<p class="sc-grey-text-on-table">{{service.hostname}}</p>
+					</div>
+					<div class="sc-inline-block-on-table sc-clickable"
+						style="width: 30%" data-ng-click="openService(service)">
+						<p class="sc-grey-text-on-table">{{'services.last.sync.at' |
+							translate}}</p>
+						<friendly-date data-date="{{service.configLoadedOn}}"
+							data-ng-if="service.configLoadedOn"
+							data-date-type="miliseconds"
+							data-full-format="d MMM yyyy, hh:mm a"
+							data-short-format="hh:mm a"></friendly-date>
+						<p data-ng-if='service.configLoadedOn == null || service.configLoadedOn == 0'>{{'services.never.sync' | translate}}</p>
+<!-- 						<p data-ng-bind="service.configLoadedOn | date: getDateFormat()"></p> -->
+					</div>
+					<div data-ng-click="openService(service)"
+						class="sc-inline-block-on-table sc-clickable">
+						<p class="sc-grey-text-on-table">{{'services.sync.frequency' |
+							translate}}</p>
+						<p
+							data-ng-show="service.configReloadInterval >=3600 && service.configReloadInterval %3600 == 0">{{service.configReloadInterval/3600}}
+							{{'hour.label' | translate}}</p>
+						<p
+							data-ng-show="service.configReloadInterval < 3600 || service.configReloadInterval % 3600 != 0">{{service.configReloadInterval/60}}
+							{{'min.label' | translate}}</p>
+					</div>
+					<div class="sc-service-option-block" data-ng-hide="true">
+						<div class="sc-align-right">
+							<button
+								class="btn btn-default sc-component-option sc-btn-icon-big sc-btn-bkgrd-hover sc-btn-no-bkgrd sc-btn-no-border"
+								data-ng-click="openOption(service, !openOption(service), $event)"></button>
+						</div>
+						<div
+							data-ng-include="'ui/app/SCServices/partials/serviceoption-template.html'"
+							class="fade-in fade-out sc-option"
+							data-ng-show="isOptionOpen(service)"></div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div data-ng-show="serviceList.length< total">
+		<button type="button" class="btn btn-default sc-btn-loadmore"
+			data-ng-click="loadMore()">{{"button.load.more" |
+			translate}}</button>
+	</div>
+
+	<!-- <div class="sc-service-pagination" data-ng-show="false">
+		<ul class="pagination">
+
+			<li data-ng-class="{'disabled':servicePageNumber == 1}"><a
+				data-ng-click="previousPage()">&laquo;</a></li>
+			<li><a data-ng-repeat="index in paginator"
+				data-ng-click="goToPage(index)">{{index}}</a></li>
+			<li data-ng-class="{'disabled':servicePageNumber == numberOfPage}"><a
+				data-ng-click="nextPage()">&raquo;</a></li>
+		</ul>
+	</div> -->
+</div>
+<div data-http-loader class="sc-data-loading">
+	<p style="text-align: center" class="sc-vertical-middle-div ">{{'data.loading'
+		| translate}}</p>
+</div>
+<div data-ng-if="!serviceList.length" class="sc-empty-resource-list-box">
+	<p style="text-align: center">{{'empty.list.msg' | translate}}</p>
+</div>

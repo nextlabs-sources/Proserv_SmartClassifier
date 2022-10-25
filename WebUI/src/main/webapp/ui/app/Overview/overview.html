@@ -1,0 +1,294 @@
+<div class="no margin sc-page-title">
+    <div class="sc-page-title-left">
+        <div class="sc-vertical-middle-div">{{'dashboard.title'|
+            translate}}
+        </div>
+    </div>
+    <div class="sc-page-title-right sc-title-button-box">
+        <a data-ng-click="refresh()"
+           class="sc-vertical-middle-div btn btn-default sc-btn-big"> <i
+                class="fa fa-refresh"></i>&nbsp;&nbsp;{{"button.refresh" |
+            translate}}
+        </a>
+    </div>
+</div>
+
+<div class="sc-overview-container">
+    <div class="sc-db-services-wrapper">
+        <div class="sc-db-wrapper-title">
+            <span>{{'components.label' | translate}} </span>
+        </div>
+        <table width="15%" class="sc-db-legend-table">
+            <tr>
+                <td width="3%">
+                    <div
+                            class="sc-db-legend-square sc-db-legend-green"></div>
+                </td>
+                <td width="47%" class="sc-db-legend-text">{{'service.healthy.label'
+                    | translate}}
+                </td>
+                <td width="3%">
+                    <div
+                            class="sc-db-legend-square sc-db-legend-red"></div>
+                </td>
+                <td width="50%" class="sc-db-legend-text">{{'service.unhealthy.label'
+                    | translate}}
+                </td>
+            </tr>
+        </table>
+        <table width="90%" class="sc-db-services-table">
+            <tr>
+                <td width="33%" data-ng-click="goToService('watcher')">
+                    <div class="sc-db-service-total" data-ng-if="!watcherInfo.missing">
+                        <div class="sc-vertical-middle-div">
+                            <p class='sc-db-context'>{{'total.label'|translate}}</p>
+                            <p class="sc-db-data">{{watcherInfo.total}}</p>
+                            <p class='sc-db-context'>{{'watchers.label'|translate}}</p>
+                        </div>
+                    </div>
+                    <canvas class="chart chart-doughnut" id="watcherChart"
+                            data-ng-if="!watcherInfo.missing" chart-data="watcherData"
+                            chart-labels="serviceLabels" chart-options="doughnutChartOption"
+                            chart-colors="serviceChartColors">
+                    </canvas>
+                    <div class="sc-db-service-count">
+                        <table data-ng-if="!watcherInfo.missing">
+                            <tr>
+                                <td>
+                                    <div class="sc-db-legend-square sc-db-legend-green"></div>
+                                </td>
+                                <td class="sc-db-service-count-data">
+                                    <div>{{watcherInfo.healthy}}</div>
+                                </td>
+                                <td>
+                                    <div class="sc-db-legend-square sc-db-legend-red"></div>
+                                </td>
+                                <td class="sc-db-service-count-data">
+                                    <div>{{watcherInfo.critical}}</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p data-ng-if="watcherInfo.missing" class="sc-db-alternate">{{'watcher.not.found'|
+                        translate}}</p></td>
+                <td width="33%" data-ng-click="goToService('extractor')">
+                    <div class="sc-db-service-total" data-ng-if="!extractorInfo.missing">
+                        <div class="sc-vertical-middle-div">
+                            <p class='sc-db-context'>{{'total.label'|translate}}</p>
+                            <p class="sc-db-data">{{extractorInfo.total}}</p>
+                            <p class='sc-db-context'>{{'extractors.label'|translate}}</p>
+                        </div>
+                    </div>
+                    <canvas class="chart chart-doughnut" id="extractorChart"
+                            data-ng-if="!extractorInfo.missing" chart-data="extractorData"
+                            chart-labels="serviceLabels" chart-options="doughnutChartOption"
+                            chart-colors="serviceChartColors">
+                    </canvas>
+                    <div class="sc-db-service-count">
+                        <table data-ng-if="!extractorInfo.missing">
+                            <tr>
+                                <td>
+                                    <div class="sc-db-legend-square sc-db-legend-green"></div>
+                                </td>
+                                <td class="sc-db-service-count-data">
+                                    <div>{{extractorInfo.healthy}}</div>
+                                </td>
+                                <td>
+                                    <div class="sc-db-legend-square sc-db-legend-red"></div>
+                                </td>
+                                <td class="sc-db-service-count-data">
+                                    <div>{{extractorInfo.critical}}</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p data-ng-if="extractorInfo.missing" class="sc-db-alternate">{{'extractor.not.found'|
+                        translate}}</p></td>
+                <td width="33%" data-ng-click="goToService('ruleEngine')">
+                    <div class="sc-db-service-total" data-ng-if="!ruleEngineInfo.missing">
+                        <div class="sc-vertical-middle-div">
+                            <p class='sc-db-context'>{{'total.label'|translate}}</p>
+                            <p class="sc-db-data">{{ruleEngineInfo.total}}</p>
+                            <p class='sc-db-context'>{{'ruleEngines.label'|translate}}</p>
+                        </div>
+                    </div>
+                    <canvas class="chart chart-doughnut" id="ruleEngineChart"
+                            data-ng-if="!ruleEngineInfo.missing" chart-data="ruleEngineData"
+                            chart-labels="serviceLabels" chart-options="doughnutChartOption"
+                            chart-colors="serviceChartColors">
+                    </canvas>
+                    <div class="sc-db-service-count">
+                        <table data-ng-if="!ruleEngineInfo.missing">
+                            <tr>
+                                <td>
+                                    <div class="sc-db-legend-square sc-db-legend-green"></div>
+                                </td>
+                                <td class="sc-db-service-count-data">
+                                    <div>{{ruleEngineInfo.healthy}}</div>
+                                </td>
+                                <td>
+                                    <div class="sc-db-legend-square sc-db-legend-red"></div>
+                                </td>
+                                <td class="sc-db-service-count-data">
+                                    <div>{{ruleEngineInfo.critical}}</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p data-ng-if="ruleEngineInfo.missing" class="sc-db-alternate">{{'ruleEngine.not.found'|
+                        translate}}</p></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="sc-db-document-wrapper">
+        <div class="sc-db-extraction-wrapper sc-inline">
+            <div class="sc-db-wrapper-title">
+                <span>{{'file.processing.status.label' | translate}}</span>
+            </div>
+            <table width="15%" class="sc-db-legend-table">
+                <tr>
+                    <td width="3%">
+                        <div
+                                class="sc-db-legend-square sc-db-legend-blue"></div>
+                    </td>
+                    <td width="47%" class="sc-db-legend-text">{{'success.label' |
+                        translate}}
+                    </td>
+                    <td width="3%">
+                        <div
+                                class="sc-db-legend-square sc-db-legend-grey"></div>
+                    </td>
+                    <td width="50%" class="sc-db-legend-text">{{'failure.label' |
+                        translate}}
+                    </td>
+                </tr>
+            </table>
+
+            <div class="sc-db-extraction-content">
+                <div class="sc-db-file-total" data-ng-if="processDetailsFound">
+                    <div class="sc-vertical-middle-div">
+                        <p class='sc-db-context'>{{'total.label'|translate}}</p>
+                        <p class="sc-db-data">{{totalDocs}}</p>
+                        <p class='sc-db-context'>{{'files.processed.label'|translate}}</p>
+                    </div>
+                </div>
+                <canvas class="chart chart-doughnut" id="extractionChart"
+                        data-ng-if="processDetailsFound"
+                        data-ng-if="!extractorInfo.missing" chart-data="processDetails"
+                        chart-labels="processLabels" chart-options="doughnutChartOption"
+                        chart-colors="processChartColors"></canvas>
+                <div class="sc-db-file-count">
+                    <table data-ng-if="processDetailsFound">
+                        <tr>
+                            <td>
+                                <div class="sc-db-legend-square sc-db-legend-blue"></div>
+                            </td>
+                            <td class="sc-db-service-count-data">
+                                <div>{{successExtraction}}</div>
+                            </td>
+                            <td>
+                                <div class="sc-db-legend-square sc-db-legend-grey"></div>
+                            </td>
+                            <td class="sc-db-service-count-data">
+                                <div>{{failExtraction}}</div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <p data-ng-if="!processDetailsFound" class="sc-db-alternate"
+                   style="padding: 20% 10% 20% 10%">{{'processDetails.not.found'|
+                    translate}}</p>
+            </div>
+        </div>
+
+        <div class="sc-db-license-wrapper sc-inline">
+            <div class="sc-db-wrapper-title">
+                <span>{{'data.volume.label' | translate}}</span>
+            </div>
+            <table width="15%" class="sc-db-legend-table"
+                   data-ng-if="getRemaining() >= 0 || dataSize == 'UNLIMITED'">
+                <tr>
+                    <td width="3%">
+                        <div
+                                class="sc-db-legend-square sc-db-legend-blue-1"></div>
+                    </td>
+                    <td width="47%" class="sc-db-legend-text">{{'used.label' |
+                        translate}}
+                    </td>
+                    <td width="3%">
+                        <div
+                                class="sc-db-legend-square sc-db-legend-grey-1"></div>
+                    </td>
+                    <td width="50%" class="sc-db-legend-text">{{'remaining.label' |
+                        translate}}
+                    </td>
+                </tr>
+            </table>
+            <div class="sc-red sc-db-limit-exceed"
+                 data-ng-if="getRemaining() < 0">{{'limit.exceeded.label'|translate}}!
+            </div>
+            <div class="sc-db-license-content">
+                <table width="100%" class="sc-license-usage-table"
+                       data-ng-if="licenseFound && dataSize != 'UNLIMITED'">
+                    <tr>
+                        <td>
+                            <uib-progressbar value="usedSize" max="dataSize"
+                                             data-ng-class="{'sc-progress-bar-exceed': usedSize > dataSize}"
+                                             type="{{getUsedSizeStyle()}}">
+                                <div class="sc-progress-bar-exceed-break" data-ng-if="getRemaining() < 0"></div>
+                            </uib-progressbar>
+                        </td>
+                        <p data-ng-if="!licenseFound" class="sc-db-alternate"
+                           style="padding: 20% 10% 20% 10%">{{'usage.not.found'|
+                            translate}}</p>
+                    </tr>
+                </table>
+                <table width="100%" class="sc-license-usage-table"
+                       data-ng-if="licenseFound && dataSize == 'UNLIMITED'">
+                    <tr>
+                        <td>
+                            <uib-progressbar value="0" max="100"
+                                             type="{{getUsedSizeStyle()}}">
+                                <div class="sc-progress-bar-exceed-break" data-ng-if="getRemaining() < 0"></div>
+                            </uib-progressbar>
+                        </td>
+                        <p data-ng-if="!licenseFound" class="sc-db-alternate"
+                           style="padding: 20% 10% 20% 10%">{{'usage.not.found'|
+                            translate}}</p>
+                    </tr>
+                </table>
+
+
+                <table width="100%" data-ng-if="licenseFound">
+                    <tr>
+                        <td width="33%">
+                            <div class="sc-license-context">{{'used.label' |
+                                translate}}
+                            </div>
+                            <div class="sc-db-data-sm">{{usedSize}} GB(s)</div>
+                        </td>
+                        <td width="33%">
+                            <div class="sc-license-context"
+                                 data-ng-if="getRemaining() >= 0 || getRemaining() == 'UNLIMITED'">
+                                {{'license.remaining.label'
+                                | translate}}
+                            </div>
+                            <div class="sc-license-context" data-ng-if="getRemaining() < 0">{{'license.exceeded.label'
+                                | translate}}
+                            </div>
+                            <div class="sc-db-data-sm">{{getRemaining()}} {{dataSize == "UNLIMITED" ? "" : "GB(s)"}}
+                            </div>
+                        </td>
+                        <td width="33%">
+                            <div class="sc-license-context">{{'license.limit.label' |
+                                translate}}
+                            </div>
+                            <div class="sc-db-data-sm">{{dataSize}} {{dataSize == "UNLIMITED" ? "" : "GB(s)"}}</div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

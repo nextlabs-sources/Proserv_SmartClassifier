@@ -1,0 +1,1284 @@
+<div
+        data-ng-if="!detailsFound"
+        class="sc-empty-resource-list-box">
+    <p style="text-align: center">{{'component.details.not.found' | translate}}</p>
+</div>
+<div
+        class="sc-resource"
+        data-ng-if="detailsFound"
+        style="height: 100%">
+    <form
+            id="ruleDetailsForm"
+            class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-vaid-maxlength"
+            novalidate=""
+            name="ruleDetailsForm">
+        <div class="no-margin sc-details-page-title-panel">
+            <div class="sc-details-page-back-btn-div ">
+                <button
+                        class="sc-details-page-back-btn btn btn-default"
+                        type="button"
+                        data-ng-click="backToRuleList(ruleDetailsForm)">
+                    <i
+                            class="fa fa-arrow-left"
+                            data-ng-class=""> </i>
+                </button>
+            </div>
+            <div class="sc-details-page-title">
+                <div class="sc-vertical-middle-div">
+                    <p
+                            class="sc-details-page-edit-text"
+                            data-ng-if="ruleID !='create'">{{"edit.label" | translate}}</p>
+                    <p
+                            class="sc-details-page-edit-text"
+                            data-ng-if="ruleID =='create'">{{"create.label" | translate}}</p>
+                    <p class="sc-details-page-edit-subject">{{rule.name}}</p>
+                </div>
+            </div>
+            <div class="sc-details-page-btn-div">
+                <a
+                        class="btn btn-default sc-details-page-discard-btn"
+                        data-ng-click="discardRuleChanges(ruleDetailsForm)"> {{"button.discard" | translate}} </a>
+                <a
+                        class="btn btn-default sc-btn-save-page"
+                        data-ng-click="saveRuleChanges(ruleDetailsForm)"> {{"button.save" | translate}} </a>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="sc-details-page-bottom-panel">
+            <div class="sc-details-page-summary-div">
+                <a
+                        href=""
+                        data-ng-click="scrollTo('ruleInfo')">
+                    <div
+                            class="sc-details-page-summary-row"
+                            data-ng-class="{'sc-details-page-summary-row-selected':isActive('ruleInfo')}">
+                        <label>{{"this.label" | translate}} {{'rule.label'| translate}}</label>
+                        <div class="wrapper">
+							<span
+                                    ng-hide="rule.name.length"
+                                    class="sc-details-page-summary-content"> <{{'rule.summary.name.alt' | translate}}> </span>
+                            <span
+                                    class="sc-details-page-summary-content"
+                                    ng-show="rule.name.length"> {{rule.name}} </span>
+                            <span data-ng-show="rule.enabled"> ({{'active.label' | translate}}) </span>
+                            <span data-ng-show="!rule.enabled"> ({{'inactive.label' | translate}}) </span>
+                        </div>
+                    </div>
+                </a>
+                <a
+                        href=""
+                        data-ng-click="scrollTo('actions')">
+                    <div
+                            class="sc-details-page-summary-row"
+                            data-ng-class="{'sc-details-page-summary-row-selected':isActive('action')}">
+                        <label>{{"will.label" | translate}}</label>
+                        <div class="wrapper">
+							<span
+                                    data-ng-show="!rule.actions || rule.actions.length === 0"
+                                    class="sc-details-page-summary-content"> {{'rule.summary.action.alt' | translate}} </span>
+                            <span
+                                    data-ng-show="rule.actions && rule.actions.length > 0"
+                                    data-ng-repeat="(index, action) in rule.actions">
+								<span>
+									{{getActionPluginName(action.actionPlugin)}}
+									<br>
+								</span>
+							</span>
+                        </div>
+                    </div>
+                </a>
+                <a
+                        href=""
+                        data-ng-click="scrollTo('criterias')">
+                    <div
+                            class="sc-details-page-summary-row"
+                            data-ng-class="{'sc-details-page-summary-row-selected':isActive('criterias')}">
+                        <label>{{"rule.summary.look.for.criteria.label" | translate}}</label>
+                        <div class="wrapper">
+							<span
+                                    ng-show="!rule.criteriaGroups || rule.criteriaGroups.length === 0"
+                                    class="sc-details-page-summary-content"> {{'rule.summary.criterias.alt' | translate}}</span>
+                            <span
+                                    data-ng-repeat="(index, cg) in rule.criteriaGroups"
+                                    ng-show="rule.criteriaGroups && rule.criteriaGroups.length > 0"
+                                    class="sc-details-page-summary-content">
+								<span ng-bind-html="'(' | translate"></span>
+								<span data-ng-repeat="(cindex, cri) in cg.criterias">
+									<span data-ng-if="cri.dataSection !== 'M'"> {{"data.section." + cri.dataSection + ".label" | translate}}
+									</span>
+									<span
+                                            class="sc-rule-summary-mc"
+                                            data-ng-if="cri.dataSection !== 'M'"> &nbsp;{{'matching.condition.' + cri.matchingCondition |
+										translate}}&nbsp; </span>
+									<span data-ng-if="cri.dataSection !== 'M'"> {{cri.value}} </span>
+									<span data-ng-if="!cri.field && cri.dataSection === 'M'"> <{{'key.label' |translate}}> </span>
+									<span data-ng-if="cri.dataSection === 'M'"> {{cri.field}}&nbsp; </span>
+									<span
+                                            data-ng-if="cri.dataSection === 'M'"
+                                            ng-bind-html="'meta.matching.condition.' + cri.matchingCondition | translate"
+                                            class="sc-rule-summary-mc"> </span>
+									<span data-ng-if="cri.dataSection === 'M'"> {{isDateCriteria(cri)?(cri.value |
+										date:'dd/MM/yyyy'):cri.value}} </span>
+									<span data-ng-if="!cri.value"> <{{'value.label' |translate}}> </span>
+									<label data-ng-if="cindex !== cg.criterias.length - 1"> &nbsp;{{'or.label' | translate}}&nbsp; </label>
+								</span>
+								<span ng-bind-html="' )'"></span>
+                                </br>
+                                <label data-ng-if="index !== rule.criteriaGroups.length - 1"> {{'and.label'| translate}}&nbsp; </label>
+							</span>
+                        </div>
+                    </div>
+                </a>
+                <a
+                        href=""
+                        data-ng-click="scrollTo('repositoryTypeLabel')">
+                    <div
+                            class="sc-details-page-summary-row"
+                            data-ng-class="{'sc-details-page-summary-row-selected':isActive('repositoryType')}">
+                        <label>{{'and.label' | translate}}{{"rule.summary.type.label" | translate}}</label>
+                        <div class="wrapper">
+							<span class="sc-details-page-summary-content"> {{rule.repositoryType === "SHARED FOLDER" ?
+								('shared.folder.label' | translate) : ('sharepoint.label' | translate)}} </span>
+                        </div>
+                    </div>
+                </a>
+                <a
+                        href=""
+                        data-ng-click="scrollTo('directories')">
+                    <div
+                            class="sc-details-page-summary-row"
+                            data-ng-class="{'sc-details-page-summary-row-selected':isActive('directories')}">
+                        <label>{{rule.repositoryType === "SHARED FOLDER" ? ("rule.summary.directories.label" |
+                            translate) :
+                            ("rule.summary.sharepoint.directories.label" | translate)}} </label>
+                        <div class="wrapper">
+							<span
+                                    data-ng-show="!rule.directories || rule.directories.length === 0"
+                                    class="sc-details-page-summary-content"> {{'rule.summary.directories.alt' | translate}} </span>
+                            <span
+                                    data-ng-show="rule.directories && rule.directories.length > 0"
+                                    data-ng-repeat="(index, directoryGroup) in rule.directories">
+								<span ng-bind-html="'( '"></span>
+								<span data-ng-repeat="(dindex, directory) in directoryGroup.criterias">
+									<span class="sc-rule-summary-mc"> {{'dir.matching.condition.' + directory.matchingCondition |
+										translate}}&nbsp; </span>
+									<span data-ng-show="directory.value && directory.value.length > 0">
+										{{directory.value}}
+										<br>
+									</span>
+									<label data-ng-if="dindex !== directoryGroup.criterias.length - 1">&nbsp;{{'or.label' |
+										translate}}&nbsp;</label>
+								</span>
+								<span ng-bind-html="' )'"></span>
+								<label data-ng-if="index !== rule.directories.length - 1">&nbsp;{{'and.label' | translate}}&nbsp;</label>
+							</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a
+                        href=""
+                        data-ng-click="scrollTo('expiry')">
+                    <div
+                            class="sc-details-page-summary-row"
+                            data-ng-class="{'sc-details-page-summary-row-selected':isActive('expiry')}">
+                        <label>{{'and.label' | translate}} {{"component.summary.valid.from.label" | translate}}</label>
+                        <div class="wrapper">
+                            <span class="sc-details-page-summary-content"> {{validity.validFrom | date:'dd/MM/yyyy'}} </span>
+                        </div>
+                        <label data-ng-show="validity.expiringOnOption  === 'never'">
+                            {{"component.summary.never.expires.label" |
+                            translate}} </label>
+                        <label data-ng-show="validity.expiringOnOption ==='specific'">
+                            {{"component.summary.expiring.on.label" |
+                            translate}} </label>
+                        <div
+                                class="wrapper"
+                                data-ng-show="validity.expiringOnOption === 'specific'">
+                            <span class="sc-details-page-summary-content"> {{validity.expiringOn | date:'dd/MM/yyyy'}} </span>
+                        </div>
+                    </div>
+                </a>
+                <a
+                        href=""
+                        data-ng-click="scrollTo('schedule')">
+                    <div
+                            class="sc-details-page-summary-row"
+                            data-ng-class="{'sc-details-page-summary-row-selected':isActive('schedule')}">
+                        <label>{{"rule.summary.schedule.label" | translate}}</label>
+                        <div class="wrapper">
+                            <span class="sc-details-page-summary-content"> {{getScheduleAsText()}} </span>
+                        </div>
+                    </div>
+                </a>
+                <div class="sc-rule-summary-btn-div">
+                    <a
+                            class="btn btn-default sc-btn-preview-rul"
+                            data-ng-click="preview()"> {{"preview.button" | translate}} </a>
+                    <a
+                            class="btn btn-default sc-btn-execute-rule"
+                            data-ng-click="execute()"> {{"execute.button" | translate}} </a>
+                </div>
+            </div>
+            <div class="sc-details-page-editor-div">
+                <div
+                        id="ruleInfo"
+                        class="sc-details-page-editor-title">
+                    <span class="sc-details-page-title-underline"> {{"rule.editor.info.label" | translate}} </span>
+                </div>
+                <div class="sc-details-page-editor-info">
+                    <div class="sc-details-page-editor-data">
+                        <label for="ruleName">{{"component.editor.name.label" | translate}}</label>
+                        <input
+                                id="ruleName"
+                                class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+                                placeholder="{{'rule.editor.name.place.holder' | translate}}"
+                                data-ng-model="rule.name"
+                                name="ruleName"
+                                required
+                                ng-maxlength="100"
+                                max-length="100">
+                        <div
+                                class="sc-validation-block"
+                                ng-messages="ruleDetailsForm.ruleName.$error"
+                                ng-if="ruleDetailsForm.ruleName.$touched">
+                            <p ng-message="maxlength">{{"rule.editor.name.validation.max.length" | translate}}</p>
+                            <p ng-message="required">{{"rule.editor.name.validation.required" | translate}}</p>
+                        </div>
+                    </div>
+                    <div class="sc-details-page-editor-data">
+                        <label for="description">{{"rule.editor.description.label" | translate}}</label>
+                        <textarea
+                                id="description"
+                                class="sc-details-page-editor-input-placeholder sc-component-text-area sc-details-page-editor-data-right sc-details-page-common-input"
+                                placeholder="{{'rule.editor.description.place.holder' | translate}}"
+                                data-ng-model="rule.description"
+                                name="description">
+						</textarea>
+                    </div>
+                    <div class="sc-details-page-editor-data">
+                        <label for="status">{{"rule.editor.status.label" | translate}}</label>
+                        <div style="margin-top: 10px">
+							<span>
+								<switch
+                                        class="sc-switch sc-inline"
+                                        id="status"
+                                        name="status"
+                                        data-ng-model="rule.enabled"></switch>
+							</span>
+                            <span class="sc-inline">{{'active.label'|translate}}</span>
+                        </div>
+                    </div>
+                    <div class="sc-details-page-editor-data">
+                        <label for="ruleEngine">{{"component.editor.rule.engine.label" | translate}}</label>
+                        <div
+                                id="ruleEngine"
+                                class="sc-details-page-editor-data-right btn-group btn-block"
+                                data-uib-dropdown>
+                            <button
+                                    class="form-control sc-button-common"
+                                    type="button"
+                                    data-uib-dropdown-toggle
+                                    ng-disabled="disabled">
+                                <span class="sc-dropdown-btn-label">{{rule.ruleEngine.name}}</span>
+                                <span class="sc-dropdown-btn-expand-icon"></span>
+                            </button>
+                            <ul
+                                    class="uib-dropdown-menu sc-dropdown-menu"
+                                    uib-dropdown-menu
+                                    role="menu"
+                                    aria-labelledby="">
+                                <li
+                                        role="menuitem"
+                                        data-ng-repeat="ruleEngine in ruleEngineList"
+                                        data-ng-click="changeRuleEngine(ruleEngine)"
+                                        class="sc-clickable-dropdown">{{ruleEngine.name}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div
+                        id="repositoryTypeLabel"
+                        class="sc-details-page-editor-title">
+                    <span class="sc-details-page-title-underline"> {{"repo.type.label.caps" | translate}} </span>
+                </div>
+                <div
+                        id="repositoryTypeData"
+                        class="sc-details-page-editor-data">
+                    <div
+                            id="repositoryType"
+                            class="sc-details-page-editor-data-right btn-group btn-block"
+                            data-uib-dropdown>
+                        <button
+                                class="form-control sc-button-common"
+                                type="button"
+                                data-uib-dropdown-toggle
+                                ng-disabled="disabled">
+                            <span class="sc-dropdown-btn-label">{{rule.repositoryType}}</span>
+                            <span class="sc-dropdown-btn-expand-icon"></span>
+                        </button>
+                        <ul
+                                class="uib-dropdown-menu sc-dropdown-menu"
+                                uib-dropdown-menu
+                                role="menu"
+                                aria-labelledby="">
+                            <li
+                                    role="menuitem"
+                                    data-ng-repeat="repositoryType in repositoryTypes"
+                                    data-ng-click="changeRepositoryType(repositoryType)"
+                                    class="sc-clickable-dropdown">{{repositoryType}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div
+                        id="criterias"
+                        class="sc-details-page-editor-title">
+                    <span class="sc-details-page-title-underline">{{"rule.editor.criterias.label" | translate}}</span>
+                </div>
+                <div class="sc-details-page-editor-info">
+                    <div class="sc-details-page-editor-data">
+                        <label data-ng-if="rule.criteriaGroups && rule.criteriaGroups.length > 0">
+                            {{"rule.editor.look.for.label"
+                            | translate}} </label>
+                        <label data-ng-if="!rule.criteriaGroups || rule.criteriaGroups.length === 0">
+                            {{"rule.editor.look.for.alt"
+                            | translate}}</label>
+                        <div
+                                class="sc-criteria-group-div"
+                                data-ng-repeat="(index,cg) in rule.criteriaGroups">
+                            <i
+                                    class="fa fa-times-circle-o sc-component-del-icon"
+                                    style="transform: translate(50%, -50%)"
+                                    data-ng-click="removeCriteriaGroup(index)"> </i>
+                            <div class="sc-criteria-group-sub-div">
+                                <table class="sc-criteria-table">
+                                    <tr>
+                                        <td
+                                                width="5%"
+                                                rowspan="{{cg.criterias.length + 1}}"
+                                                style="border-right: 1px solid #CCCCCC"
+                                                data-ng-if="cg.criterias.length  > 1">
+                                            <span>{{'or.label' | translate}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr data-ng-repeat="(cindex,cri) in cg.criterias">
+                                        <td width="20%">
+                                            <div
+                                                    class="btn-group btn-block"
+                                                    data-uib-dropdown>
+                                                <button
+                                                        class="form-control sc-button-common"
+                                                        type="button"
+                                                        data-uib-dropdown-toggle
+                                                        ng-disabled="disabled">
+                                                    <span class="sc-dropdown-btn-label"> {{"data.section." + cri.dataSection + ".label" | translate}} </span>
+                                                    <span class="sc-dropdown-btn-expand-icon"></span>
+                                                </button>
+                                                <ul
+                                                        class="uib-dropdown-menu sc-dropdown-menu"
+                                                        uib-dropdown-menu
+                                                        role="menu"
+                                                        aria-labelledby="">
+                                                    <li
+                                                            role="menuitem"
+                                                            data-ng-repeat="ds in dataSections"
+                                                            data-ng-if="ds != 'D'"
+                                                            data-ng-click="changeDataSection(cri, ds)"
+                                                            class="sc-clickable-dropdown">{{"data.section." + ds +
+                                                        ".label" | translate}}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td
+                                                width="20%"
+                                                data-ng-if="!isMetaData(cri, cg)">
+                                            <div
+                                                    class="btn-group btn-block"
+                                                    data-uib-dropdown>
+                                                <button
+                                                        class="form-control sc-button-common"
+                                                        type="button"
+                                                        data-uib-dropdown-toggle
+                                                        ng-disabled="disabled">
+                                                    <span class="sc-dropdown-btn-label"> {{"matching.condition." + cri.matchingCondition | translate}} </span>
+                                                    <span class="sc-dropdown-btn-expand-icon"></span>
+                                                </button>
+                                                <ul
+                                                        class="uib-dropdown-menu sc-dropdown-menu"
+                                                        uib-dropdown-menu
+                                                        role="menu"
+                                                        aria-labelledby="">
+                                                    <li
+                                                            role="menuitem"
+                                                            data-ng-repeat="mc in matchingConditions"
+                                                            data-ng-click="changeMatchingCondition(cri, mc)"
+                                                            class="sc-clickable-dropdown">{{"matching.condition." +
+                                                        mc.code | translate}}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td
+                                                width="23%"
+                                                data-ng-if="isMetaData(cri, cg)">
+                                            <input
+                                                    class="sc-input-dropdown-input sc-details-page-editor-input-placeholder sc-details-page-common-input"
+                                                    data-ng-model="cri.field"
+                                                    data-ng-keypress="resetMetaMatchingCondition(cri)"
+                                                    name="{{'criteriaField-' + index + '' + cindex}}"
+                                                    required
+                                                    data-ng-class="{'has-error': ruleDetailsForm['criteriaField-' + index + '' + cindex].$dirty && ruleDetailsForm['criteriaField-' + index + '' + cindex].$invalid}"
+                                                    uib-tooltip="{{getTooltipMessage(ruleDetailsForm['criteriaField-' + index + '' + cindex])}}"
+                                                    max-length="100"
+                                                    ng-maxlength="100"
+                                                    data-ng-change="updateMetaField(cri)"
+                                                    tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['criteriaField-' + index + '' + cindex].$invalid]}}"
+                                                    tooltip-placement="bottom"
+                                                    placeholder="{{'meta.field.place.holder' | translate}}">
+                                            <div
+                                                    class="sc-input-dropdown-dropdown btn-group"
+                                                    data-uib-dropdown>
+                                                <button
+                                                        class="form-control sc-button-common"
+                                                        type="button"
+                                                        data-uib-dropdown-toggle
+                                                        ng-disabled="disabled">
+                                                    <span class="sc-dropdown-btn-expand-icon"></span>
+                                                </button>
+                                                <ul
+                                                        class="uib-dropdown-menu sc-input-dropdown-menu"
+                                                        role="menu"
+                                                        aria-labelledby="">
+                                                    <li
+                                                            role="menuitem"
+                                                            data-ng-repeat="meta in metaDataList"
+                                                            data-ng-click="changeMetadataField(cri, meta)"
+                                                            class="sc-clickable-dropdown">{{meta.value}}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td
+                                                width="19%"
+                                                data-ng-if="isMetaData(cri, cg)">
+                                            <div
+                                                    class="btn-group btn-block"
+                                                    data-uib-dropdown>
+                                                <button
+                                                        class="form-control sc-button-common"
+                                                        type="button"
+                                                        data-uib-dropdown-toggle
+                                                        ng-disabled="disabled">
+													<span
+                                                            class="sc-dropdown-btn-label"
+                                                            ng-bind-html="'meta.matching.condition.' + cri.matchingCondition | translate"> </span>
+                                                    <span class="sc-dropdown-btn-expand-icon"></span>
+                                                </button>
+                                                <ul
+                                                        class="uib-dropdown-menu sc-dropdown-menu"
+                                                        role="menu"
+                                                        aria-labelledby="">
+                                                    <li
+                                                            role="menuitem"
+                                                            ng-bind-html="'meta.matching.condition.' + mc.code | translate"
+                                                            data-ng-repeat="mc in metaDataMatchingConditions"
+                                                            data-ng-click="changeMetaMatchingCondition(cri, mc)"
+                                                            data-ng-if="!hideMetaMatchingCondition(cri, mc.code)"
+                                                            class="sc-clickable-dropdown"></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td
+                                                width="45%"
+                                                data-ng-if="!isMetaData(cri, cg)"
+                                                colspan="{{hasMetaData(cg)?2:1}}">
+                                            <input
+                                                    class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-full-width"
+                                                    data-ng-model="cri.value"
+                                                    data-ng-change="checkDataProvider(cri)"
+                                                    uib-typeahead="dp.suggestion for dp in dataProviders | filter:{suggestion:$viewValue}:checkDataProvider | limitTo:10"
+                                                    name="{{'criteriaValue-' + index + '' + cindex}}"
+                                                    required
+                                                    data-ng-class="{'has-error': ruleDetailsForm['criteriaValue-' + index + '' + cindex].$dirty && ruleDetailsForm['criteriaValue-' + index + '' + cindex].$invalid}"
+                                                    uib-tooltip="{{getTooltipMessage(ruleDetailsForm['criteriaValue-' + index + '' + cindex])}}"
+                                                    maxlength="1000"
+                                                    ng-maxlength="1000"
+                                                    tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['criteriaValue-' + index + '' + cindex].$invalid]}}"
+                                                    tooltip-placement="bottom"
+                                                    placeholder="{{'meta.value.place.holder'| translate}}">
+                                        </td>
+                                        <td
+                                                width="23%"
+                                                data-ng-if="isMetaData(cri, cg) && isStringCriteria(cri)">
+                                            <input
+                                                    class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-full-width"
+                                                    data-ng-model="cri.value"
+                                                    data-ng-change="checkDataProvider(cri)"
+                                                    uib-typeahead="dp.suggestion for dp in dataProviders | filter:{suggestion:$viewValue}:checkDataProvider | limitTo:10"
+                                                    name="{{'criteriaValue-' + index + '' + cindex}}"
+                                                    required
+                                                    data-ng-class="{'has-error': ruleDetailsForm['criteriaValue-' + index + '' + cindex].$dirty && ruleDetailsForm['criteriaValue-' + index + '' + cindex].$invalid}"
+                                                    uib-tooltip="{{getTooltipMessage(ruleDetailsForm['criteriaValue-' + index + '' + cindex])}}"
+                                                    max-length="1000"
+                                                    ng-maxlength="1000"
+                                                    tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['criteriaValue-' + index + '' + cindex].$invalid]}}"
+                                                    tooltip-placement="bottom"
+                                                    placeholder="{{'meta.value.place.holder'| translate}}">
+                                        </td>
+                                        <td
+                                                width="23%"
+                                                data-ng-if="isMetaData(cri, cg) && cri.matchingCondition ==='BETWEEN'">
+                                            <input
+                                                    class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-full-width"
+                                                    data-ng-model="cri.value"
+                                                    name="{{'criteriaValue-' + index + '' + cindex}}"
+                                                    required
+                                                    data-ng-class="{'has-error': ruleDetailsForm['criteriaValue-' + index + '' + cindex].$dirty && ruleDetailsForm['criteriaValue-' + index + '' + cindex].$invalid}"
+                                                    uib-tooltip="{{getTooltipMessage(ruleDetailsForm['criteriaValue-' + index + '' + cindex])}}"
+                                                    max-length="1000"
+                                                    ng-maxlength="1000"
+                                                    tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['criteriaValue-' + index + '' + cindex].$invalid]}}"
+                                                    tooltip-placement="bottom"
+                                                    placeholder="{{'meta.value.place.holder' | translate}}">
+                                        </td>
+                                        <td
+                                                width="23%"
+                                                data-ng-if="isMetaData(cri, cg) && isNumberCriteria(cri)">
+                                            <input
+                                                    class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-full-width"
+                                                    data-ng-model="cri.value"
+                                                    ui-hide-group-sep
+                                                    ui-negative-number
+                                                    name="{{'criteriaValue-' + index + '' + cindex}}"
+                                                    required
+                                                    data-ng-class="{'has-error': ruleDetailsForm['criteriaValue-' + index + '' + cindex].$dirty && ruleDetailsForm['criteriaValue-' + index + '' + cindex].$invalid}"
+                                                    uib-tooltip="{{getTooltipMessage(ruleDetailsForm['criteriaValue-' + index + '' + cindex])}}"
+                                                    max-length="1000"
+                                                    ng-maxlength="1000"
+                                                    tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['criteriaValue-' + index + '' + cindex].$invalid]}}"
+                                                    tooltip-placement="bottom"
+                                                    placeholder="{{'meta.value.place.holder' | translate}}"
+                                                    ui-number-mask="0">
+                                        </td>
+                                        <td
+                                                width="23%"
+                                                data-ng-if="isMetaData(cri, cg) && isDateCriteria(cri)">
+                                            <div class="sc-date-picker">
+												<span class="input-group">
+													<input
+                                                            type="text"
+                                                            class="form-control"
+                                                            name="{{'criteriaValue-' + index + '' + cindex}}"
+                                                            uib-datepicker-popup="dd/MM/yyyy"
+                                                            ng-model="cri.date"
+                                                            data-ng-change="updateDateCriteria(cri)"
+                                                            is-open="cri.dateOpened"
+                                                            ng-required
+                                                            show-button-bar="true"
+                                                            close-text="{{'close.label'|translate}}"
+                                                            current-text="{{'today.label'|translate}}"
+                                                            clear-text="{{'clear.label'|translate}}"/>
+													<span class="input-group-btn">
+														<button
+                                                                type="button"
+                                                                class="btn btn-default"
+                                                                data-ng-click="cri.openDate()">
+															<i class="fa fa-calendar"></i>
+														</button>
+													</span>
+												</span>
+                                            </div>
+                                        </td>
+                                        <td width="5%">
+                                            <div
+                                                    class="fa fa-trash-o sc-bigger-icon sc-inline"
+                                                    data-ng-click="removeCriteria(cg, index, cindex)"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <a
+                                        data-ng-click="addCriteria(cg)"
+                                        class="btn btn-default"
+                                        style="margin-right: 1%; margin-top: 1%; margin-bottom: 1%">
+                                    <i class="fa fa-plus uppercase"></i>
+                                    &nbsp;&nbsp;{{'rule.editor.add.criteria.button' | translate}}
+                                </a>
+                            </div>
+                            <div
+                                    class="sc-rule-criteria-and"
+                                    data-ng-show="index != rule.criteriaGroups.length - 1">{{'and.label'| translate}}
+                            </div>
+                        </div>
+                        <a
+                                data-ng-click="addCriteriaGroup()"
+                                class="btn btn-default"
+                                data-ng-if="!rule.criteriaGroups || rule.criteriaGroups.length  === 0"
+                                style="margin-right: 2%; margin-top: 2%">
+                            <i class="fa fa-plus uppercase"></i>
+                            &nbsp;&nbsp;{{'rule.editor.add.criteria.group.button.first' | translate}}
+                        </a>
+                        <a
+                                data-ng-click="addCriteriaGroup()"
+                                class="btn btn-default"
+                                data-ng-if="rule.criteriaGroups.length > 0"
+                                style="margin-top: 2%">
+                            <i class="fa fa-plus uppercase"></i>
+                            &nbsp;&nbsp;{{'rule.editor.add.criteria.group.button' | translate}}
+                        </a>
+                    </div>
+                </div>
+                <div
+                        id="directories"
+                        class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline"> {{rule.repositoryType === "SHARED FOLDER" ?
+						("rule.editor.directories.label" | translate) : ("rule.editor.sharepoint.directories.label" | translate)}} </span>
+                </div>
+                <div class="sc-details-page-editor-info">
+                    <div class="sc-details-page-editor-data">
+                        <label
+                                data-ng-if="rule.directories
+							&& rule.directories.length > 0
+							&& rule.directories[0].criterias
+							&& rule.directories[0].criterias.length > 0">
+                            {{rule.repositoryType === "SHARED FOLDER" ? ("rule.editor.directories.context" | translate)
+                            :
+                            ("rule.editor.sharepoint.directories.context" | translate)}} </label>
+                        <label
+                                data-ng-if="!rule.directories
+							|| rule.directories.length === 0 
+							|| !rule.directories[0].criterias 
+							|| rule.directories[0].criterias.length === 0">
+                            {{"rule.editor.directories.alt" | translate}} </label>
+                        <div
+                                class="sc-criteria-group-div"
+                                data-ng-repeat="(index, directoryGroup) in rule.directories">
+                            <i
+                                    class="fa fa-times-circle-o sc-component-del-icon"
+                                    style="transform: translate(50%, -50%)"
+                                    data-ng-click="removeDirectoryGroup(index)"></i>
+                            <div class="sc-criteria-group-sub-div">
+                                <table class="sc-criteria-table">
+                                    <tr>
+                                        <td
+                                                width="5%"
+                                                rowspan="{{directoryGroup.criterias.length + 1}}"
+                                                style="border-right: 1px solid #CCCCCC"
+                                                data-ng-if="directoryGroup.criterias.length  > 1">
+                                            <span>{{'or.label' | translate}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr data-ng-repeat="(dindex, dir) in directoryGroup.criterias">
+                                        <td width="10%">
+                                            <div
+                                                    class="btn-group btn-block"
+                                                    data-uib-dropdown>
+                                                <button
+                                                        class="form-control sc-button-common"
+                                                        type="button"
+                                                        data-uib-dropdown-toggle
+                                                        ng-disabled="disabled">
+													<span
+                                                            class="sc-dropdown-btn-label"
+                                                            ng-bind-html="'dir.matching.condition.' + dir.matchingCondition | translate"> </span>
+                                                    <span class="sc-dropdown-btn-expand-icon"></span>
+                                                </button>
+                                                <ul
+                                                        class="uib-dropdown-menu sc-dropdown-menu"
+                                                        role="menu"
+                                                        aria-labelledby="">
+                                                    <li
+                                                            role="menuitem"
+                                                            ng-bind-html="'dir.matching.condition.' + mc.code | translate"
+                                                            data-ng-repeat="mc in documentMatchingConditions"
+                                                            data-ng-click="changeDirectoryMatchingCondition(dir, mc)"
+                                                            class="sc-clickable-dropdown"></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td width="80%">
+                                            <input
+                                                    data-ng-class="{'has-error': ruleDetailsForm['directory0' + index + dindex].$dirty && ruleDetailsForm['directory0' + index + dindex].$invalid}"
+                                                    class="sc-details-page-editor-input-placeholder	sc-details-page-editor-data-full sc-details-page-common-input"
+                                                    placeholder="{{rule.repositoryType === 'SHARED FOLDER'
+													? ('rule.editor.directory.place.holder' | translate)
+													: ('rule.editor.sharepoint.directory.place.holder' | translate)}}"
+                                                    data-ng-model="dir.value"
+                                                    name="{{'directory0' + index + dindex}}"
+                                                    required
+                                                    max-length="1000"
+                                                    ng-maxlength="1000"
+                                                    uib-tooltip="{{getTooltipMessage(ruleDetailsForm['directory0' + index + dindex])}}"
+                                                    max-length="1000"
+                                                    ng-maxlength="1000"
+                                                    tooltip-trigger="mouseenter"
+                                                    tooltip-placement="bottom">
+                                        </td>
+                                        <td width="5%">
+                                            <div
+                                                    class="fa fa-trash-o sc-bigger-icon sc-inline"
+                                                    data-ng-click="removeDirectory(directoryGroup, index, dindex)"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <a
+                                        data-ng-click="addDirectory(directoryGroup)"
+                                        class="btn btn-default"
+                                        style="margin-top: 2%">
+                                    <i class="fa fa-plus uppercase"></i>
+                                    &nbsp;&nbsp;{{rule.repositoryType === "SHARED FOLDER" ?
+                                    ("rule.editor.add.directory.button" | translate) :
+                                    ("rule.sharepoint.directory.new.button" | translate)}}
+                                </a>
+                            </div>
+                            <div
+                                    class="sc-rule-criteria-and"
+                                    data-ng-show="index != rule.directories.length - 1">{{'and.label'| translate}}
+                            </div>
+                        </div>
+                        <a
+                                data-ng-click="addDirectoryGroup()"
+                                class="btn btn-default"
+                                data-ng-if="!rule.directories || rule.directories.length  === 0"
+                                style="margin-right: 2%; margin-top: 2%">
+                            <i class="fa fa-plus uppercase"></i>
+                            &nbsp;&nbsp;{{'rule.editor.add.directory.group.button.first' | translate}}
+                        </a>
+                        <a
+                                data-ng-click="addDirectoryGroup()"
+                                class="btn btn-default"
+                                data-ng-if="rule.directories.length > 0"
+                                style="margin-top: 2%">
+                            <i class="fa fa-plus uppercase"></i>
+                            &nbsp;&nbsp; {{'rule.editor.add.directory.group.button' | translate}}
+                        </a>
+                    </div>
+                </div>
+                <div
+                        id="actions"
+                        class="sc-details-page-editor-title">
+                    <span class="sc-details-page-title-underline"> {{"rule.editor.actions.label" | translate}} </span>
+                </div>
+                <div class="sc-details-page-editor-info">
+                    <div class="sc-details-page-editor-data">
+                        <label for="schedule">{{"rule.editor.actions.context.label" | translate}}</label>
+                        <div
+                                data-ng-if="rule.actions.length"
+                                data-ng-repeat="(index,action) in rule.actions">
+                            <table class="sc-rule-action-table">
+                                <tr>
+                                    <td width="80%">
+                                        <div class="sc-action-name-heading">
+                                            {{getActionPluginName(action.actionPlugin)}}
+                                        </div>
+                                    </td>
+                                    <td
+                                            width="20%"
+                                            style="text-align: right">
+                                        <div
+                                                class="sc-rule-action-inline-btn fa fa-check sc-bigger-icon sc-inline"
+                                                data-ng-click="saveAction(index, ruleDetailsForm)"
+                                                data-ng-show="!actionCollapse[index]"></div>
+                                        <div
+                                                class="sc-rule-action-inline-btn fa fa-edit sc-bigger-icon sc-inline"
+                                                data-ng-click="editAction(index)"
+                                                data-ng-show="actionCollapse[index]"></div>
+                                        <div
+                                                class="sc-rule-action-inline-btn fa fa-trash-o sc-bigger-icon sc-inline"
+                                                data-ng-click="removeAction(index)"></div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div
+                                    uib-collapse="actionCollapse[index]"
+                                    id="{{'actionCollapse' + index}}"
+                                    class="sc-rule-action-details">
+                                <table width="100%">
+                                    <tr data-ng-repeat="(pindex,param) in action.actionParams">
+                                        <td
+                                                width="18%"
+                                                class="sc-action-param-label">
+                                            <span>{{param.label}}</span>
+                                        </td>
+                                        <td width="82%">
+                                            <div
+                                                    style="position: relative"
+                                                    data-ng-if="!param.keyValue &&	!param.collections">
+                                                <input
+                                                        data-ng-if="param.dataType ==='String'"
+                                                        class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-action-param"
+                                                        placeholder="{{'rule.editor.action.param.' + param.dataType | translate}}"
+                                                        data-ng-model="param.values[0].value"
+                                                        name="{{'actionParam-' + index + '' + pindex}}"
+                                                        required
+                                                        data-ng-class="{'has-error': ruleDetailsForm['actionParam-' + index + '' + pindex].$dirty && ruleDetailsForm['actionParam-' + index + '' + pindex].$invalid}"
+                                                        uib-tooltip="{{getTooltipMessage(ruleDetailsForm['actionParam-' + index + '' + pindex])}}"
+                                                        max-length="1000"
+                                                        ng-maxlength="1000"
+                                                        tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['actionParam-' + index + '' + pindex].$invalid]}}"
+                                                        tooltip-placement="bottom"/>
+                                                <input
+                                                        data-ng-if="param.dataType ==='Email'"
+                                                        class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-action-param"
+                                                        placeholder="{{'rule.editor.action.param.' + param.dataType | translate}}"
+                                                        data-ng-model="param.values[0].value"
+                                                        type="email"
+                                                        name="{{'actionParam-' + index + '' + pindex}}"
+                                                        required
+                                                        type="email"
+                                                        data-ng-class="{'has-error': ruleDetailsForm['actionParam-' + index + '' + pindex].$dirty && ruleDetailsForm['actionParam-' + index + '' + pindex].$invalid}"
+                                                        uib-tooltip="{{getTooltipMessage(ruleDetailsForm['actionParam-' + index + '' + pindex])}}"
+                                                        max-length="1000"
+                                                        ng-maxlength="1000"
+                                                        tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['actionParam-' + index + '' + pindex].$invalid]}}"
+                                                        tooltip-placement="bottom"/>
+                                                <input
+                                                        style="margin-left: 0px"
+                                                        data-ng-if="param.dataType === 'Integer'"
+                                                        ui-hide-group-sep
+                                                        ui-negative-number
+                                                        name="{{'actionParam-' + index + '' + pindex}}"
+                                                        class="sc-number-input-sm sc-details-page-common-input sc-action-param"
+                                                        ui-number-mask="0"
+                                                        data-ng-model="param.values[0].value"
+                                                        required
+                                                        data-ng-class="{'has-error': ruleDetailsForm['actionParam-' + index + '' + pindex].$dirty && ruleDetailsForm['actionParam-' + index + '' + pindex].$invalid}"
+                                                        uib-tooltip="{{getTooltipMessage(ruleDetailsForm['actionParam-' + index + '' + pindex])}}"
+                                                        max-length="1000"
+                                                        ng-maxlength="1000"
+                                                        tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['actionParam-' + index + '' + pindex].$invalid]}}"
+                                                        tooltip-placement="bottom"/>
+                                                <input
+                                                        style="margin-left: 0px"
+                                                        data-ng-if="param.dataType === 'Number'"
+                                                        ui-hide-group-sep
+                                                        ui-negative-number
+                                                        name="{{'actionParam-' + index + '' + pindex}}"
+                                                        class="sc-number-input-sm sc-details-page-common-input sc-action-param"
+                                                        ui-number-mask="2"
+                                                        data-ng-model="param.values[0].value"
+                                                        required
+                                                        data-ng-class="{'has-error': ruleDetailsForm['actionParam-' + index + '' + pindex].$dirty && ruleDetailsForm['actionParam-' + index + '' + pindex].$invalid}"
+                                                        uib-tooltip="{{getTooltipMessage(ruleDetailsForm['actionParam-' + index + '' + pindex])}}"
+                                                        max-length="1000"
+                                                        ng-maxlength="1000"
+                                                        tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['actionParam-' + index + '' + pindex].$invalid]}}"
+                                                        tooltip-placement="bottom"/>
+                                                <switch
+                                                        class="sc-switch sc-inline"
+                                                        name="{{'actionParam-' + index + '' + pindex}}"
+                                                        data-ng-if="checkBoolean(param)"
+                                                        data-ng-model="param.values[0].value"></switch>
+                                                <textarea
+                                                        class="sc-textarea-input-sm"
+                                                        tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['actionParam-' + index + '' + pindex].$invalid]}}"
+                                                        required
+                                                        name="{{'actionParam-' + index + '' + pindex}}"
+                                                        tooltip-placement="bottom"
+                                                        data-ng-class="{'has-error': ruleDetailsForm['actionParam-' + index + '' + pindex].$dirty && ruleDetailsForm['actionParam-' + index + '' + pindex].$invalid}"
+                                                        uib-tooltip="{{getTooltipMessage(ruleDetailsForm['actionParam-' + index + '' + pindex])}}"
+                                                        data-ng-if="param.dataType === 'Text'"
+                                                        data-ng-model="param.values[0].value"></textarea>
+                                            </div>
+                                            <div data-ng-if="!param.keyValue && param.collections">
+                                                <multi-param
+                                                        paramList="param.values"
+                                                        class="multi-param"
+                                                        name="{{'actionParam-' + index + '' + pindex}}"
+                                                        input-type="{{param.dataType}}"
+                                                        input-required="true"
+                                                        placeholder="{{'rule.editor.action.param.' + param.dataType + '.multi' | translate}}"></multi-param>
+                                            </div>
+                                            <div data-ng-if="param.keyValue && !param.collections">
+                                                <table style="width: 100%">
+                                                    <tr>
+                                                        <td width="45%">
+                                                            <input
+                                                                    class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-action-param"
+                                                                    placeholder="{{param.label == 'Column' ? ('column.name.label' | translate) : ('tag.name.action.param' | translate)}}"
+                                                                    data-ng-model="param.values[0].key"
+                                                                    name="{{'actionParam-' + index + '' + pindex + 'key'}}"
+                                                                    required
+                                                                    data-ng-class="{'has-error': ruleDetailsForm['actionParam-' + index + '' + pindex+ 'key'].$dirty && ruleDetailsForm['actionParam-' + index + '' + pindex+ 'key'].$invalid}"
+                                                                    uib-tooltip="{{getTooltipMessage(ruleDetailsForm['actionParam-' + index + '' + pindex+ 'key'])}}"
+                                                                    maxlength="1000"
+                                                                    ng-maxlength="1000"
+                                                                    tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['actionParam-' + index + '' + pindex+ 'key'].$invalid]}}"
+                                                                    tooltip-placement="bottom">
+                                                        </td>
+                                                        <td width=45%>
+                                                            <input
+                                                                    class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-action-param"
+                                                                    placeholder="{{param.label == 'Column' ? ('column.value.label' | translate):('tag.value.action.param' | translate)}}"
+                                                                    data-ng-model="param.values[0].value"
+                                                                    name="{{'actionParam-' + index + '' + pindex+ 'value'}}"
+                                                                    required
+                                                                    data-ng-class="{'has-error': ruleDetailsForm['actionParam-' + index + '' + pindex+ 'value'].$dirty && ruleDetailsForm['actionParam-' + index + '' + pindex+ 'value'].$invalid}"
+                                                                    uib-tooltip="{{getTooltipMessage(ruleDetailsForm['actionParam-' + index + '' + pindex+ 'value'])}}"
+                                                                    maxlength="1000"
+                                                                    ng-maxlength="1000"
+                                                                    tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['actionParam-' + index + '' + pindex+ 'value'].$invalid]}}"
+                                                                    tooltip-placement="bottom">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div data-ng-if="param.keyValue && param.collections">
+                                                <table style="width: 100%">
+                                                    <tr data-ng-repeat="(eindex,element) in param.values">
+                                                        <td width="45%">
+                                                            <input
+                                                                    class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-action-param"
+                                                                    placeholder="{{'tag.name.action.param' | translate}}"
+                                                                    data-ng-model="element.key"
+                                                                    name="{{'actionParam-' + index + '' + pindex +'' + eindex+ 'key'}}"
+                                                                    required
+                                                                    data-ng-class="{'has-error': ruleDetailsForm['actionParam-' + index + '' + pindex +'' + eindex+ 'key'].$dirty && ruleDetailsForm['actionParam-' + index + '' + pindex+'' + eindex+ 'key'].$invalid}"
+                                                                    uib-tooltip="{{getTooltipMessage(ruleDetailsForm['actionParam-' + index + '' + pindex+'' + eindex+ 'key'])}}"
+                                                                    max-length="1000"
+                                                                    ng-maxlength="1000"
+                                                                    tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['actionParam-' + index + '' + pindex+'' + eindex+ 'key'].$invalid]}}"
+                                                                    tooltip-placement="bottom">
+                                                        </td>
+                                                        <td width=45%>
+                                                            <input
+                                                                    class="sc-details-page-editor-input-placeholder sc-details-page-common-input sc-action-param"
+                                                                    placeholder="{{'tag.value.action.param' | translate}}"
+                                                                    data-ng-model="element.value"
+                                                                    name="{{'actionParam-' + index + '' + pindex+'' + eindex+ 'value'}}"
+                                                                    required
+                                                                    data-ng-class="{'has-error': ruleDetailsForm['actionParam-' + index + '' + pindex+'' + eindex+ 'value'].$dirty && ruleDetailsForm['actionParam-' + index + '' + pindex+'' + eindex+ 'value'].$invalid}"
+                                                                    uib-tooltip="{{getTooltipMessage(ruleDetailsForm['actionParam-' + index + '' + pindex+'' + eindex+ 'value'])}}"
+                                                                    max-length="1000"
+                                                                    ng-maxlength="1000"
+                                                                    tooltip-trigger="{{{true: 'focus', false: 'never'}[ruleDetailsForm['actionParam-' + index + '' + pindex+'' + eindex+ 'value'].$invalid]}}"
+                                                                    tooltip-placement="bottom">
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                    class="fa fa-trash-o sc-bigger-icon sc-inline"
+                                                                    data-ng-click="removeActionParamElement(param, eindex)"></div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <a
+                                                        data-ng-click="addActionParamElement(param)"
+                                                        class="btn btn-default"
+                                                        style="margin-left: 2%; margin-top: 1%">
+                                                    <i class="fa fa-plus uppercase"></i>
+                                                    &nbsp;&nbsp;{{param.label}}
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- Actions will be execute in "transaction" manner
+                                    <tr>
+                                        <td colspan="2">
+                                            <md-checkbox class="md-primary"
+                                                data-ng-model="action.toleranceLevel" ng-true-value="'S'"
+                                                ng-false-value="'F'" aria-label="">
+                                                {{'rule.editor.action.torrelance.context' | translate}}
+                                            </md-checkbox>
+                                        </td>
+                                    </tr>
+                                     -->
+                                </table>
+                            </div>
+                        </div>
+                        <table class="sc-rule-action-dropdown-table">
+                            <tr>
+                                <td width="70%">
+                                    <div data-uib-dropdown>
+                                        <button
+                                                class="form-control sc-button-common"
+                                                id="actionDropDown"
+                                                type="button"
+                                                data-uib-dropdown-toggle
+                                                ng-disabled="disabled">
+                                            <span class="sc-dropdown-btn-label">{{selectActionDropDownBtn}}</span>
+                                            <span class="sc-dropdown-btn-expand-icon"/>
+                                        </button>
+                                        <ul
+                                                class="uib-dropdown-menu sc-dropdown-menu"
+                                                role="menu"
+                                                aria-labelledby="">
+                                            <li
+                                                    role="menuitem"
+                                                    data-ng-repeat="plugin in pluginList"
+                                                    data-ng-click="addAction(plugin)"
+                                                    class="sc-clickable-dropdown">{{getActionPluginName(plugin)}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td width="30%"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div
+                        id="expiry"
+                        class="sc-details-page-editor-title">
+                    <span class="sc-details-page-title-underline"> {{"rule.editor.expiry.label" | translate}} </span>
+                </div>
+                <div class="sc-details-page-editor-info">
+                    <div class="sc-details-page-editor-data">
+                        <label
+                                for="validFrom"
+                                class="sc-label-inline">{{"rule.editor.valid.from.label" | translate}}</label>
+                        <div
+                                name="validFrom"
+                                class="sc-inline">
+                            <div class="sc-date-picker">
+                                <p class="input-group">
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            name="validFrom"
+                                            id="validFrom"
+                                            uib-datepicker-popup="dd/MM/yyyy"
+                                            data-ng-model="validity.validFrom"
+                                            is-open="validFromPopUp.opened"
+                                            show-button-bar="true"
+                                            close-text="{{'close.label'|translate}}"
+                                            current-text="{{'today.label'|translate}}"
+                                            clear-text="{{'clear.label'|translate}}"/>
+                                    <span class="input-group-btn">
+										<button
+                                                type="button"
+                                                class="btn btn-default"
+                                                data-ng-click="validFromOpen()">
+											<i class="fa fa-calendar"></i>
+										</button>
+									</span>
+                                </p>
+                            </div>
+                            <div
+                                    class="sc-validation-block"
+                                    ng-messages="ruleDetailsForm.validFrom.$error"
+                                    ng-if="ruleDetailsForm.validFrom.$touched">
+                                <p ng-message="required">{{"rule.editor.valid.from.validation.required" |
+                                    translate}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sc-details-page-editor-data">
+                        <label class="sc-label-inline">{{"rule.editor.expiring.on.label" | translate}}</label>
+                        <div class="sc-inline">
+                            <md-radio-group data-ng-model="validity.expiringOnOption">
+                                <md-radio-button
+                                        value="specific"
+                                        class="md-primary sc-radio-inline sc-inline">
+                                    {{'rule.editor.specific.date.label' |
+                                    translate}}
+                                </md-radio-button>
+                                <md-radio-button
+                                        value="never"
+                                        class="md-primary sc-radio-inline sc-inline"> {{'rule.editor.never.label'|
+                                    translate}}
+                                </md-radio-button>
+                            </md-radio-group>
+                            <div
+                                    data-ng-show="validity.expiringOnOption == 'specific'"
+                                    class="sc-date-picker">
+                                <p class="input-group">
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            name="expiringOn"
+                                            id="expiringOn"
+                                            uib-datepicker-popup="dd/MM/yyyy"
+                                            data-ng-model="validity.expiringOn"
+                                            is-open="expiringOnPopUp.opened"
+                                            ng-required="expiringOnOption =='specific'"
+                                            show-button-bar="true"
+                                            close-text="{{'close.label'|translate}}"
+                                            current-text="{{'today.label'|translate}}"
+                                            clear-text="{{'clear.label'|translate}}"/>
+                                    <span class="input-group-btn">
+										<button
+                                                type="button"
+                                                class="btn btn-default"
+                                                data-ng-click="expiringOnOpen()">
+											<i class="fa fa-calendar"></i>
+										</button>
+									</span>
+                                </p>
+                            </div>
+                            <div
+                                    class="sc-validation-block"
+                                    ng-messages="ruleDetailsForm.expiringOn.$error"
+                                    ng-if="ruleDetailsForm.expiringOn.$touched && expiringOnOption == 'specific' && ruleDetailsForm.expiringOn.$error">
+                                <p ng-message="required">{{"rule.editor.expiring.on.validation.required" |
+                                    translate}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                            id="schedule"
+                            class="sc-details-page-editor-title">
+                        <span class="sc-details-page-title-underline"> {{"rule.editor.schedule.label" | translate}} </span>
+                    </div>
+                    <div class="sc-details-page-editor-info">
+                        <div class="sc-details-page-editor-data">
+                            <label for="schedule">{{"rule.editor.execute.rule.label" | translate}}</label>
+                            <div class="sc-grey-div">
+                                <md-radio-group data-ng-model="rule.scheduleType">
+                                    <md-radio-button
+                                            value="D"
+                                            class="md-primary sc-radio-inline-with-background sc-inline">
+                                        {{'daily.label' | translate}}
+                                    </md-radio-button>
+                                    <md-radio-button
+                                            value="W"
+                                            class="md-primary sc-radio-inline-with-background sc-inline">
+                                        {{'weekly.label'| translate}}
+                                    </md-radio-button>
+                                    <md-radio-button
+                                            value="M"
+                                            class="md-primary sc-radio-inline-with-background sc-inline">
+                                        {{'monthly.label'| translate}}
+                                    </md-radio-button>
+                                </md-radio-group>
+                            </div>
+                            <div
+                                    class="sc-border-div"
+                                    data-ng-show="rule.scheduleType == 'D'">
+                                <table class="sc-schedule-table-daily">
+                                    <tr
+                                            data-ng-repeat="dailySchedule in dailySchedules"
+                                            class="sc-table-row">
+                                        <td
+                                                class="sc-padding-cell-left"
+                                                width="5%">
+                                            <span class="sc-inline sc-details-page-editor-label"> {{'at.label'| translate}} </span>
+                                        </td>
+                                        <td>
+                                            <uib-timepicker
+                                                    data-ng-model="dailySchedule.time"
+                                                    class="sc-inline sc-timepicker"
+                                                    minute-step="1"
+                                                    hour-step="1"
+                                                    show-meridian="true"></uib-timepicker>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div
+                                    class="sc-border-div"
+                                    data-ng-show="rule.scheduleType == 'W'">
+                                <table class="sc-schedule-table-weekly">
+                                    <tr
+                                            data-ng-repeat="weeklySchedule in weeklySchedules"
+                                            class="sc-table-row">
+                                        <td
+                                                class="sc-padding-cell-left sc-padding-cell-right"
+                                                width="50%">
+                                            <div class="btn-group">
+                                                <label
+                                                        class="btn btn-primary"
+                                                        data-ng-repeat="day in dayOfTheWeek"
+                                                        data-ng-model="weeklySchedule.days[day]"
+                                                        uib-btn-checkbox
+                                                        btn-checkbox-true="true"
+                                                        btn-checkbox-false="false"> {{day + ".label"|
+                                                    translate}} </label>
+                                            </div>
+                                        </td>
+                                        <td class="sc-padding-cell-left sc-horizontal-center-div">
+                                            <span class="sc-inline sc-details-page-editor-label"> {{'at.label'| translate}} </span>
+                                        </td>
+                                        <td>
+                                            <uib-timepicker
+                                                    data-ng-model="weeklySchedule.time"
+                                                    class="sc-inline sc-timepicker"
+                                                    minute-step="1"
+                                                    show-meridian="true"></uib-timepicker>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div
+                                    class="sc-border-div"
+                                    data-ng-show="rule.scheduleType == 'M'">
+                                <table class="sc-schedule-table-monthly">
+                                    <tr
+                                            data-ng-repeat="monthlySchedule in monthlySchedules"
+                                            class="sc-table-row">
+                                        <td
+                                                class="sc-padding-cell-left"
+                                                width="50%">
+                                            <div
+                                                    class="btn-group btn-block"
+                                                    data-uib-dropdown
+                                                    auto-close="outsideClick">
+                                                <button
+                                                        class="form-control sc-button-common"
+                                                        id=""
+                                                        type="button"
+                                                        data-uib-dropdown-toggle
+                                                        ng-disabled="disabled">
+                                                    <span class="sc-dropdown-btn-label">{{getDayOfMonthString(monthlySchedule.days)}}</span>
+                                                    <span class="sc-dropdown-btn-expand-icon"></span>
+                                                </button>
+                                                <ul
+                                                        class="sc-dropdown-day-of-month-picker uib-dropdown-menu"
+                                                        role="menu"
+                                                        aria-labelledby="">
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td width="40%">
+                                                                <div class="btn-group">
+                                                                    <button
+                                                                            class="sc-select-all-btn btn"
+                                                                            data-ng-click="selectAll(monthlySchedule)">
+                                                                        {{'select.all.button' | translate}}
+                                                                    </button>
+                                                                    <button
+                                                                            class="sc-clear-all-btn btn"
+                                                                            data-ng-click="clearAll(monthlySchedule)">
+                                                                        {{'clear.all.button' | translate}}
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                            <td width="60%">{{'rule.editor.monthly.schedule.context' |
+                                                                translate}}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <div class="sc-dropdown-day-of-month-wrapper">
+                                                        <div
+                                                                data-ng-repeat="day in dayOfTheMonth"
+                                                                data-ng-click="monthlyScheduleChange(monthlySchedule, day, monthlySchedule.days[day])"
+                                                                data-ng-model="monthlySchedule.days[day]"
+                                                                class="sc-dropdown-day-of-month-item sc-inline"
+                                                                uib-btn-checkbox
+                                                                btn-checkbox-true="true"
+                                                                btn-checkbox-false="false">{{day | translate}}
+                                                        </div>
+                                                    </div>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td class="sc-padding-cell-left sc-horizontal-center-div">
+                                            <span class="sc-inline sc-details-page-editor-label"> {{'at.label'| translate}} </span>
+                                        </td>
+                                        <td>
+                                            <uib-timepicker
+                                                    data-ng-model="monthlySchedule.time"
+                                                    class="sc-inline sc-timepicker"
+                                                    minute-step="1"
+                                                    show-meridian="true"></uib-timepicker>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

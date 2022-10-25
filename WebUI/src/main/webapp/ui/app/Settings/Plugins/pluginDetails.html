@@ -1,0 +1,228 @@
+
+<div data-ng-if="!detailsFound" class="sc-empty-resource-list-box">
+	<p style="text-align: center">{{'plugins.details.not.found' |
+		translate}}</p>
+</div>
+<div data-http-loader class="sc-data-loading">
+	<p style="text-align: center" class="sc-vertical-middle-div">{{'data.loading'
+		| translate}}</p>
+</div>
+<div class="sc-resource" data-ng-if="detailsFound" style="height: 100%">
+	<form id="pluginsDetailsForm"
+		class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-vaid-maxlength"
+		novalidate="" name="pluginsDetailsForm">
+		<div class="no-margin sc-details-page-title-panel">
+			<div class="sc-details-page-back-btn-div ">
+				<button class="sc-details-page-back-btn btn btn-default"
+					type="button" data-ng-click="backToPluginsList(pluginsDetailsForm)">
+					<i class="fa fa-arrow-left" data-ng-class=""> </i>
+				</button>
+			</div>
+			<div class="sc-details-page-title">
+				<div class="sc-vertical-middle-div">
+					<p class="sc-details-page-edit-text">{{"edit.label" |
+						translate}}</p>
+					<p class="sc-details-page-edit-subject">{{plugins.name}}</p>
+				</div>
+			</div>
+
+			<div class="sc-details-page-btn-div">
+				<a class="btn btn-default sc-details-page-discard-btn"
+					data-ng-click="discardPluginChanges(pluginsDetailsForm)">{{"button.discard"
+					| translate}} </a> <a class="btn btn-default sc-btn-save-page"
+					data-ng-click="savePluginChanges(pluginsDetailsForm)">{{"button.save"
+					| translate}} </a>
+			</div>
+			<div class="clear" />
+
+
+		</div>
+		<div class="sc-details-page-bottom-panel">
+			<div class="sc-details-page-summary-div">
+				<a href="" data-ng-click="scrollTo('pluginsInfo')">
+					<div class="sc-details-page-summary-row"
+						data-ng-class="{'sc-details-page-summary-row-selected':isActive('pluginsInfo')}">
+						<label for="pluginsInfo"> {{"this.label"
+							| translate}} {{'plugin.label'|translate}}</label>
+						<div class="wrapper">
+							<span ng-hide="plugins.name.length"
+								class="sc-details-page-summary-content">
+								<{{'plugins.summary.plugins.name.alt' | translate}}> </span> <span
+								class="sc-details-page-summary-content"
+								ng-show="plugins.name.length"> {{plugins.name}}</span>
+						</div>
+
+					</div>
+				</a> <a href="" data-ng-click="scrollTo('properties')">
+					<div class="sc-details-page-summary-row"
+						data-ng-class="{'sc-details-page-summary-row-selected':isActive('properties')}">
+						<label for="properties"> {{"plugin.summary.has.properties"
+							| translate}} </label>
+						<div class="wrapper sc-details-page-summary-sub-content">
+							<div class="sc-details-page-summary-content"
+								data-ng-repeat="(index, param) in plugins.params">
+								<span>{{param.label}}</span><span class="sc-summary-context">
+									{{'matching.condition.equals'|translate}}</span><span
+									data-ng-if="param.value"> {{param.value}}</span><span
+									data-ng-if="!param.value"> <{{'value.label'
+									|translate}}></span>
+							</div>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="sc-details-page-editor-div">
+
+				<div id="pluginsInfo" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline">
+						{{"plugin.editor.plugin.info.label" | translate}}</span>
+				</div>
+
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label for="hostname">{{"component.editor.name.label" |
+							translate}}</label>
+						<p>{{plugins.name}}</p>
+					</div>
+
+					<div class="sc-details-page-editor-data">
+						<label for="description">{{"component.editor.description.label"
+							| translate}}</label>
+						<textarea id="description"
+							class="sc-details-page-editor-input-placeholder sc-component-text-area sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'plugins.editor.description.place.holder' | translate}}"
+							data-ng-model="plugins.description" name="description" />
+					</div>
+				</div>
+
+				<div id="properties" class="sc-details-page-editor-title">
+					<span class="sc-details-page-title-underline">
+						{{"plugins.editor.plugin.properties.label" | translate}}</span>
+				</div>
+
+				<div class="sc-details-page-editor-info">
+
+					<table class="sc-properties-table">
+						<thead>
+						</thead>
+						<tbody>
+							<tr data-ng-repeat="(index, param) in plugins.params"
+								class="sc-properties-row">
+								<td class="sc-plugin-details-on-table">
+									<div id="parameterName" class="sc-inline-block-on-table"
+										style="width: 24%">
+										<p class="sc-plugin-property-heading">{{'parameter.name' |
+											translate}}</p>
+										<input disabled="true"
+											class="sc-plugins-editor-properties-input-placeholder form-control"
+											type="text" data-ng-model="param.label" readonly />
+									</div>
+									<div id="parameterIdentifier" class="sc-inline-block-on-table"
+										style="width: 24%">
+										<p class="sc-plugin-property-heading">{{'parameter.identifier'
+											| translate}}</p>
+										<input disabled="true"
+											class="sc-plugins-editor-properties-input-placeholder form-control"
+											type="text" data-ng-model="param.identifier" readonly />
+									</div>
+									<div id="parameterDatatype" class="sc-inline-block-on-table"
+										style="width: 24%">
+										<p class="sc-plugin-property-heading">{{'parameter.datatype'
+											| translate}}</p>
+										<input disabled="true"
+											class="sc-plugins-editor-properties-input-placeholder form-control"
+											type="text" data-ng-model="param.dataType" readonly />
+									</div>
+
+									<div id="parameterValue" class="sc-inline-block-on-table"
+										style="width: 24%">
+										<p class="sc-plugin-property-heading">{{'parameter.value'
+											| translate}}</p>
+										<div>
+
+											<input name="{{'booleanValue-' + index}}"
+												placeholder="{{'fixed.action.plugin.param.place.holder.boolean'| translate}}"
+												data-ng-if="param.dataType === 'Boolean'" type="text"
+												data-ng-model="param.value"
+												data-ng-class="{'has-error': pluginsDetailsForm['booleanValue-' + index].$dirty && pluginsDetailsForm['booleanValue-' + index].$invalid}"
+												uib-tooltip="{{getTooltipMessage(pluginsDetailsForm['booleanValue-' + index])}}"
+												tooltip-trigger="{{{true: 'mouseenter', false:
+									'never'}[pluginsDetailsForm['booleanValue-' + index].$invalid]}}"
+												tooltip-placement="bottom"
+												uib-typeahead="bool for bool in [true, false] | filter:$viewValue"
+												class="sc-plugins-editor-properties-input-placeholder form-control"
+												typeahead-show-hint="true" typeahead-min-length="0"
+												ng-maxlength="50" max-length="50" typeahead-editable="false"
+												autocomplete="off" typeahead-focus-first required />
+											<!-- 												<div 
+												class="sc-plugin-properties-value-button btn-group btn-block"
+												data-uib-dropdown data-ng-if="param.dataType == 'Boolean'">
+																										<button
+													class="form-control sc-button-common sc-button-properties"
+													id="" type="button" style="width: 100%; padding: 3px 12px;"
+													data-uib-dropdown-toggle ng-disabled="disabled"
+													uib-tooltip="{{ param.value ? '' : 'This is a required field' }}"
+													tooltip-trigger="mouseenter" tooltip-placement="bottom">
+														<span
+														class="sc-dropdown-btn-label sc-button-properties-value">{{param.value}}</span>
+														<span
+														class="sc-dropdown-btn-expand-icon sc-button-properties-dropdown-expand-icon" />
+													</button>
+													<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu"
+													aria-labelledby="">
+														<li role="menuitem" data-ng-repeat="bool in [true, false]"
+														data-ng-click="changeBooleanValue(bool, index)"
+														class="sc-clickable-dropdown-properties">{{bool}}</li>
+													</ul>
+												</div> -->
+
+											<input name="{{'stringValue-' + index}}"
+												id="{{'stringValue-' + index}}"
+												class="sc-plugins-editor-properties-input-placeholder form-control"
+												type="text" data-ng-model="param.value"
+												data-ng-if="param.dataType === 'String'"
+												data-ng-class="{'has-error': pluginsDetailsForm['stringValue-' + index].$dirty && pluginsDetailsForm['stringValue-' + index].$invalid}"
+												uib-tooltip="{{getTooltipMessage(pluginsDetailsForm['stringValue-' + index])}}"
+												tooltip-trigger="{{{true: 'mouseenter', false:
+									'never'}[pluginsDetailsForm['stringValue-' + index].$invalid]}}"
+												tooltip-placement="bottom"
+												placeholder="{{'fixed.action.plugin.param.place.holder.string'| translate}}"
+												autocomplete="off" ng-maxlength="1024" max-length="1024" required /> <input
+												name="{{'integerValue-' + index}}"
+												id="{{'integerValue-' + index}}"
+												data-ng-if="param.dataType === 'Integer'"
+												ng-class="{'has-error': pluginsDetailsForm['integerValue-' + index].$dirty && pluginsDetailsForm['integerValue-' + index].$invalid}"
+												class="sc-plugins-editor-properties-input-placeholder form-control"
+												data-ng-model="param.value"
+												uib-tooltip="{{getTooltipMessage(pluginsDetailsForm['integerValue-' + index])}}"
+												tooltip-trigger="{{{true: 'mouseenter', false:
+									'never'}[pluginsDetailsForm['integerValue-' + index].$invalid]}}"
+												tooltip-placement="bottom" ui-number-mask="0"
+												ui-hide-group-sep ui-negative-number
+												placeholder="{{'fixed.action.plugin.param.place.holder.int'| translate}}"
+												autocomplete="off" ng-maxlength="50" max-length="50" required /> <input
+												name="{{'numberValue-' + index}}"
+												id="{{'numberValue-' + index}}" ui-number-mask="0"
+												ui-negative-number data-ng-if="param.dataType === 'Number'"
+												ui-hide-group-sep
+												data-ng-class="{'has-error': pluginsDetailsForm['numberValue-' + index].$dirty && pluginsDetailsForm['numberValue-' + index].$invalid}"
+												class="sc-plugins-editor-properties-input-placeholder form-control"
+												data-ng-model="param.value"
+												uib-tooltip="{{getTooltipMessage(pluginsDetailsForm['numberValue-' + index])}}"
+												tooltip-trigger="{{{true: 'mouseenter', false:
+									'never'}[pluginsDetailsForm['numberValue-' + index].$invalid]}}"
+												tooltip-placement="bottom"
+												placeholder="{{'fixed.action.plugin.param.place.holder.number'| translate}}"
+												autocomplete="off" ng-maxlength="50" max-length="50" required />
+
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

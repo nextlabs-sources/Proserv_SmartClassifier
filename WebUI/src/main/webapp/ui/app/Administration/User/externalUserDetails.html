@@ -1,0 +1,118 @@
+<div class="sc-resource" style="height: 100%">
+	<form id="userDetailsForm"
+		class="sc-layout-full-height ng-pristine ng-valid ng-valid-required ng-vaid-maxlength"
+		novalidate="" name="userDetailsForm">
+		<div class="no-margin sc-details-page-title-panel">
+			<div class="sc-details-page-back-btn-div ">
+				<button class="sc-details-page-back-btn btn btn-default"
+					type="button" data-ng-click="backToUserList(userDetailsForm)">
+					<i class="fa fa-arrow-left" data-ng-class=""> </i>
+				</button>
+			</div>
+			<div class="sc-details-page-title">
+				<div class="sc-vertical-middle-div">
+					<p class="sc-details-page-edit-text">
+						{{"import.label" | translate}}
+					</p>
+				</div>
+			</div>
+			
+			<div class="sc-details-page-btn-div">
+				<a class="btn btn-default sc-details-page-discard-btn"
+					data-ng-click="discardChanges()">
+					{{"button.discard" | translate}}
+				</a>
+				<a class="btn btn-default sc-btn-save-page"
+					data-ng-click="importUsers()"
+					data-ng-disabled="!(userList | filter:{$checked : true}).length">
+					{{"button.import" | translate}}
+				</a>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="sc-details-page-bottom-panel">
+			<div data-ng-if="!authenticationHandlerFound" class="sc-empty-resource-list-box">
+				<center>
+					<a data-ng-click="createNewUserSource()"
+						class="sc-vertical-middle-div btn btn-default sc-btn-save-page"
+						id="sc-btn-create-user-source">
+						{{"authentication.handler.not.found" | translate}}
+					</a>
+				</center>
+			</div>
+			<div data-ng-if="authenticationHandlerFound" class="sc-details-full-page-editor-div">
+				<div class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<label for="filter">
+							{{"user.editor.filter.label" | translate}}
+						</label>
+						<input id="filter"
+							class="sc-details-page-editor-input-placeholder sc-details-page-editor-data-right sc-details-page-common-input"
+							placeholder="{{'user.editor.filter.place.holder' | translate}}"
+							data-ng-model="authenticationHandler.filter" name="filter">
+					</div>
+					<div class="sc-details-page-editor-data">
+						<label for="ldap">
+							{{"user.editor.import.user.from.label" | translate}}
+						</label>
+						<div class="sc-half-width dropdown" data-uib-dropdown>
+							<button class="form-control sc-button-common" type="button" data-uib-dropdown-toggle ng-disabled="disabled" required>
+								<span data-ng-if="!authenticationHandler" class="sc-dropdown-btn-label">{{"user.editor.select.import.user.from.dropdown" | translate}}</span>
+								<span data-ng-if="authenticationHandler" class="sc-dropdown-btn-label">{{authenticationHandler.name}}</span>
+								<span class="sc-dropdown-btn-expand-icon"></span>
+							</button>
+							<ul class="uib-dropdown-menu sc-dropdown-menu" role="menu" aria-labelledby="">
+								<li role="menuitem" data-ng-repeat="authHandler in authenticationHandlers"
+									data-ng-click="loadUsers(authHandler)"
+									class="sc-clickable-dropdown">{{authHandler.name}}</li>
+							</ul>
+						</div>
+					</div>
+					<div class="sc-details-page-editor-data">
+						<a class="btn btn-default sc-btn-save-page"
+							data-ng-click="refresh()">
+							{{"button.refresh" | translate}}
+				</a>
+					</div>
+				</div>
+				<div data-ng-if="userList.length > 0" class="sc-details-page-editor-info">
+					<div class="sc-details-page-editor-data">
+						<table class="table sc-create-page-common-table sc-create-page-editable-table">
+							<thead>
+								<th style="width: 60px;">
+									<label class="nobold sc-green-checkbox-radio-label">
+										<input type="checkbox" ng-disabled="userList.length == 1"
+											class="sc-green-checkbox-radio ng-untouched ng-valid ng-dirty ng-valid-parse" data-ng-model="checkStatus.allUserChecked" data-ng-change="toggleCheckAll()">
+										<span>
+											<span class="sc-green-checkbox-radio-bgrd-holder"></span>
+										</span>
+									</label>
+								</th>
+								<th style="width: 25%;" class="ng-binding">{{"user.editor.user.name.header" | translate}}</th>
+								<th class="ng-binding">{{"user.editor.user.details.header" | translate}}</th>
+							</thead>
+							<tbody>
+								<tr data-ng-repeat="(index, user) in userList">
+									<td>
+										<label class="nobold sc-green-checkbox-radio-label">
+											<input type="checkbox"
+												class="sc-green-checkbox-radio ng-untouched ng-valid ng-prestine" data-ng-model="user.$checked" data-ng-change="checkStatusChanged()">
+											<span>
+												<span class="sc-green-checkbox-radio-bgrd-holder"></span>
+											</span>
+										</label>
+									</td>
+									<td><span class="ng-binding">{{user.firstName}}&nbsp;{{user.lastName}}</span></td>
+									<td><span class="ng-binding"></span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div data-ng-if="loadedUser && !userList.length" class="sc-empty-resource-list-box">
+					<p style="text-align: center;">{{'empty.list.msg' | translate}}</p>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

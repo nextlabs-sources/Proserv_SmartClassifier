@@ -1,0 +1,57 @@
+<div class="no margin sc-page-title">
+    <div class="sc-page-title-left">
+        <div class="sc-vertical-middle-div">{{'license.title'|
+            translate}}
+        </div>
+    </div>
+</div>
+
+<div data-ng-if="licenseFound">
+    <div class="sc-license-wrapper">
+        <table width="100%" class="sc-license-expiry-table">
+            <tr>
+                <td width="50%"><p class="sc-license-heading">{{'expiry.date.label'
+                    | translate}}</p>
+                    <p class="sc-license-data">{{hasExpiryDate()?(expiryDate | date):expiryDate}}</p></td>
+                <td width="50%"><p class="sc-license-heading"
+                                   data-ng-if="(getLicenseRemainingDays() > 0 && hasExpiryDate())">
+                    {{'license.expiring.in.label'
+                    | translate}}</p>
+                    <p class="sc-license-heading"
+                       data-ng-if="(getLicenseRemainingDays() <= 0 && hasExpiryDate())">{{'license.expired.label'
+                        | translate}}</p>
+                    <p class="sc-license-heading"
+                       data-ng-if="(!hasExpiryDate())">{{'license.remaining.days.label'
+                        | translate}}</p>
+                    <p class="sc-license-data" data-ng-class="getExpiryClass()">
+                        {{hasExpiryDate()?(abs(getLicenseRemainingDays())):('unlimited.label'
+                        | translate)}}</p>
+                    <p class="sc-license-context">{{'days.label' | translate}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="sc-license-wrapper">
+        <table width="100%" class="sc-license-usage-table">
+            <tr>
+                <td width="50%">
+                    <p class="sc-license-heading">{{'usage.label' | translate}}</p>
+                    <p class="sc-license-data">{{dataSize == "UNLIMITED" ? usedSize  + ' GB(s)' : usedSize + ' GB(s) / ' + dataSize
+                        + ' GB(s)'}}</p>
+                </td>
+                <td width="50%"><p class="sc-license-heading"
+                                   data-ng-if="getRemaining() < 0">{{'license.exceeded.label' |
+                    translate}}</p>
+                    <p class="sc-license-heading" data-ng-if="getRemaining() >= 0 || getRemaining() == 'UNLIMITED'">
+                        {{'license.remaining.data.label'
+                        | translate}}</p>
+                    <p class="sc-license-data" data-ng-class="getRemainingClass()">{{getRemaining()}}</p>
+                    <span class="sc-license-context" data-ng-if="dataSize != 'UNLIMITED'">GB</span></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+<div data-ng-if="!licenseFound" class="sc-empty-resource-list-box">
+    <p style="text-align: center">{{'license.not.found.label' |
+        translate}}</p>
+</div>
